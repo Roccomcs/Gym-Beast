@@ -9,6 +9,9 @@ import { dateKey, weekDates, uid, type Profile } from './domain'
 import { Routines } from './routines'
 import { Workout } from './workout'
 import { Progress } from './progress'
+import { Companion, companions } from './companion'
+import '@fontsource/press-start-2p/latin-400.css'
+import '@fontsource-variable/atkinson-hyperlegible-next'
 import './style.css'
 
 const update = registerSW({
@@ -56,7 +59,7 @@ function Root() {
   }}><label>Contraseña nueva<input name="password" type="password" minLength={8} required /></label>
     <button>Guardar contraseña</button></form>{problem && <p role="alert">{problem}</p>}</main>
   if (!owner) return <main className="welcome">
-    <Logo /><p className="eyebrow">TU DIARIO DE FUERZA</p>
+    <Logo /><Companion name="Dragón" /><p className="eyebrow">TU DIARIO DE FUERZA</p>
     <h1>Cada repetición cuenta.</h1>
     <p>Planificá tu semana, registrá tus series y seguí tu progreso.</p>
     {api && <button onClick={async () => {
@@ -116,6 +119,8 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   const schedules = useLiveQuery(() => list(owner, 'schedule'), [owner], [])
   const sets = useLiveQuery(() => list(owner, 'set'), [owner], [])
   const operations = useLiveQuery(() => db.operations.where('owner').equals(owner).toArray(), [owner], [])
+  const rewards = useLiveQuery(() => db.rewards.where('owner').equals(owner).toArray(), [owner], [])
+  const xp = rewards.reduce((total, reward) => total + reward.xp, 0)
   const [status, setStatus] = useState('')
   const [available, setAvailable] = useState(false)
   const date = dateKey(new Date(), profile.timezone)
@@ -189,11 +194,12 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
               {active ? 'Continuar entrenamiento' : today.length ? 'Empezar entrenamiento' : 'Preparar entrenamiento'}
             </button>
           </section>
+          <section className="panel companion-card"><Companion name={profile.companion} /><div><h2>{profile.companion}</h2>{owner !== local && <><p>Nivel {1 + Math.floor(xp / 100)} · {xp} XP</p><progress className="xp-meter" value={xp % 100} max={100} aria-label="Experiencia hacia el próximo nivel" /></>}<NavLink to="/perfil">Elegir compañero</NavLink></div></section>
           <div className="stats"><section className="panel"><Flame className="lime" /><p>Sesiones esta semana</p><strong>{weekCount}</strong></section>
             <section className="panel"><Activity className="lime" /><p>Sesiones totales</p><strong>{completed.length}</strong></section></div>
         </>} />
-        <Route path="/entrenar" element={<Routines owner={owner} date={date} weekStart={profile.weekStart} start={start} />} />
-        <Route path="/sesion/:id" element={<Workout owner={owner} profile={profile} sessions={sessions} sets={sets} />} />
+        <Route path="/entrenar" element={<Routines owner={owner} date={date} weekStart={profile.weekStart} unit={profile.unit} start={start} />} />
+        <Route path="/sesion/:id" element={<Workout owner={owner} profile={profile} sessions={sessions} sets={sets} rewards={rewards} />} />
         <Route path="/progreso" element={<Progress sessions={completed} sets={sets} unit={profile.unit} />} />
         <Route path="/amigos" element={<><h1>Amigos</h1><p>Las funciones sociales todavía no están disponibles.</p></>} />
         <Route path="/instalar" element={<Install />} />
@@ -213,6 +219,12 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
               {['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'].map((day, index) => <option key={day} value={index}>{day}</option>)}</select></label>
             <button>Guardar preferencias</button>
           </form>
+          <section className="panel"><h2>Compañero</h2><div className="companion-picker">
+            {companions.map(name => <button key={name} className="secondary" aria-pressed={profile.companion === name}
+              onClick={() => void save(owner, 'profile', 'self', { ...profile, companion: name }).catch(() => setStatus('No se pudo guardar la mascota'))}>
+              <Companion name={name} />{name}
+            </button>)}
+          </div></section>
           <section className="panel"><NavLink to="/instalar">Instalar GymBeast</NavLink></section>
           <section className="panel actions">
             <button className="secondary" onClick={async () => {

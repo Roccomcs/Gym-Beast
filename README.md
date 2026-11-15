@@ -12,7 +12,7 @@ El espacio local conserva datos en IndexedDB en ese navegador. Exportá una copi
 
 ## Conectar cuentas y publicar
 
-1. Creá un proyecto Supabase Free y aplicá la migración en `supabase/migrations` desde el SQL Editor o con Supabase CLI.
+1. Creá un proyecto Supabase Free y aplicá las migraciones en orden en `supabase/migrations` desde el SQL Editor o con Supabase CLI.
 2. Configurá Google en Auth Providers. En Google Cloud, creá un cliente OAuth web con la URL de callback que indica Supabase. Definí la URL HTTPS de GymBeast como Site URL de Supabase y agregá la URL local a las redirecciones permitidas para desarrollo.
 3. Copiá `.env.example` a `.env.local` y configurá la URL y la clave publicable del proyecto. Guardá los secretos OAuth en Supabase. Email y contraseña requieren SMTP de prueba o un remitente gratuito verificado. Habilitalos con `VITE_ENABLE_EMAIL_AUTH=true`.
 4. En Cloudflare Pages, usá `npm run build` y publicá `dist`. Configurá allí las mismas variables públicas. Revisá el tamaño de la base y las cuotas antes de ampliar el piloto. Conservá exportaciones privadas y respaldos de PostgreSQL en un lugar seguro.
@@ -21,10 +21,13 @@ En iPhone abrí el sitio HTTPS en Safari y elegí **Compartir → Agregar a inic
 
 ## Pruebas
 
-- `npm test` ejecuta las pruebas del parser y del dominio.
+- `npm test` ejecuta las pruebas del parser, del dominio y de PostgreSQL embebido. La suite SQL simula el rol y la identidad de Supabase para comprobar operaciones, RLS y recompensas.
 - `npx playwright install chromium`, `npm run build` y `npm run test:e2e` permiten probar el flujo offline en un navegador con dimensiones móviles.
-- La autenticación hospedada, migraciones, permisos con dos cuentas, conflictos entre dispositivos y validación en iPhone y Android físicos requieren verificación antes de abrir el piloto.
+- La autenticación hospedada, el despliegue de las migraciones en Supabase, la sincronización completa entre dos dispositivos y la validación en iPhone y Android físicos requieren verificación antes de abrir el piloto.
 
 ## Estado
 
-La edición de rutinas usa versiones en los documentos y guarda una copia de la planificación al iniciar cada sesión. La primera migración guarda agregados versionados en JSONB. Todavía están pendientes la normalización completa, la validación de agregado en servidor, gráficos adicionales y recomendaciones, economía de recompensas, mascotas originales, amigos, restauración y notificaciones. Iconografía de interfaz de Lucide (ISC). El icono de la app se creó para GymBeast.
+- Importación de la rutina de cinco días, tres plantillas editables, planificación semanal, vistas pixel art, fichas con músculos y filtros, y selección de mascota 2D.
+- Primera regla de XP para cuentas sincronizadas. El servidor otorga 25 XP por una sesión finalizada de al menos un minuto con una serie válida y un máximo de tres premios por día UTC de sincronización. Una sesión tiene una sola recompensa. La app muestra nivel y progreso después de descargar los eventos.
+- Cuatro variantes de ejercicio cuentan con ilustración específica. Las demás muestran una imagen genérica y el mapa muscular. Los créditos están en [Licencias de recursos](docs/assets-licenses.md).
+- Pendientes para el piloto completo: ilustraciones de inicio y fin de todos los ejercicios, versiones recuperables y compartir rutinas, edición completa en sesión, estadísticas y progresión doble, normalización y validación integral en PostgreSQL, restauración, misiones, rachas, logros, cosméticos, modelos GLB, funciones sociales, recordatorios, despliegue y pruebas físicas.

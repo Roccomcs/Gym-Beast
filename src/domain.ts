@@ -1,26 +1,46 @@
 import { z } from 'zod'
 
 export const catalog = [
-  ['bench-barbell', 'Press banca', 'press de banca|press banca barra|bench press'],
-  ['bench-smith', 'Press banca Smith', 'press banca en smith'],
+  ['bench-barbell', 'Press banca', 'press de banca|press banca barra|bench press|banco plano c barra'],
+  ['bench-smith', 'Press banca Smith', 'press banca en smith|press pecho smith'],
   ['bench-dumbbell', 'Press banca mancuernas', 'press plano mancuernas'],
-  ['incline-dumbbell', 'Press inclinado mancuernas', 'press inclinado con mancuernas'],
+  ['incline-dumbbell', 'Press inclinado mancuernas', 'press inclinado con mancuernas|press inclinado c manc'],
   ['fly', 'Aperturas', 'aperturas mancuernas'],
   ['dip', 'Fondos', 'fondos en paralelas'],
-  ['pushdown', 'Tríceps polea', 'extension triceps'],
+  ['pushdown', 'Tríceps polea', 'extension triceps|extension de triceps polea'],
   ['pull-up', 'Dominadas', 'dominada|pull up'],
   ['barbell-row', 'Remo barra', 'remo con barra'],
   ['pulldown', 'Jalón al pecho', 'jalon|lat pulldown'],
   ['curl', 'Curl bíceps', 'curl de biceps|curl bicep'],
-  ['squat', 'Sentadilla libre', 'sentadilla|squat'],
+  ['squat', 'Sentadilla libre', 'sentadilla|squat|sentadillas'],
   ['smith-squat', 'Sentadilla Smith', 'sentadilla en smith'],
   ['deadlift', 'Peso muerto', 'deadlift'],
   ['leg-press', 'Prensa', 'prensa piernas'],
   ['lateral-raise', 'Elevaciones laterales', 'vuelos laterales'],
   ['calf-raise', 'Gemelos', 'elevacion de talones'],
-  ['hip-thrust', 'Hip thrust', 'empuje de cadera'],
+  ['hip-thrust', 'Hip thrust', 'empuje de cadera|hip trust'],
   ['leg-curl', 'Curl femoral', 'curl piernas'],
   ['plank', 'Plancha', 'plank'],
+  ['wide-pulldown', 'Jalón al pecho abierto', 'jalon abierto'],
+  ['close-pulldown', 'Jalón al pecho cerrado', 'jalon cerrado'],
+  ['t-row', 'Remo T', 'remo en t'],
+  ['pullover', 'Pullover', 'pull over'],
+  ['rear-delt-machine', 'Posteriores en máquina', 'posteriores maquina'],
+  ['incline-curl', 'Curl inclinado con mancuernas', 'curl biceps inclinado sentado c manc'],
+  ['barbell-curl', 'Curl con barra', 'curl biceps c barra'],
+  ['hammer-curl', 'Curl martillo', 'curl biceps martillo'],
+  ['glute-press', 'Prensa de glúteos', 'prensa gluteos'],
+  ['long-lunge', 'Estocadas largas', 'estocadas largas manc'],
+  ['walking-lunge', 'Estocadas ida y vuelta', 'estocadas ida y vuelta c manc'],
+  ['lying-curl', 'Camilla de isquios', 'camilla isquio'],
+  ['pec-deck', 'Aperturas en máquina', 'aperturas pecho'],
+  ['front-raise', 'Vuelos frontales con disco', 'elevacion frontal disco'],
+  ['french-press', 'Tríceps francés con mancuerna', 'triceps frances c manc'],
+  ['leg-extension', 'Sillón de cuádriceps', 'extension cuadriceps'],
+  ['abductor', 'Abductores en máquina', 'abductores maquina'],
+  ['low-row', 'Remo bajo', 'low row'],
+  ['overhead-extension', 'Extensión de tríceps con mancuerna', 'extension de triceps c manc'],
+  ['quad-press', 'Prensa de cuádriceps', 'prensa cuadriceps'],
   ['walk', 'Caminata', 'caminar|cinta'],
 ] as const
 
@@ -40,6 +60,9 @@ export const exerciseSchema = z.object({
   mode: z.enum(['external', 'per-side', 'bodyweight', 'assisted', 'unknown']),
   rest: z.number().int().nonnegative().nullable(),
   type: z.enum(['work', 'warmup', 'drop', 'failure', 'amrap']),
+  notes: z.string().optional(),
+  inferredUnit: z.boolean().optional(),
+  superset: z.object({ id: z.string(), name: z.string(), rounds: z.number().int().positive() }).optional(),
   warning: z.string().optional(),
 })
 export type Exercise = z.infer<typeof exerciseSchema>
@@ -49,57 +72,89 @@ export type Session = {
   title: string; exercises: Exercise[]; started: number; ended?: number;
   date: string; scheduleId?: string; restUntil?: number; pausedRest?: number;
 }
-export type PerformedSet = { sessionId: string; exerciseId: string; reps: number; kg: number | null; done: boolean; created: number }
+export type PerformedSet = { sessionId: string; exerciseId: string; reps: number; kg: number | null; done: boolean; created: number; rpe?: number; rir?: number; notes?: string; type?: Exercise['type'] }
 export type Profile = { name: string; unit: 'kg' | 'lb'; theme: 'dark' | 'light'; weekStart: number; timezone: string; companion: string }
 export type Schedule = { date: string; title: string; exercises: Exercise[]; routineId: string; version: number; skipped?: boolean }
 
 export const uid = () => crypto.randomUUID()
 
-export function parseRoutine(source: string): Day[] {
+const findExercise = (name: string) => catalog.find(([, label, aliases]) =>
+  [normalize(label), ...aliases.split('|')].includes(normalize(name)))
+
+export function parseRoutine(source: string, preferredUnit: 'kg' | 'lb' = 'kg'): Day[] {
   const days: Day[] = []
   let day: Day | undefined
+  let group: Exercise['superset']
+  let groupRemaining = 0
   for (const input of source.split(/\r?\n/)) {
     const original = input.trim()
-    if (!original) continue
-    const row = original.replace(/^(?:[-*•]\s+|\d+[.)]\s+)/, '')
+    const row = original.replace(/\\+$/, '').trim().replace(/^(?:[-*•]\s+|\d+[.)]\s+)/, '')
+    if (!row) continue
     const plain = normalize(row)
     if (/^(?:(?:dia|entrenamiento)\s+[\da-z]+(?:\s*[:—–-].*)?|(?:lunes|martes|miercoles|jueves|viernes|sabado|domingo|push|pull|legs|piernas|torso)(?:\s+[ab])?(?:\s*[:—–-].*)?)[:\s]*$/.test(plain)) {
       day = { id: uid(), title: row.replace(/:$/, ''), exercises: [] }
       days.push(day)
+      groupRemaining = 0
+      continue
+    }
+    if (day && /^dia\s+\d+$/.test(normalize(day.title)) &&
+        !day.exercises.length && /^(espalda|cara posterior|pecho|cuadriceps|full tren superior)\b/.test(plain) &&
+        !/\d|series|superserie/.test(plain) && !findExercise(row)) {
+      day.title += ' — ' + row
       continue
     }
     if (!day) {
       day = { id: uid(), title: 'Día 1', exercises: [] }
       days.push(day)
     }
-    const prescription = plain.match(/(\d+)\s*(?:[x×]\s*|series?\s+(?:de\s+)?)(?:(\d+)(?:\s*[-–]\s*(\d+))?|(?:al\s+fallo|amrap))|(\d+)\s+(?:al\s+fallo|amrap)/)
-    const name = (prescription ? row.slice(0, prescription.index) : row).trim().replace(/[:—–-]+$/, '').trim() || row
-    const match = catalog.find(([, label, aliases]) =>
-      [normalize(label), ...aliases.split('|')].includes(normalize(name)))
-    const load = plain.match(/(\d+(?:[.,]\d+)?)\s*(kg|lbs?)\b/)
-    const rest = plain.match(/descanso\s*:?\s*(\d+)\s*(min|m\b|s\b)?/)
+    const heading = row.match(/^superserie\s+(.+?)\s*\((\d+)\s*x\)$/i)
+    if (heading && Number(heading[2]) > 0) {
+      group = { id: uid(), name: heading[1], rounds: Number(heading[2]) }
+      groupRemaining = 2
+      continue
+    }
+    const notesMatch = row.match(/\s+(?:\(([^)]+)\)|(intento\b.*|incompleto\b.*|dif[ií]cil\b.*))$/i)
+    const movement = notesMatch ? row.slice(0, notesMatch.index).trim() : row
+    const clean = normalize(movement)
+    const prescription = clean.match(/\b(\d+)\s*(?:[x×]\s*(?=\d|amrap|al\s+fallo)|series?\b\s*(?:de\s+)?)(?:(\d+)(?:\s*[-–]\s*(\d+))?|al\s+fallo|amrap)?|\b(\d+)\s+(?:al\s+fallo|amrap)/)
+    const explicit = clean.match(/\b(\d+(?:[.,]\d+)?)\s*(kg|lbs?)\b/)
+    const bare = prescription ? null : clean.match(/\s(\d+(?:[.,]\d+)?)$/)
+    const start = Math.min(prescription?.index ?? clean.length, explicit?.index ?? clean.length, bare?.index ?? clean.length)
+    let name = movement.slice(0, start).trim().replace(/[:—–-]+$/, '').trim() || movement
+    if (prescription && explicit && prescription.index! < explicit.index!) {
+      const equipment = clean.slice(prescription.index! + prescription[0].length, explicit.index).trim()
+      if (/^(?:c\s+)?manc$/.test(equipment)) name += ' ' + equipment
+    }
+    const match = findExercise(name)
+    const load = explicit ?? bare
+    const rest = clean.match(/descanso\s*:?\s*(\d+)\s*(min|m\b|s\b)?/)
     const min = prescription?.[2] ? Number(prescription[2]) : null
     const max = prescription?.[3] ? Number(prescription[3]) : min
     const sets = prescription ? Number(prescription[1] ?? prescription[4]) : null
-    const type = /calentamiento/.test(plain) ? 'warmup'
-      : /descendente|drop\s*set/.test(plain) ? 'drop'
-      : /amrap/.test(plain) ? 'amrap' : /al fallo/.test(plain) ? 'failure' : 'work'
+    const type = /calentamiento/.test(clean) ? 'warmup'
+      : /descendente|drop\s*set/.test(clean) ? 'drop'
+      : /amrap/.test(clean) ? 'amrap' : /al fallo/.test(clean) ? 'failure' : 'work'
+    const bodyweight = /sin peso/.test(clean)
     day.exercises.push({
       id: uid(), name: match?.[1] ?? name, original, catalogId: match?.[0] ?? null,
       sets: sets && sets <= 100 ? sets : null, min: min || null,
       max: min && max && max >= min ? max : min || null,
-      load: load ? Number(load[1].replace(',', '.')) : null,
-      unit: load ? load[2] === 'kg' ? 'kg' : 'lb' : null,
-      mode: /asistid/.test(plain) ? 'assisted' : /c\/u|cada (lado|mano)/.test(plain) ? 'per-side'
+      load: load && !bodyweight ? Number(load[1].replace(',', '.')) : null,
+      unit: bodyweight ? null : explicit ? explicit[2] === 'kg' ? 'kg' : 'lb' : bare ? preferredUnit : null,
+      inferredUnit: !!bare && !bodyweight,
+      mode: bodyweight ? 'bodyweight' : /asistid/.test(clean) ? 'assisted'
+        : /c\/u|cada (lado|mano)/.test(clean) ? 'per-side'
         : load ? 'external' : match && ['pull-up', 'dip', 'plank'].includes(match[0]) ? 'bodyweight' : 'unknown',
       rest: rest ? Number(rest[1]) * (rest[2]?.startsWith('m') ? 60 : 1) : null,
-      type, warning: !match || !sets || sets > 100 || (min !== null && max !== null && max < min) || /superserie|@rpe/.test(plain)
+      notes: notesMatch?.[1] ?? notesMatch?.[2],
+      superset: groupRemaining > 0 ? group : undefined,
+      type, warning: !match || !sets || sets > 100 || (min !== null && max !== null && max < min) || /superserie|@rpe/.test(clean)
         ? 'Revisá esta línea' : undefined,
     })
+    groupRemaining = Math.max(0, groupRemaining - 1)
   }
   return days
 }
-
 export const pounds = 0.45359237
 export const toKg = (value: number, unit: 'kg' | 'lb') => unit === 'lb' ? value * pounds : value
 export const fromKg = (value: number, unit: 'kg' | 'lb') =>
