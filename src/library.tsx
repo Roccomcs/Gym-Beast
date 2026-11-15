@@ -48,17 +48,33 @@ const anatomy: Record<typeof catalog[number][0], [Gear, Muscle, ...Muscle[]]> = 
   'overhead-extension': ['Mancuernas', 'Tríceps'],
   'quad-press': ['Máquina', 'Cuádriceps', 'Glúteos'],
 }
-const illustrations: Record<string, number> = {
-  'bench-barbell': 0, squat: 1, 'wide-pulldown': 2, 'barbell-row': 3,
-}
+const exerciseSheets = [
+  ['bench-smith', 'bench-dumbbell', 'incline-dumbbell', 'fly', 'dip', 'pushdown', 'pull-up', 'pulldown', 'curl'],
+  ['smith-squat', 'deadlift', 'leg-press', 'lateral-raise', '', 'hip-thrust', '', 'plank', 'walk'],
+  ['close-pulldown', 't-row', 'pullover', 'rear-delt-machine', 'incline-curl', 'barbell-curl', 'hammer-curl', 'glute-press', 'long-lunge'],
+  ['walking-lunge', 'lying-curl', 'pec-deck', 'front-raise', 'french-press', 'leg-extension', 'abductor', 'low-row', 'overhead-extension'],
+  ['calf-raise', 'leg-curl', 'quad-press'],
+]
+const original = ['bench-barbell', 'squat', 'wide-pulldown', 'barbell-row']
 
 export function ExerciseArt({ id }: { id: string | null }) {
-  const index = id ? illustrations[id] : undefined
-  if (index === undefined) return <span className="exercise-placeholder" aria-hidden="true"><Dumbbell /></span>
-  return <span className="exercise-sprite" aria-hidden="true"
-    style={{ backgroundPosition: (index % 2 ? '100%' : '0%') + ' ' + (index >= 2 ? '100%' : '0%') }} />
+  const pulldown = ['pulldown', 'wide-pulldown', 'close-pulldown'].indexOf(id ?? '')
+  if (pulldown >= 0) return <span className="exercise-sprite exercise-atlas" aria-hidden="true" style={{
+    backgroundImage: 'url(/pulldown-front.jpg)', backgroundSize: '300% 100%', backgroundPosition: pulldown * 50 + '% 0%',
+  }}/>
+  const originalIndex = original.indexOf(id ?? '')
+  if (originalIndex >= 0) return <span className="exercise-sprite" aria-hidden="true"
+    style={{ backgroundPosition: (originalIndex % 2 ? '100%' : '0%') + ' ' + (originalIndex >= 2 ? '100%' : '0%') }} />
+  const sheet = id ? exerciseSheets.findIndex(entries => entries.includes(id)) : -1
+  if (sheet < 0) return <span className="exercise-placeholder" aria-hidden="true"><Dumbbell /></span>
+  const index = exerciseSheets[sheet].indexOf(id!)
+  const rows = sheet === 4 ? 1 : 3
+  return <span className="exercise-sprite exercise-atlas" aria-hidden="true" style={{
+    backgroundImage: 'url(/exercise-atlas-' + (sheet + 1) + '.jpg)',
+    backgroundSize: '300% ' + (rows * 100) + '%',
+    backgroundPosition: (index % 3) * 50 + '% ' + (rows === 1 ? 0 : Math.floor(index / 3) * 50) + '%',
+  }} />
 }
-
 const front: [Muscle, string][] = [
   ['Hombros', '19,24 29,20 29,34 18,39'], ['Hombros','51,20 61,24 62,39 51,34'],
   ['Pecho','30,21 50,21 53,35 42,39 38,39 27,35'],
@@ -77,14 +93,19 @@ const back: [Muscle, string][] = [
   ['Abductores','23,55 28,56 27,65 23,65'], ['Abductores','52,56 57,55 57,65 53,65'],
 ]
 
-function MuscleMap({ primary, secondary }: { primary: Muscle; secondary: Muscle[] }) {
+export function MuscleMap({ primary, secondary = [], counts }: { primary?: Muscle; secondary?: Muscle[]; counts?: Map<string, number> }) {
   return <div className="muscle-map" aria-hidden="true">
     {[front, back].map((regions, index) => <svg key={index} viewBox="8 0 64 122">
       <path className="body-silhouette" d="M34 3H46V7H50V17H46V20L62 24L71 59H65L57 42L54 56L57 76L54 110L59 115V120H44L40 76L36 120H21V115L26 110L23 76L26 56L23 42L15 59H9L18 24L34 20V17H30V7H34Z"/>
       {regions.map(([group, shape]) => <polygon key={shape} points={shape}
+        style={counts && (counts.get(group) ?? 0) > 0 ? { fill: 'var(--accent)', opacity: Math.min(1, .38 + (counts.get(group) ?? 0) * .12) } : undefined}
         className={group === primary || primary === 'Cuerpo completo' ? 'primary-muscle' : secondary.includes(group) ? 'secondary-muscle' : 'inactive-muscle'} />)}
     </svg>)}
   </div>
+}
+
+export function primaryMuscle(id: string | null): string | undefined {
+  return id ? anatomy[id as keyof typeof anatomy]?.[1] : undefined
 }
 
 export function ExerciseTargets({ id }: { id: string | null }) {

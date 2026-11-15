@@ -67,13 +67,14 @@ export const exerciseSchema = z.object({
 })
 export type Exercise = z.infer<typeof exerciseSchema>
 export type Day = { id: string; title: string; exercises: Exercise[] }
-export type Routine = { name: string; version: number; source: string; days: Day[]; archived?: boolean }
+export type RoutineVersion = { name: string; version: number; source: string; days: Day[] }
+export type Routine = RoutineVersion & { archived?: boolean; cover?: number; photo?: string; history?: RoutineVersion[] }
 export type Session = {
   title: string; exercises: Exercise[]; started: number; ended?: number;
-  date: string; scheduleId?: string; cycleId?: string; dayId?: string; companion?: string; incomplete?: boolean; omitted?: string[]; restUntil?: number; pausedRest?: number;
+  date: string; scheduleId?: string; cycleId?: string; dayId?: string; routineId?: string; routineVersion?: number; companion?: string; incomplete?: boolean; omitted?: string[]; restUntil?: number; pausedRest?: number;
 }
-export type PerformedSet = { sessionId: string; exerciseId: string; reps: number; kg: number | null; done: boolean; created: number; rpe?: number; rir?: number; notes?: string; type?: Exercise['type'] }
-export type Profile = { name: string; unit: 'kg' | 'lb'; theme: 'dark' | 'light'; weekStart: number; timezone: string; companion: string; onboarded?: boolean; starter?: string; weightKg?: number; cycle?: { id: string; routineId: string; skipped: string[]; order?: string[] }; purchases?: string[]; equipped?: string; petGear?: Record<string, string | null> }
+export type PerformedSet = { sessionId: string; exerciseId: string; reps: number; kg: number | null; done: boolean; created: number; slot?: number; rpe?: number; rir?: number; notes?: string; type?: Exercise['type'] }
+export type Profile = { name: string; unit: 'kg' | 'lb'; theme: 'dark' | 'light'; weekStart: number; weeklyGoal?: number; reminderTime?: string; loadIncrementKg?: number; timezone: string; companion: string; onboarded?: boolean; starter?: string; weightKg?: number; cycle?: { id: string; routineId: string; skipped: string[]; startedOn?: string; order?: string[] }; purchases?: string[]; equipped?: string; petGear?: Record<string, string | null> }
 export type Schedule = { date: string; title: string; exercises: Exercise[]; routineId: string; version: number; skipped?: boolean }
 
 export const uid = () => crypto.randomUUID()
@@ -152,7 +153,7 @@ export function parseRoutine(source: string, preferredUnit: 'kg' | 'lb' = 'kg'):
       inferredUnit: !!bare && !bodyweight,
       mode: bodyweight ? 'bodyweight' : /asistid/.test(clean) ? 'assisted'
         : /c\/u|cada (lado|mano)/.test(clean) ? 'per-side'
-        : load ? 'external' : match && ['pull-up', 'dip', 'plank'].includes(match[0]) ? 'bodyweight' : 'unknown',
+        : match && ['pull-up', 'dip', 'plank'].includes(match[0]) && !load ? 'bodyweight' : load || (match && match[0] !== 'walk') ? 'external' : 'unknown',
       rest: rest ? Number(rest[1]) * (rest[2]?.startsWith('m') ? 60 : 1) : null,
       notes: notesMatch?.[1] ?? notesMatch?.[2],
       superset: groupRemaining > 0 ? group : undefined,
@@ -192,4 +193,39 @@ export function metrics(series: PerformedSet[], exercise: Exercise) {
     estimated: exercise.mode === 'external' ? Math.max(0, ...work.filter(set => set.type !== 'warmup' && set.reps <= 10)
       .map(set => set.kg! * (set.reps === 1 ? 1 : 1 + set.reps / 30))) : 0,
   }
+}
+
+export function reviseRoutine(current: Routine, proposed: Routine): Routine {
+  const { name, version, source, days } = current
+  const history = [{ name, version, source, days }, ...(current.history ?? [])].slice(0, 3)
+  const next = { ...proposed, version: version + 1, history }
+  while (history.length > 1 && new Blob([JSON.stringify(next)]).size > 180000) history.pop()
+  if (new Blob([JSON.stringify(next)]).size > 180000) throw new Error('La rutina y su versión anterior son demasiado grandes.')
+  return next
+}
+
+export function routineShareText(routine: Routine) {
+  return routine.days.map((day, index) => {
+    const title = day.title.replace(/^d[ií]a\s+\d+\s*(?:[-—–:]\s*)?/i, '').trim()
+    const moves = day.exercises.map(exercise => {
+      const reps = exercise.min ? exercise.min + (exercise.max && exercise.max !== exercise.min ? '-' + exercise.max : '') : ''
+      return exercise.name + (exercise.sets ? ' ' + exercise.sets + (reps ? 'x' + reps : ' series') : '')
+        + (exercise.rest ? ' descanso ' + exercise.rest + 's' : '')
+    })
+    return ['Día ' + (index + 1) + (title ? ' — ' + title : ''), ...moves].join('\n')
+  }).join('\n\n')
+}
+export function suggestedLoad(exercise: Exercise, sets: PerformedSet[], incrementKg: number) {
+  if (!exercise.sets || !exercise.max || incrementKg <= 0 ||
+      (exercise.mode !== 'external' && exercise.mode !== 'per-side')) return null
+  const work = sets.filter(set => set.done && (set.type ?? 'work') === 'work' && set.kg !== null)
+  if (work.length < exercise.sets) return null
+  const recent = work.slice(0, exercise.sets)
+  const kg = recent[0].kg!
+  if (kg <= 0 || !recent.every(set => set.kg === kg && set.reps >= exercise.max! && (set.rpe ?? 0) < 9)) return null
+  return kg + incrementKg
+}
+
+export function companionHealth(missedSessions: number, completedThisWeek: number) {
+  return Math.min(100, Math.max(25, 100 - 15 * missedSessions + 10 * completedThisWeek))
 }

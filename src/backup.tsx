@@ -9,30 +9,32 @@ const day = z.object({ id, title: z.string().min(1), exercises: z.array(exercise
 const date = z.iso.date()
 const session = z.object({
   title: z.string().min(1), exercises: z.array(exerciseSchema), started: number, ended: number.optional(),
-  date, scheduleId: id.optional(), cycleId: id.optional(), dayId: id.optional(), companion: z.string().optional(),
+  date, scheduleId: id.optional(), cycleId: id.optional(), dayId: id.optional(), routineId: id.optional(), routineVersion: z.number().int().positive().optional(), companion: z.string().optional(),
   incomplete: z.boolean().optional(), omitted: z.array(id).optional(), restUntil: number.optional(), pausedRest: number.optional(),
 })
 const profile = z.object({
   name: z.string().max(60), unit: z.enum(['kg','lb']), theme: z.enum(['dark','light']),
-  weekStart: z.number().int().min(0).max(6), timezone: z.string().refine(zone => {
+  weekStart: z.number().int().min(0).max(6), reminderTime: z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/).optional(), weeklyGoal: z.number().int().min(1).max(7).optional(), loadIncrementKg: z.number().positive().optional(), timezone: z.string().refine(zone => {
     try { new Intl.DateTimeFormat('es', { timeZone: zone }); return true }
     catch { return false }
   }),
   companion: z.enum(['Dragón','Cocodrilo','Oso','Lobo']), onboarded: z.boolean().optional(),
   starter: z.enum(['Dragón','Cocodrilo','Oso','Lobo']).optional(),
-  weightKg: number.optional(), cycle: z.object({ id, routineId: id, skipped: z.array(id), order: z.array(id).optional() }).optional(),
+  weightKg: number.optional(), cycle: z.object({ id, routineId: id, skipped: z.array(id), startedOn: date.optional(), order: z.array(id).optional() }).optional(),
   purchases: z.array(z.string()).optional(), equipped: z.string().optional(),
   petGear: z.record(z.string(), z.string().nullable()).optional(),
 })
 const row = z.object({ id, version: z.number().int().positive() })
 const backup = z.object({ version: z.literal(1), items: z.array(z.discriminatedUnion('kind', [
   row.extend({ kind: z.literal('routine'), data: z.object({ name: z.string().min(1), version: z.number().int().positive(),
-    source: z.string(), days: z.array(day), archived: z.boolean().optional() }) }),
+    source: z.string(), days: z.array(day), archived: z.boolean().optional(), cover: z.number().int().min(0).max(9).optional(), photo: z.string().max(90000).optional(),
+    history: z.array(z.object({ name: z.string().min(1), version: z.number().int().positive(),
+      source: z.string(), days: z.array(day) })).max(3).optional() }) }),
   row.extend({ kind: z.literal('session'), data: session }),
   row.extend({ kind: z.literal('schedule'), data: z.object({ date, title: z.string(), exercises: z.array(exerciseSchema),
     routineId: id, version: z.number().int().positive(), skipped: z.boolean().optional() }) }),
   row.extend({ kind: z.literal('set'), data: z.object({ sessionId: id, exerciseId: id, kg: number.nullable(),
-    reps: z.number().int().positive(), done: z.boolean(), created: number, rpe: number.optional(), rir: number.optional(),
+    reps: z.number().int().positive(), done: z.boolean(), created: number, slot: z.number().int().min(0).optional(), rpe: number.optional(), rir: number.optional(),
     notes: z.string().optional(), type: exerciseSchema.shape.type.optional() }) }),
   row.extend({ kind: z.literal('profile'), data: profile }),
 ])).max(50000) })

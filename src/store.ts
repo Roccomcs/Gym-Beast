@@ -7,7 +7,7 @@ type Kind = keyof Values
 export type Item<K extends Kind = Kind> = {
   owner: string; kind: K; id: string; version: number; data: Values[K]
 }
-export type Reward = { owner: string; session_id: string; xp: number; gold?: number; companion?: string }
+export type Reward = { owner: string; session_id: string; xp: number; gold?: number; companion?: string; occurrence?: string | null }
 type Remote = Omit<Item, 'owner'>
 export type Operation = {
   op: string; owner: string; kind: Kind; id: string; base: number; data: Values[Kind]; conflict?: Remote; rejected?: string
@@ -120,7 +120,7 @@ async function synchronize(owner: string) {
   }
   const rewards: Reward[] = []
   for (let offset = 0; ; offset += size) {
-    const result = await api.from('session_rewards').select('owner,session_id,xp,gold,companion')
+    const result = await api.from('session_rewards').select('owner,session_id,xp,gold,companion,occurrence')
       .eq('owner', owner).order('session_id').range(offset, offset + size - 1)
     if (result.error) throw result.error
     rewards.push(...result.data as Reward[])

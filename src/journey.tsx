@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { BookOpen, ChevronRight, Plus } from 'lucide-react'
+import { Camera, ChevronRight, Pencil, Plus, Share2 } from 'lucide-react'
 import { Companion, companions } from './companion'
 import { ExerciseArt, ExerciseTargets } from './library'
 import { programRoutine, programs } from './programs'
-import { toKg, fromKg, type Profile, type Routine } from './domain'
+import { toKg, fromKg, routineShareText, type Profile, type Routine } from './domain'
 import type { Item } from './store'
 
 const personality = ['Curioso y valiente', 'Paciente y decidido', 'Fuerte y tranquilo', 'Ágil y leal']
@@ -58,8 +58,8 @@ export function Onboarding({ profile, save, checkpoint }: { profile: Profile; sa
   </section>
 }
 
-export function Train({ routine, index, active, companion, stage, start, skip, repeat, delay }: {
-  routine?: Routine; index: number; active?: string; companion: string; stage: 'bebé' | 'joven' | 'adulta';
+export function Train({ routine, index, active, companion, xp, start, skip, repeat, delay }: {
+  routine?: Routine; index: number; active?: string; companion: string; xp: number;
   start: () => void; skip: () => void; repeat: () => void; delay: () => void;
 }) {
   const [create, showCreate] = useState(false)
@@ -74,7 +74,7 @@ export function Train({ routine, index, active, companion, stage, start, skip, r
         {active || day ? <button onClick={start}>{active ? 'Continuar' : 'Empezar'}</button>
           : routine ? <button onClick={repeat}>Repetir ciclo</button> : <Link className="pixel-link" to="/rutinas">Explorar rutinas <ChevronRight size={16}/></Link>}
       </div>
-      <Companion name={companion} stage={stage} />
+      <Companion name={companion} xp={xp} />
     </section>
     {!active && day && <details className="panel"><summary>Opciones de la rutina</summary><div className="actions">
       <button className="secondary" onClick={skip}>Saltar día</button><button className="secondary" onClick={delay}>Mover al final</button><Link to="/calendario">Organizar fechas</Link>
@@ -83,7 +83,7 @@ export function Train({ routine, index, active, companion, stage, start, skip, r
   </>
 }
 
-export function ProgramLibrary({ routines, activate }: { routines: Item<'routine'>[]; activate: (routine: Routine, id?: string) => Promise<void> }) {
+export function ProgramLibrary({ routines, activate, updateCover }: { routines: Item<'routine'>[]; activate: (routine: Routine, id?: string) => Promise<void>; updateCover: (id: string, routine: Routine) => Promise<void> }) {
   const [mine, setMine] = useState(false)
   const [selected, select] = useState<number>()
   const [error, setError] = useState('')
@@ -101,24 +101,42 @@ export function ProgramLibrary({ routines, activate }: { routines: Item<'routine
     {error && <p role="alert">{error}</p>}
     {program && selected !== undefined ? <article className="panel">
       <button className="secondary" onClick={() => select(undefined)}>Volver a explorar</button>
-      <Cover index={selected} /><h2>{program.name}</h2><p>{program.goal}</p>
+      <Cover index={selected % 10} /><h2>{program.name}</h2><p>{program.goal}</p>
       <p>{program.level} · {program.equipment} · {program.days.length} días</p>
       <button disabled={busy} onClick={() => void use(programRoutine(program))}>Usar rutina</button>
-      <p>{program.progression}</p><p>Inspirada en <a href={program.source}>{program.reference}</a>.</p>
+      <p>{program.progression}</p>{program.source && <p>Inspirada en <a href={program.source}>{program.reference}</a>.</p>}
       {programRoutine(program).days.map((day, i) => <details className="exercise-card" key={i}><summary>Día {i + 1}</summary>
-        {day.exercises.map(exercise => <div className="program-move" key={exercise.id}><ExerciseArt id={exercise.catalogId}/><span>{exercise.name}
-          <small>{exercise.sets ? exercise.sets + ' series' : 'Series a definir'}{exercise.min ? ' · ' + exercise.min + (exercise.max !== exercise.min ? '–' + exercise.max : '') + ' reps' : ''}{exercise.rest ? ' · ' + exercise.rest + ' s' : ''}</small><ExerciseTargets id={exercise.catalogId}/></span></div>)}
+        {day.exercises.map(exercise => <div className="program-move" key={exercise.id}><div><h3>{exercise.name}</h3>
+          <small>{exercise.sets ? exercise.sets + ' series' : 'Series a definir'}{exercise.min ? ' · ' + exercise.min + (exercise.max !== exercise.min ? '–' + exercise.max : '') + ' reps' : ''}{exercise.rest ? ' · ' + exercise.rest + ' s' : ''}</small><div className="move-visual"><ExerciseArt id={exercise.catalogId}/><div><ExerciseTargets id={exercise.catalogId}/></div></div></div></div>)}
       </details>)}
     </article> : mine ? <section className="panel">
       {!routines.length && <p>Tus rutinas guardadas van a aparecer acá.</p>}
-      {routines.filter(item => !item.data.archived).map(item => <div className="schedule" key={item.id}><h3>{item.data.name}</h3>
-        <div className="actions"><button disabled={busy} onClick={() => void use(item.data, item.id)}>Usar rutina</button><Link to={'/editor/manual?rutina=' + item.id}>Editar</Link></div></div>)}
+      {routines.filter(item => !item.data.archived).map(item => <article className="my-routine" key={item.id}>
+        {item.data.photo ? <img className="routine-photo" src={item.data.photo} alt=""/> : <Cover index={item.data.cover ?? 0}/>}
+        <h3>{item.data.name}</h3><small>{item.data.days.length} días</small>
+        <div className="actions routine-actions">
+          <button disabled={busy} onClick={() => void use(item.data, item.id)}>Usar rutina</button>
+          <Link className="icon-action" to={'/editor/manual?rutina=' + item.id} aria-label="Editar"><Pencil size={18}/></Link>
+          <a className="icon-action" href={'https://wa.me/?text=' + encodeURIComponent(item.data.name + '\n\n' + routineShareText(item.data))}
+            target="_blank" rel="noreferrer" aria-label="Compartir por WhatsApp"><Share2 size={18}/></a>
+        </div>
+        <details className="routine-cover-picker"><summary><Camera size={16}/> Cambiar foto</summary>
+          <div className="cover-choices">{Array.from({ length: 10 }, (_, index) =>
+            <button key={index} className="secondary" aria-label={'Elegir portada ' + (index + 1)}
+              onClick={() => void updateCover(item.id, { ...item.data, cover: index, photo: undefined }).catch(() => setError('No se pudo cambiar la portada.'))}><Cover index={index}/></button>)}</div>
+          <label>Subir foto<input type="file" accept="image/*" onChange={async event => {
+            const file = event.target.files?.[0]
+            if (!file) return
+            try { await updateCover(item.id, { ...item.data, photo: await routinePhoto(file) }) }
+            catch { setError('No se pudo cargar la foto. Probá con otra imagen.') }
+          }}/></label>
+        </details>
+      </article>)}
       <Link to="/calendario">Administrar rutinas guardadas</Link>
     </section> : <div className="program-grid">{programs.map((entry, index) =>
       <button className="program-card secondary" onClick={() => select(index)} key={entry.name}>
-        <Cover index={index}/><strong>{entry.name}</strong><small>{entry.days.length} días · {entry.level}</small>
+        <Cover index={index % 10}/><strong>{entry.name}</strong><small>{entry.days.length} días · {entry.level}</small>
       </button>)}</div>}
-    <p><Link to="/ejercicios"><BookOpen size={16}/> Biblioteca de ejercicios</Link></p>
   </>
 }
 
@@ -127,4 +145,21 @@ function Cover({ index }: { index: number }) {
     '--cover-x': (index % 5) * 25 + '%', '--cover-y': index < 5 ? '0%' : '100%',
     '--cover-hue': index * 39,
   } as React.CSSProperties} />
+}
+
+async function routinePhoto(file: File) {
+  if (file.size > 12_000_000 || !file.type.startsWith('image/')) throw new Error('Invalid photo')
+  const image = await createImageBitmap(file)
+  try {
+    const scale = Math.min(1, 380 / Math.max(image.width, image.height))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.max(1, Math.round(image.width * scale))
+    canvas.height = Math.max(1, Math.round(image.height * scale))
+    const context = canvas.getContext('2d')
+    if (!context) throw new Error('Photo unavailable')
+    context.drawImage(image, 0, 0, canvas.width, canvas.height)
+    const encoded = canvas.toDataURL('image/jpeg', .68)
+    if (encoded.length > 90000) throw new Error('Photo too large')
+    return encoded
+  } finally { image.close() }
 }

@@ -1,12 +1,17 @@
-import { useEffect, useState, type FormEvent } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
-import { toKg, fromKg, metrics, parseRoutine, catalog, uid, type Exercise, type PerformedSet, type Profile } from './domain'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useParams } from 'react-router-dom'
+import { Check, Coins, Sparkles } from 'lucide-react'
+import { toKg, fromKg, uid, type Exercise, type PerformedSet, type Profile } from './domain'
 import { save, local, type Item, type Reward } from './store'
+import { ExerciseArt, ExerciseTargets } from './library'
+import { Movement } from './movement'
 import { Companion } from './companion'
 
 function clock(seconds: number) {
   return String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(seconds % 60).padStart(2, '0')
 }
+const sameMovement = (a: Exercise, b: Exercise) => a.mode === b.mode &&
+  (a.catalogId ? a.catalogId === b.catalogId : a.name.trim().toLowerCase() === b.name.trim().toLowerCase())
 
 export function Workout({ owner, profile, sessions, sets, rewards }: {
   owner: string; profile: Profile; sessions: Item<'session'>[]; sets: Item<'set'>[]; rewards: Reward[]
@@ -14,177 +19,133 @@ export function Workout({ owner, profile, sessions, sets, rewards }: {
   const { id } = useParams()
   const item = sessions.find(entry => entry.id === id)
   const [now, setNow] = useState(Date.now)
+  const [extraRows, setExtraRows] = useState<Record<string, number>>({})
+  const [highlight, setHighlight] = useState('')
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
+  const saving = useRef(false)
+  const result = useRef<HTMLElement>(null)
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 500)
     return () => clearInterval(timer)
   }, [])
+  useEffect(() => {
+    if (item?.data.ended) {
+      result.current?.focus({ preventScroll: true })
+      result.current?.scrollIntoView({ block: 'start' })
+    }
+  }, [item?.data.ended])
   if (!item) return <p>Buscando entrenamiento…</p>
-  const reward = rewards.find(entry => entry.session_id === item.id)
   const session = item.data
-  const sessionSets = sets.filter(set => set.data.sessionId === item.id)
-  const series = sessionSets.filter(set => set.data.done)
-  async function editExercises(exercises: Exercise[]) {
-    try { await save(owner, 'session', item!.id, { ...item!.data, exercises }) }
-    catch { setMessage('No se pudo editar la sesión.') }
+  const logged = sets.filter(entry => entry.data.sessionId === item.id && entry.data.done)
+  const entriesByExercise = (exercise: Exercise) => logged.filter(entry => entry.data.exerciseId === exercise.id)
+    .sort((a, b) => a.data.created - b.data.created || a.id.localeCompare(b.id))
+  const previous = sessions.filter(entry => entry.id !== item.id && entry.data.ended && entry.data.started < session.started)
+    .sort((a, b) => b.data.started - a.data.started)
+  const previousSets = (exercise: Exercise) => previous.map(entry => {
+    const move = entry.data.exercises.find(candidate => candidate.id === exercise.id && sameMovement(exercise, candidate))
+      ?? entry.data.exercises.find(candidate => sameMovement(exercise, candidate))
+    return move ? sets.filter(set => set.data.sessionId === entry.id && set.data.exerciseId === move.id &&
+      set.data.done && set.data.type !== 'warmup').sort((a, b) => a.data.created - b.data.created || a.id.localeCompare(b.id)) : []
+  }).find(entries => entries.length) ?? []
+
+  async function run(action: () => Promise<void>) {
+    if (saving.current) return
+    saving.current = true
+    setBusy(true); setMessage('')
+    try { await action() }
+    catch { setMessage('No se pudo guardar. Revisá los cambios y probá de nuevo.') }
+    finally { saving.current = false; setBusy(false) }
   }
-  async function writeSet(setId: string, data: PerformedSet) {
-    try { await save(owner, 'set', setId, data) }
-    catch { setMessage('No se pudo guardar la serie.') }
-  }
-  const worked = new Set(series.filter(entry => entry.data.type !== 'warmup' && entry.data.reps > 0).map(entry => entry.data.exerciseId))
-  const ready = worked.size > 0 && session.exercises.every(exercise => worked.has(exercise.id) || session.omitted?.includes(exercise.id))
-  const remaining = session.pausedRest ?? Math.max(0, Math.ceil(((session.restUntil ?? 0) - now) / 1000))
-  const volume = session.exercises.reduce((total, exercise) => total + metrics(
-    series.filter(entry => entry.data.exerciseId === exercise.id).map(entry => entry.data), exercise,
-  ).volume, 0)
-  async function record(exercise: Exercise, event: FormEvent<HTMLFormElement>, existing?: Item<'set'>) {
+
+  function record(exercise: Exercise, index: number, count: number, event: FormEvent<HTMLFormElement>, existing?: Item<'set'>) {
     event.preventDefault()
-    if (busy) return
     const fields = new FormData(event.currentTarget)
     const weight = fields.get('load')
-    const value = (key: string) => String(fields.get(key) ?? '').trim()
-    const numeric = (key: string) => value(key) ? Number(value(key)) : undefined
-    const next: PerformedSet = {
-      sessionId: item!.id, exerciseId: exercise.id, reps: Number(fields.get('reps')),
-      kg: weight === '' ? null : toKg(Number(weight), profile.unit), done: true,
-      created: existing?.data.created ?? Date.now(),
-      rpe: numeric('rpe'), rir: numeric('rir'), notes: value('notes'),
-      type: (fields.get('type') as Exercise['type'] | null) ?? exercise.type,
-    }
-    setBusy(true)
-    setMessage('')
-    try {
+    const next: PerformedSet = { ...existing?.data, sessionId: item!.id, exerciseId: exercise.id,
+      reps: Number(fields.get('reps')), kg: weight === '' ? null : toKg(Number(weight), profile.unit), done: true,
+      created: existing?.data.created ?? Date.now(), slot: index, type: existing?.data.type ?? exercise.type }
+    void run(async () => {
       await save(owner, 'set', existing?.id ?? uid(), next)
-      if (exercise.rest && !existing && !session.ended) {
-        await save(owner, 'session', item!.id, { ...session, restUntil: Date.now() + exercise.rest * 1000, pausedRest: undefined })
-      }
-    } catch { setMessage('No se pudo completar el guardado. Revisá la última serie antes de reintentar.') }
-    finally { setBusy(false) }
-  }
-  return <>
-    <p className="eyebrow">{session.ended ? 'FINALIZADO' : 'EN CURSO'} · {clock(Math.max(0, Math.floor(((session.ended ?? now) - session.started) / 1000)))}</p>
-    <h1>{session.title}</h1>
-    {session.ended && <section className="panel companion-card workout-summary">
-      <Companion name={session.companion ?? profile.companion} />
-      <div><h2>{session.incomplete ? 'Sesión incompleta' : 'Sesión completada'}</h2><p>{series.length} series · {new Set(series.map(set => set.data.exerciseId)).size} ejercicios · {fromKg(volume, profile.unit)} {profile.unit} de volumen</p>{reward && <p className="eyebrow">+{reward.xp} EXP{reward.gold ? ' · +' + reward.gold + ' de oro' : ''}</p>}{!session.incomplete && !reward && owner !== local && <p>La experiencia se confirma al sincronizar las sesiones que cumplen los requisitos.</p>}</div>
-    </section>}
-    {!session.ended && (session.restUntil !== undefined || session.pausedRest !== undefined) && <section className="panel rest">
-      <strong>Descanso · {clock(remaining)}</strong>{remaining === 0 && session.pausedRest === undefined && <span role="status">Descanso terminado</span>}
-      <button className="secondary" onClick={() => {
-        const duration = session.exercises.find(exercise => exercise.id === series.at(-1)?.data.exerciseId)?.rest ?? 60
-        void save(owner, 'session', item.id, { ...session, restUntil: Date.now() + duration * 1000, pausedRest: undefined })
-      }}>Reiniciar descanso</button>
-      <div className="actions">
-        <button className="secondary" disabled={!remaining && session.pausedRest === undefined} onClick={() => {
-          const paused = session.pausedRest !== undefined
-          void save(owner, 'session', item.id, {
-            ...session, pausedRest: paused ? undefined : remaining,
-            restUntil: paused ? Date.now() + remaining * 1000 : undefined,
+      if (!existing && exercise.rest) await save(owner, 'session', item!.id, {
+        ...session, restUntil: Date.now() + exercise.rest * 1000, pausedRest: undefined,
+      })
+      if (!existing && next.type !== 'warmup' && index + 1 >= count) {
+        const nextExercise = session.exercises.slice(session.exercises.indexOf(exercise) + 1)
+          .find(move => entriesByExercise(move).length < (move.sets ?? (previousSets(move).length || 1)))
+        if (nextExercise) {
+          setHighlight(nextExercise.id)
+          requestAnimationFrame(() => {
+            const element = document.getElementById('exercise-' + nextExercise.id)
+            element?.focus({ preventScroll: true })
+            element?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' })
           })
-        }}>{session.pausedRest === undefined ? 'Pausar' : 'Reanudar'}</button>
-        {[-15, 15].map(delta => <button key={delta} className="secondary" onClick={() =>
-          void save(owner, 'session', item.id, { ...session, restUntil: session.pausedRest === undefined ? Date.now() + Math.max(0, remaining + delta) * 1000 : undefined, pausedRest: session.pausedRest === undefined ? undefined : Math.max(0, remaining + delta) })
-        }>{delta > 0 ? '+' : ''}{delta} s</button>)}
-      </div>
-    </section>}
-    {session.exercises.map((exercise, position) => {
-      const saved = series.filter(set => set.data.exerciseId === exercise.id).sort((a, b) => a.data.created - b.data.created)
-      const previous = sessions.filter(entry => entry.id !== item.id && entry.data.ended && entry.data.started < session.started)
-        .sort((a, b) => b.data.started - a.data.started)
-        .flatMap(entry => {
-          const previousExercise = entry.data.exercises.find(candidate => exercise.catalogId ? candidate.catalogId === exercise.catalogId : candidate.name === exercise.name)
-          return previousExercise ? sets.filter(set => set.data.sessionId === entry.id && set.data.exerciseId === previousExercise.id && set.data.done)
-            .sort((a, b) => b.data.created - a.data.created) : []
-        })[0]?.data
-      const goalKg = exercise.load === null ? null : toKg(exercise.load, exercise.unit ?? profile.unit)
-      const fields = (set?: PerformedSet) => <>
-        <label>{profile.unit}<input name="load" type="number" min="0" step="any" inputMode="decimal"
-          defaultValue={set?.kg != null ? fromKg(set.kg, profile.unit) : ''} /></label>
-        <label>Reps<input name="reps" type="number" min="1" step="1" required inputMode="numeric" defaultValue={set?.reps ?? exercise.min ?? ''} /></label>
-      </>
-      const extras = (set?: PerformedSet) => <details className="set-extras"><summary>Tipo, esfuerzo y notas</summary>
-        <div className="input-grid">
-          <label>Tipo<select name="type" defaultValue={set?.type ?? exercise.type}>
-            <option value="work">Efectiva</option><option value="warmup">Calentamiento</option>
-            <option value="drop">Descendente</option><option value="failure">Al fallo</option><option value="amrap">AMRAP</option>
-          </select></label>
-          <label>RPE<input name="rpe" type="number" min={1} max={10} step={0.5} defaultValue={set?.rpe} /></label>
-          <label>RIR<input name="rir" type="number" min={0} max={20} defaultValue={set?.rir} /></label>
-          <label>Notas de la serie<input name="notes" maxLength={240} defaultValue={set?.notes} /></label>
-        </div>
-      </details>
-      return <section className="panel" key={exercise.id}>
+        }
+      }
+    })
+  }
+
+  const species = session.companion ?? profile.companion
+  const companionXp = rewards.filter(entry => entry.companion === species).reduce((sum, entry) => sum + entry.xp, 0)
+  const reward = rewards.find(entry => entry.session_id === item.id)
+  const elapsed = Math.max(0, Math.floor(((session.ended ?? now) - session.started) / 1000))
+  if (session.ended) return <section className="panel victory-card workout-finish" ref={result} tabIndex={-1}>
+    <div className="victory-stage">
+      <span className="victory-stars" aria-hidden="true">✦ ✧ ✦</span>
+      <Companion name={species} xp={companionXp}/>
+    </div>
+    <div className="victory-content">
+      <p className="eyebrow">{session.title} · {clock(elapsed)}</p>
+      <h1>{session.incomplete ? 'Sesión incompleta' : 'Sesión completada'}</h1>
+      {reward ? <div className="reward-pair" role="status" aria-label={'+' + reward.xp + ' EXP · +' + (reward.gold ?? 0) + ' de oro'}>
+        <div className="reward-tile"><Sparkles aria-hidden="true"/><strong>+{reward.xp}</strong><span>EXP</span></div>
+        <div className="reward-tile"><Coins aria-hidden="true"/><strong>+{reward.gold ?? 0}</strong><span>Oro</span></div>
+      </div> : !session.incomplete && <p role="status">{owner === local ? 'Sesión guardada.' : 'Recompensa pendiente de sincronizar.'}</p>}
+    </div>
+  </section>
+
+  const remaining = Math.max(0, Math.ceil(((session.restUntil ?? 0) - now) / 1000))
+  return <>
+    <p className="eyebrow">EN CURSO · {clock(elapsed)}</p><h1>{session.title}</h1>
+    {session.restUntil && <p className="workout-rest" role={remaining === 0 ? 'status' : undefined}>{remaining ? 'Descanso · ' + clock(remaining) : 'Descanso terminado'}</p>}
+    {session.exercises.map(exercise => {
+      const saved = entriesByExercise(exercise)
+      const last = previousSets(exercise)
+      const target = Math.max(1, exercise.sets ?? 0, last.length)
+      const rows = new Map(saved.map((entry, index) => [entry.data.slot ?? index, entry]))
+      const count = Math.max(target, extraRows[exercise.id] ?? 0, saved.length, ...Array.from(rows.keys(), index => index + 1))
+      return <section className={'panel exercise-session' + (highlight === exercise.id ? ' exercise-arrival' : '')}
+        key={exercise.id} id={'exercise-' + exercise.id} tabIndex={-1}>
         <h2>{exercise.name}</h2>
-        {!session.ended && <details><summary>Editar solo esta sesión</summary>
-          <div className="actions">
-            {[-1, 1].map(step => <button type="button" className="secondary" key={step}
-              disabled={!session.exercises[position + step]} onClick={() => {
-                const reordered = [...session.exercises]
-                const [moving] = reordered.splice(position, 1)
-                reordered.splice(position + step, 0, moving)
-                void editExercises(reordered)
-              }}>{step < 0 ? 'Subir ejercicio' : 'Bajar ejercicio'}</button>)}
-          </div>
-          {!sessionSets.some(set => set.data.exerciseId === exercise.id) && <form onSubmit={event => {
-            event.preventDefault()
-            const name = String(new FormData(event.currentTarget).get('replacement')).trim()
-            if (!name) return
-            const replacement = parseRoutine(name)[0]?.exercises[0]
-            if (!replacement) { setMessage('Ingresá el nombre de un ejercicio.'); return }
-            void editExercises(session.exercises.map(move => move.id === exercise.id
-              ? { ...replacement, id: move.id, sets: move.sets, min: move.min, max: move.max, rest: move.rest, superset: move.superset }
-              : move))
-          }}><label>Reemplazar por<input name="replacement" list="workout-catalog" required maxLength={100}/></label>
-            <button className="secondary">Reemplazar ejercicio</button></form>}
-        </details>}
-        {!session.ended && !worked.has(exercise.id) && <button type="button" className="secondary" onClick={() => {
-          const omitted = session.omitted ?? []
-          void save(owner, 'session', item.id, { ...session, omitted: omitted.includes(exercise.id)
-            ? omitted.filter(id => id !== exercise.id) : [...omitted, exercise.id] })
-        }}>{session.omitted?.includes(exercise.id) ? 'Restaurar ejercicio' : 'Omitir ejercicio'}</button>}
-        {exercise.superset && <p className="eyebrow">Superserie {exercise.superset.name} · {exercise.superset.rounds} vueltas</p>}
-        {exercise.notes && <p>{exercise.notes}</p>}
-        <p>{saved.length}{exercise.sets && ' de ' + exercise.sets} series
-          {previous && ' · Anterior: ' + (previous.kg === null ? '' : fromKg(previous.kg, profile.unit) + ' ' + profile.unit + ' × ') + previous.reps + ' reps'}</p>
-        {saved.map((set, index) => <form className="set-row series-saved" key={set.id + ':' + set.version + ':' + profile.unit} onSubmit={event => void record(exercise, event, set)}>
-          <span aria-label={'Serie ' + (index + 1)}>{index + 1}</span>{fields(set.data)}
-          <button className="secondary" disabled={busy}>Guardar</button>
-          <button type="button" className="secondary" aria-label={'Deshacer serie ' + (index + 1)} onClick={() => void save(owner, 'set', set.id, { ...set.data, done: false })}>×</button>
-          <button type="button" className="secondary" onClick={() => void writeSet(uid(), {
-            ...set.data, created: Date.now(),
-          })}>Duplicar serie</button>
-          {extras(set.data)}
-        </form>)}
-        {sessionSets.filter(set => set.data.exerciseId === exercise.id && !set.data.done).map(set =>
-          <button type="button" className="secondary" key={set.id}
-            onClick={() => void writeSet(set.id, { ...set.data, done: true })}>Recuperar serie de {set.data.reps} reps</button>)}
-        <form className="set-row" key={String(previous?.kg) + ':' + profile.unit} onSubmit={event => void record(exercise, event)}>
-          <label>{profile.unit}<input name="load" type="number" min="0" step="any" inputMode="decimal"
-            defaultValue={(previous?.kg ?? goalKg) != null ? fromKg((previous?.kg ?? goalKg)!, profile.unit) : ''} /></label>
-          <label>Reps<input name="reps" type="number" min="1" step="1" required inputMode="numeric" defaultValue={previous?.reps ?? exercise.min ?? ''} /></label>
-          <button disabled={busy}>Registrar serie</button>
-          {extras()}
-        </form>
+        <div className="move-visual workout-visual"><ExerciseArt id={exercise.catalogId}/><div><ExerciseTargets id={exercise.catalogId}/></div></div><Movement id={exercise.catalogId}/>
+        <p className="workout-set-count">{saved.length} de {count} series</p>
+        {Array.from({ length: count }, (_, index) => {
+          const existing = rows.get(index)
+          const prior = last.find(entry => entry.data.slot === index)?.data ?? last[index]?.data
+          const kg = existing ? existing.data.kg : prior ? prior.kg :
+            exercise.load === null ? null : toKg(exercise.load, exercise.unit ?? profile.unit)
+          const reps = existing?.data.reps ?? prior?.reps ?? exercise.min ?? ''
+          return <form className={'quick-set' + (existing ? ' quick-set-done' : '')} key={index + ':' + (existing?.version ?? 'new') + ':' + kg + ':' + reps + ':' + profile.unit}
+            onSubmit={event => record(exercise, index, count, event, existing)}>
+            <span className="quick-index">{index + 1}</span>
+            <label>{profile.unit}<input name="load" type="number" min="0" step="any" inputMode="decimal"
+              defaultValue={kg === null ? '' : fromKg(kg, profile.unit)}/></label>
+            <label>Reps<input name="reps" type="number" required min="1" max="1000" inputMode="numeric" defaultValue={reps}/></label>
+            <button disabled={busy} className={existing ? 'secondary' : ''} aria-label={existing ? 'Guardar serie ' + (index + 1) : 'Registrar serie ' + (index + 1)}>
+              <Check aria-hidden="true" size={18}/>
+            </button>
+          </form>
+        })}
+        {count < 100 && <button type="button" className="secondary add-set" onClick={() => setExtraRows(current => ({
+          ...current, [exercise.id]: count + 1,
+        }))}>+ Serie</button>}
       </section>
     })}
-    {!session.ended && <form className="panel" onSubmit={event => {
-      event.preventDefault()
-      const form = event.currentTarget
-      const name = String(new FormData(form).get('exercise')).trim()
-      if (!name) return
-      const move = parseRoutine(name)[0]?.exercises[0]
-      if (!move) { setMessage('Ingresá el nombre de un ejercicio.'); return }
-      void editExercises([...session.exercises, move])
-      form.reset()
-    }}><label>Ejercicio nuevo<input name="exercise" list="workout-catalog" required maxLength={100}/></label>
-      <datalist id="workout-catalog">{catalog.map(([id, name]) => <option key={id} value={name}/>)}</datalist>
-      <button className="secondary">Agregar a esta sesión</button></form>}
     {message && <p role="alert">{message}</p>}
-    {session.ended ? <div className="actions"><NavLink to="/entrenar">Volver a Entrenar</NavLink><NavLink to="/progreso">Volver a progreso</NavLink></div> :
-      <button disabled={busy || !ready} onClick={() => void save(owner, 'session', item.id, {
-        ...session, ended: Date.now(), restUntil: undefined, pausedRest: undefined,
-      }).catch(() => setMessage('No se pudo finalizar el entrenamiento.'))}>Finalizar entrenamiento</button>}
+    <button className="finish-workout" disabled={busy || !logged.some(entry => entry.data.type !== 'warmup')} onClick={() => void run(async () => {
+      const done = new Set(logged.filter(entry => entry.data.type !== 'warmup').map(entry => entry.data.exerciseId))
+      await save(owner, 'session', item.id, { ...session, ended: Date.now(),
+        omitted: session.exercises.filter(move => !done.has(move.id)).map(move => move.id), restUntil: undefined, pausedRest: undefined })
+    })}>Finalizar entrenamiento</button>
   </>
 }

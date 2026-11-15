@@ -1,5 +1,6 @@
+import { milestoneId, trainingMilestones } from './milestones'
 import { lazy, Suspense, useState } from 'react'
-import { Companion, companions } from './companion'
+import { Companion, companions, companionStage } from './companion'
 import { api, local, save, sync, type Item, type Reward } from './store'
 import type { Profile } from './domain'
 
@@ -14,7 +15,7 @@ export const goods = [
 export function localRewards(sessions: Item<'session'>[], sets: Item<'set'>[]): Reward[] {
   const seen = new Set<string>()
   const dates = new Map<string, number>()
-  return [...sessions].sort((a, b) => (a.data.ended ?? 0) - (b.data.ended ?? 0) || a.id.localeCompare(b.id)).flatMap(item => {
+  const earned: Reward[] = [...sessions].sort((a, b) => (a.data.ended ?? 0) - (b.data.ended ?? 0) || a.id.localeCompare(b.id)).flatMap(item => {
     const session = item.data
     const occurrence = session.scheduleId ?? (session.cycleId && session.dayId ? session.cycleId + ':' + session.dayId : undefined)
     if (!occurrence || seen.has(occurrence) || !session.ended || session.incomplete || !session.exercises.length) return []
@@ -26,9 +27,14 @@ export function localRewards(sessions: Item<'session'>[], sets: Item<'set'>[]): 
     if (count >= 3) return []
     dates.set(session.date, count + 1)
     seen.add(occurrence)
-    return [{ owner: item.owner, session_id: item.id, xp: 25, gold: 20, companion: session.companion }]
+    return [{ owner: item.owner, session_id: item.id, xp: 25, gold: 20, companion: session.companion, occurrence }]
   })
+  const owner = earned[0]?.owner
+  if (!owner) return earned
+  return [...earned, ...trainingMilestones.filter(item => earned.length >= item.goal)
+    .map(item => ({ owner, session_id: milestoneId(item.goal), xp: 25 }))]
 }
+
 
 export const stageFor = (xp: number) => xp >= 300 ? 'adulta' : xp >= 100 ? 'joven' : 'bebé'
 
@@ -71,10 +77,10 @@ export function PetShop({ owner, profile, rewards }: { owner: string; profile: P
     <section className="panel"><h2>Tu equipo</h2><div className="companion-picker">
       {owned.map(name => {
         const xp = rewards.filter(entry => entry.companion === name).reduce((sum, entry) => sum + entry.xp, 0)
-        const stage = stageFor(xp)
+        const stage = companionStage(name, xp).stage.name.toLowerCase()
         return <button className="secondary" key={name} disabled={busy} aria-pressed={name === profile.companion}
           onClick={() => void update({ ...profile, starter: initial, companion: name })}>
-          <Companion name={name} stage={stage}/>{name}<small>{stage} · {xp} EXP</small>{name === profile.companion && equipped && <small className="gold">{goods.find(good => good.id === equipped)?.name}</small>}
+          <Companion name={name} xp={xp}/>{name}<small>{stage} · {xp} EXP</small>{name === profile.companion && equipped && <small className="gold">{goods.find(good => good.id === equipped)?.name}</small>}
         </button>
       })}
     </div>

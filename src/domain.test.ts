@@ -1,6 +1,6 @@
 import { fiveDayRoutine } from '../tests/five-day-routine'
 import { describe, expect, it } from 'vitest'
-import { fromKg, metrics, parseRoutine, toKg, weekDates } from './domain'
+import { companionHealth, suggestedLoad, fromKg, metrics, parseRoutine, toKg, weekDates } from './domain'
 
 describe('importar rutinas', () => {
   it.each(['x', ' x ', '×', ' × '].flatMap(separator =>
@@ -95,4 +95,21 @@ it('excluye calentamiento de récords y e1RM', () => {
   const exercise = parseRoutine('Press banca 4x8 70kg')[0].exercises[0]
   const set = { sessionId: 's', exerciseId: exercise.id, kg: 70, reps: 8, created: 0, done: true, type: 'warmup' as const }
   expect(metrics([set], exercise)).toEqual({ volume: 560, peak: 0, estimated: 0 })
+})
+
+it('sugiere subir carga solo tras completar el rango de todas las series', () => {
+  const exercise = parseRoutine('Press banca 2x8-10')[0].exercises[0]
+  const set = { sessionId: 's', exerciseId: exercise.id, kg: 50, reps: 10, created: 0, done: true }
+  expect(suggestedLoad(exercise, [set, set], 2.5)).toBe(52.5)
+  expect(suggestedLoad(exercise, [set, { ...set, reps: 9 }], 2.5)).toBeNull()
+  expect(suggestedLoad(exercise, [set, { ...set, rpe: 9 }], 2.5)).toBeNull()
+  expect(suggestedLoad(exercise, [set, { ...set, type: 'warmup' }], 2.5)).toBeNull()
+})
+
+it('reduce la vida por sesiones omitidas y permite recuperarla sin superar 100', () => {
+  expect(companionHealth(0, 0)).toBe(100)
+  expect(companionHealth(2, 0)).toBe(70)
+  expect(companionHealth(2, 1)).toBe(80)
+  expect(companionHealth(2, 4)).toBe(100)
+  expect(companionHealth(8, 0)).toBe(25)
 })

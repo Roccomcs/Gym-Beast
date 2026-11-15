@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { catalog, exerciseSchema, parseRoutine, uid, weekDates, type Day, type Exercise, type Profile, type Routine } from './domain'
+import { catalog, exerciseSchema, parseRoutine, reviseRoutine, uid, weekDates, type Day, type Exercise, type Profile, type Routine } from './domain'
 import { list, save, saveMany } from './store'
 
 const empty = () => ({ name: '', version: 1, source: '', days: [] })
@@ -39,9 +39,12 @@ export function Routines({ owner, date, weekStart, unit, start, mode, editId }: 
       return
     }
     try {
-      await save(owner, 'routine', editing || uid(), { ...draft, name: draft.name.trim() })
+      const current = routines.find(item => item.id === editing)?.data
+      const proposed = { ...draft, name: draft.name.trim(), version: 1 }
+      const next = current ? reviseRoutine(current, proposed) : proposed
+      await save(owner, 'routine', editing || uid(), next)
       setEditing(''); setDraft(empty()); setMessage('Rutina guardada.')
-    } catch { setMessage('No se pudo guardar la rutina.') }
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'No se pudo guardar la rutina.') }
   }
   return <>
     <h1>{mode === 'calendar' ? 'Organizar fechas' : mode === 'importar' ? 'Importar rutina' : 'Crear rutina'}</h1>
@@ -85,7 +88,7 @@ export function Routines({ owner, date, weekStart, unit, start, mode, editId }: 
         <h3>{item.data.name}{item.data.archived && ' · Archivada'}</h3>
         <div className="actions">
           <a href="#editor" onClick={() => { setEditing(item.id); setDraft({ ...item.data, version: item.data.version + 1 }) }}>Editar</a>
-          <button className="secondary" onClick={() => void save(owner, 'routine', uid(), { ...item.data, name: item.data.name + ' (copia)', version: 1, archived: false, days: item.data.days.map(day => ({ ...day, id: uid() })) })}>Duplicar</button>
+          <button className="secondary" onClick={() => void save(owner, 'routine', uid(), { ...item.data, name: item.data.name + ' (copia)', version: 1, archived: false, history: undefined, days: item.data.days.map(day => ({ ...day, id: uid() })) })}>Duplicar</button>
           <button className="secondary" onClick={() => void save(owner, 'routine', item.id, { ...item.data, archived: !item.data.archived })}>
             {item.data.archived ? 'Restaurar' : 'Archivar'}</button>
         </div>
@@ -114,6 +117,14 @@ export function Routines({ owner, date, weekStart, unit, start, mode, editId }: 
     </>}
     {(mode !== 'calendar' || !!editing) && <form id="editor" className="panel" onSubmit={submit}>
       <h2>{editing ? 'Editar rutina' : 'Nueva rutina'}</h2>
+      {!!draft.history?.length && <details className="routine-history">
+        <summary>Versiones anteriores</summary>
+        {draft.history.map(snapshot => <button key={snapshot.version} type="button" className="secondary"
+          onClick={() => {
+            setDraft(current => ({ ...current, name: snapshot.name, source: snapshot.source, days: snapshot.days }))
+            setMessage('Versión ' + snapshot.version + ' cargada. Guardá la rutina para aplicarla.')
+          }}>Cargar versión {snapshot.version}</button>)}
+      </details>}
       {editing && <button type="button" className="secondary" onClick={() => { setDraft(empty()); setEditing('') }}>Cancelar edición</button>}
       <label>Nombre de la rutina<input required value={draft.name} maxLength={100} onChange={event => setDraft({ ...draft, name: event.target.value })} /></label>
       {mode !== 'manual' && <><label id="importar">Importar desde texto<textarea rows={5} maxLength={40000} value={draft.source}

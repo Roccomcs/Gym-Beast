@@ -10,7 +10,7 @@ beforeAll(async () => {
   await db.exec("create schema auth; create role anon; create role authenticated; create table auth.users(id uuid primary key);")
   await db.exec("create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$; grant usage on schema auth to anon, authenticated")
   await db.query('insert into auth.users values ($1), ($2)', [athlete, friend])
-  for (const file of ['202611140001_training.sql', '202611140002_session_rewards.sql', '202611140003_pet_economy.sql']) {
+  for (const file of ['202611140001_training.sql', '202611140002_session_rewards.sql', '202611140003_pet_economy.sql', '202611140004_training_milestones.sql']) {
     await db.exec(await readFile(new URL('../supabase/migrations/' + file, import.meta.url), 'utf8'))
   }
 }, 15000)
@@ -39,7 +39,7 @@ it('applies offline changes once, rewards only eligible sessions, and isolates a
   expect(await change('set', 'series', 0, performed, op)).toBe('applied')
   expect(await change('set', 'series', 0, { ...performed, reps: 9 })).toBe('conflict')
   expect(await change('set', 'series2', 0, performed)).toBe('applied')
-  expect((await db.query('select xp, gold from public.session_rewards')).rows).toEqual([{ xp: 25, gold: 20 }])
+  expect((await db.query('select xp, gold from public.session_rewards order by gold')).rows).toEqual([{ xp: 25, gold: 0 }, { xp: 25, gold: 20 }])
   await expect(db.exec("insert into public.session_rewards(owner,session_id,xp) values ('" + athlete + "','fake',25)"))
     .rejects.toThrow(/permission denied/)
   expect(await change('profile', 'self', 0, { starter: 'Dragón', companion: 'Dragón' })).toBe('applied')
@@ -49,7 +49,30 @@ it('applies offline changes once, rewards only eligible sessions, and isolates a
   await db.exec("select public.buy_pet_good('bandana'); select public.buy_pet_good('bandana')")
   expect((await db.query("select data -> 'purchases' as goods from public.training_items where kind = 'profile'")).rows)
     .toEqual([{ goods: ['bandana'] }])
+  expect((await db.query("select session_id from public.session_rewards where session_id like 'mission:%'")).rows).toEqual([{ session_id: 'mission:1' }])
   await account(friend)
   expect((await db.query('select id from public.training_items')).rows).toEqual([])
   expect((await db.query('select xp, gold from public.session_rewards')).rows).toEqual([])
+}, 15000)
+
+it('vende los huevos disponibles y ambos accesorios sin cobrar dos veces', async () => {
+  const buyer = '61aab025-ecd7-418b-80cd-540eb85e0379'
+  await db.exec('reset role')
+  await db.query('insert into auth.users values ($1)', [buyer])
+  await db.query("insert into public.session_rewards(owner,session_id,xp,gold) select $1,'test-' || id,25,20 from generate_series(1,50) id", [buyer])
+  await db.exec('set role authenticated')
+  await db.query("select set_config('request.jwt.claim.sub', $1, false)", [buyer])
+  await db.query("select public.apply_change($1,'profile','self',0,$2)", [crypto.randomUUID(), { starter: 'Dragón', companion: 'Dragón' }])
+  for (const sku of ['bandana','medalla','egg:Cocodrilo','egg:Oso','egg:Lobo']) {
+    await db.query('select public.buy_pet_good($1)', [sku])
+    await db.query('select public.buy_pet_good($1)', [sku])
+  }
+  await expect(db.query("select public.buy_pet_good('egg:Dragón')")).rejects.toThrow(/Invalid purchase/)
+  await db.exec('reset role')
+  const result = await db.query('select count(*)::int as goods, sum(price)::int as gold from public.pet_purchases where owner = $1', [buyer])
+  expect(result.rows).toEqual([{ goods: 5, gold: 720 }])
+  await db.exec('set role authenticated')
+  await db.query("select set_config('request.jwt.claim.sub', $1, false)", [buyer])
+  expect((await db.query("select data -> 'purchases' as goods from public.training_items where kind = 'profile'")).rows)
+    .toEqual([{ goods: ['bandana', 'egg:Cocodrilo', 'egg:Lobo', 'egg:Oso', 'medalla'] }])
 }, 15000)

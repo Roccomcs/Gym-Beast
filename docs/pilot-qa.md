@@ -32,3 +32,24 @@
 - El entorno local puede usarse desde el README. La salida del piloto depende del QA hospedado y físico, además de los pendientes funcionales de esta tabla.
 
 La restauración local valida el respaldo y se aplica en una transacción. Requiere un espacio sin rutinas ni sesiones. La tienda dibuja la bandana y la medalla equipadas en el visor 3D.
+
+## Seguimiento
+
+- Mis rutinas permite compartir un texto reutilizable con ejercicios, series, repeticiones y descansos. La copia omite cargas y notas.
+- Las sesiones iniciadas desde la rutina activa pueden actualizar su día de plantilla. Se conserva una versión anterior y se rechaza la actualización si ya cambió la versión de la plantilla.
+- La progresión doble inicial propone un aumento solo si las series válidas alcanzaron el máximo del rango. El aumento es voluntario y usa 2,5 kg o 5 lb. Falta configurar los incrementos y registrar fatiga o descarga.
+- Progreso muestra una racha semanal de actividad y tres hitos de sesiones. Falta la racha de cumplimiento del plan, las misiones configurables y su reflejo en recompensas del servidor.
+Las misiones de 1, 5 y 10 sesiones válidas otorgan 25 EXP de cuenta cada una. En modo local se derivan del historial elegible. En cuentas, PostgreSQL las registra una sola vez. Falta verificar la migración sobre Supabase alojado.
+
+El hábitat de Inicio muestra huevo, bebé, cría, adolescente, adulto y titán para el dragón. La vida refleja únicamente el incumplimiento de la última semana cerrada y recupera puntos con las sesiones de la semana actual. Las 41 fichas del catálogo tienen una pose ilustrada y mapas de músculos. Sigue pendiente una segunda pose de inicio o fin por ejercicio.
+
+## Revisión visual de Inicio, Entrenar, Progreso y Perfil
+
+- El sprite de cada acompañante se obtiene de la misma selección de especie y EXP en Inicio, Entrenar, Perfil, tienda y cierre. El visor 3D opcional usa los modelos low-poly existentes.
+- Se comprobó la entrada animada de Inicio, el foco al pasar al ejercicio siguiente, la aparición del cierre y el detalle desplegable. Las láminas se muestran más grandes en la rutina y durante la sesión.
+- Progreso presenta métricas, mapa corporal y tendencia de carga. Se inspeccionaron capturas de Progreso y Perfil a 390 px y se comprobó el ancho del flujo a 320 px.
+- Se revisó la disponibilidad de las ilustraciones de los 41 ejercicios. Se probó el catálogo de compras disponible para una cuenta con dragón inicial en PostgreSQL embebido, incluyendo reintentos y saldo insuficiente. Sigue pendiente validar la tienda alojada y el comportamiento en iPhone y Android físicos.
+
+## Registro simplificado y perfil
+
+Las filas de peso y repeticiones se reutilizan por ejercicio desde el historial y solo cuentan al marcarlas. El cierre muestra el resultado y dos tarjetas animadas de recompensa. El equipo, la lámina y el mapa muscular se muestran en la sesión. El esquema animado ilustra familias de movimiento y la lámina permite distinguir la variante. Mis rutinas admite fotos y las portadas del catálogo. Perfil guarda automáticamente y muestra el acceso a Amigos con estado vacío. El calendario y la constancia se enfocan en el plan activo. La tienda y la sincronización alojadas siguen pendientes de prueba.
