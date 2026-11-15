@@ -7,15 +7,16 @@ type Kind = keyof Values
 export type Item<K extends Kind = Kind> = {
   owner: string; kind: K; id: string; version: number; data: Values[K]
 }
-export type Reward = { owner: string; session_id: string; xp: number }
+export type Reward = { owner: string; session_id: string; xp: number; gold?: number; companion?: string }
 type Remote = Omit<Item, 'owner'>
 export type Operation = {
-  op: string; owner: string; kind: Kind; id: string; base: number; data: Values[Kind]; conflict?: Remote
+  op: string; owner: string; kind: Kind; id: string; base: number; data: Values[Kind]; conflict?: Remote; rejected?: string
 }
 class Database extends Dexie {
   items!: Table<Item, [string, Kind, string]>
   operations!: Table<Operation, string>
   rewards!: Table<Reward, [string, string]>
+  onboarding!: Table<{ owner: string; profile: Profile }, string>
   constructor() {
     super('gymbeast')
     this.version(1).stores({
@@ -23,6 +24,7 @@ class Database extends Dexie {
       operations: 'op, owner, [owner+kind+id]',
     })
     this.version(2).stores({ rewards: '[owner+session_id], owner' })
+    this.version(3).stores({ onboarding: 'owner' })
   }
 }
 export const db = new Database()
@@ -82,7 +84,7 @@ async function synchronize(owner: string) {
   const { data: auth } = await api.auth.getSession()
   if (auth.session?.user.id !== owner) return
   const ops = await db.operations.where('owner').equals(owner).toArray()
-  const blocked = new Set(ops.filter(op => op.conflict).map(op => op.kind + ':' + op.id))
+  const blocked = new Set(ops.filter(op => op.conflict || op.rejected).map(op => op.kind + ':' + op.id))
   const sorted = ops.sort((a, b) => a.base - b.base)
   for (const op of sorted) {
     const key = op.kind + ':' + op.id
@@ -90,7 +92,12 @@ async function synchronize(owner: string) {
     const { data, error } = await api.rpc('apply_change', {
       p_operation: op.op, p_kind: op.kind, p_id: op.id, p_base: op.base, p_data: op.data,
     })
-    if (error) throw error
+    if (error) {
+      if (!/^(?:22|23|P0001)/.test(error.code)) throw error
+      await db.operations.update(op.op, { rejected: error.message })
+      blocked.add(key)
+      continue
+    }
     if (data.status === 'conflict') {
       blocked.add(key)
       await db.operations.update(op.op, { conflict: data.row as Remote })
@@ -111,17 +118,28 @@ async function synchronize(owner: string) {
     })
     if (data.length < size) break
   }
+  const rewards: Reward[] = []
   for (let offset = 0; ; offset += size) {
-    const result = await api.from('session_rewards').select('owner,session_id,xp')
+    const result = await api.from('session_rewards').select('owner,session_id,xp,gold,companion')
       .eq('owner', owner).order('session_id').range(offset, offset + size - 1)
     if (result.error) throw result.error
-    await db.rewards.bulkPut(result.data as Reward[])
+    rewards.push(...result.data as Reward[])
     if (result.data.length < size) break
   }
+  await db.transaction('rw', db.rewards, async () => {
+    await db.rewards.where('owner').equals(owner).delete()
+    await db.rewards.bulkPut(rewards)
+  })
+}
+
+export async function retryOperation(operation: Operation) {
+  await db.operations.update(operation.op, { rejected: undefined })
+  window.dispatchEvent(new Event('gymbeast-save'))
 }
 
 export async function clearAccount(owner: string) {
-  await db.transaction('rw', db.items, db.operations, db.rewards, async () => {
+  await db.transaction('rw', db.items, db.operations, db.rewards, db.onboarding, async () => {
+    await db.onboarding.delete(owner)
     await db.rewards.where('owner').equals(owner).delete()
     await db.items.where('owner').equals(owner).delete()
     await db.operations.where('owner').equals(owner).delete()

@@ -27,7 +27,8 @@ En iPhone abrí el sitio HTTPS en Safari y elegí **Compartir → Agregar a inic
 
 ## Estado
 
-- Importación de la rutina de cinco días, tres plantillas editables, planificación semanal, vistas pixel art, fichas con músculos y filtros, y selección de mascota 2D.
-- Primera regla de XP para cuentas sincronizadas. El servidor otorga 25 XP por una sesión finalizada de al menos un minuto con una serie válida y un máximo de tres premios por día UTC de sincronización. Una sesión tiene una sola recompensa. La app muestra nivel y progreso después de descargar los eventos.
-- Cuatro variantes de ejercicio cuentan con ilustración específica. Las demás muestran una imagen genérica y el mapa muscular. Los créditos están en [Licencias de recursos](docs/assets-licenses.md).
-- Pendientes para el piloto completo: ilustraciones de inicio y fin de todos los ejercicios, versiones recuperables y compartir rutinas, edición completa en sesión, estadísticas y progresión doble, normalización y validación integral en PostgreSQL, restauración, misiones, rachas, logros, cosméticos, modelos GLB, funciones sociales, recordatorios, despliegue y pruebas físicas.
+El alta local permite elegir un compañero y activar una de diez rutinas ilustradas. El entrenamiento registra series sin conexión y conserva el avance del ciclo al recargar. La economía incluye EXP, oro, tienda y crecimiento, con recompensas locales de demostración y funciones PostgreSQL para cuentas.
+
+La vista 3D se abre desde Perfil → Mascotas y tienda. Para regenerar los modelos locales, ejecutá: node make-pets.mjs.
+
+El piloto todavía requiere las validaciones alojadas y físicas. Consultá el [registro de QA](docs/pilot-qa.md) y los [créditos visuales](docs/assets-licenses.md).

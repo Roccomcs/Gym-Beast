@@ -5,3 +5,5 @@
 - La biblioteca usa un diagrama vectorial original para distinguir regiones musculares.
 - Press Start 2P y Atkinson Hyperlegible Next se sirven desde la aplicación. Sus respectivas licencias SIL Open Font License acompañan esta documentación.
 - Los íconos de interfaz pertenecen a Lucide (ISC).
+- Portadas en public/program-covers.jpg. Diez portadas originales generadas para GymBeast con OpenAI ImageGen.
+- Modelos en public/pets. Geometría low-poly original generada con el script make-pets.mjs y Three.js (MIT).

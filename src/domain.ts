@@ -70,10 +70,10 @@ export type Day = { id: string; title: string; exercises: Exercise[] }
 export type Routine = { name: string; version: number; source: string; days: Day[]; archived?: boolean }
 export type Session = {
   title: string; exercises: Exercise[]; started: number; ended?: number;
-  date: string; scheduleId?: string; restUntil?: number; pausedRest?: number;
+  date: string; scheduleId?: string; cycleId?: string; dayId?: string; companion?: string; incomplete?: boolean; omitted?: string[]; restUntil?: number; pausedRest?: number;
 }
 export type PerformedSet = { sessionId: string; exerciseId: string; reps: number; kg: number | null; done: boolean; created: number; rpe?: number; rir?: number; notes?: string; type?: Exercise['type'] }
-export type Profile = { name: string; unit: 'kg' | 'lb'; theme: 'dark' | 'light'; weekStart: number; timezone: string; companion: string }
+export type Profile = { name: string; unit: 'kg' | 'lb'; theme: 'dark' | 'light'; weekStart: number; timezone: string; companion: string; onboarded?: boolean; starter?: string; weightKg?: number; cycle?: { id: string; routineId: string; skipped: string[]; order?: string[] }; purchases?: string[]; equipped?: string; petGear?: Record<string, string | null> }
 export type Schedule = { date: string; title: string; exercises: Exercise[]; routineId: string; version: number; skipped?: boolean }
 
 export const uid = () => crypto.randomUUID()
@@ -86,7 +86,14 @@ export function parseRoutine(source: string, preferredUnit: 'kg' | 'lb' = 'kg'):
   let day: Day | undefined
   let group: Exercise['superset']
   let groupRemaining = 0
-  for (const input of source.split(/\r?\n/)) {
+  const lines = source.split(/\r?\n/).flatMap(line => {
+    const moves = line.replace(/\\+$/, '').split(/\s+\+\s+/)
+    if (moves.length < 2 || !moves.every(move => /\d+\s*[x×]\s*\d+/i.test(move))) return [line]
+    const rounds = moves.map(move => Number(move.match(/(\d+)\s*[x×]/i)?.[1]))
+    return rounds.every(count => count === rounds[0]) && moves.length === 2
+      ? ['Superserie (' + rounds[0] + 'x)', ...moves] : moves
+  })
+  for (const input of lines) {
     const original = input.trim()
     const row = original.replace(/\\+$/, '').trim().replace(/^(?:[-*•]\s+|\d+[.)]\s+)/, '')
     if (!row) continue
@@ -107,9 +114,9 @@ export function parseRoutine(source: string, preferredUnit: 'kg' | 'lb' = 'kg'):
       day = { id: uid(), title: 'Día 1', exercises: [] }
       days.push(day)
     }
-    const heading = row.match(/^superserie\s+(.+?)\s*\((\d+)\s*x\)$/i)
+    const heading = row.match(/^superserie(?:\s+(.+?))?\s*\((\d+)\s*x\)$/i)
     if (heading && Number(heading[2]) > 0) {
-      group = { id: uid(), name: heading[1], rounds: Number(heading[2]) }
+      group = { id: uid(), name: heading[1] ?? 'Combinada', rounds: Number(heading[2]) }
       groupRemaining = 2
       continue
     }
@@ -118,9 +125,10 @@ export function parseRoutine(source: string, preferredUnit: 'kg' | 'lb' = 'kg'):
     const clean = normalize(movement)
     const prescription = clean.match(/\b(\d+)\s*(?:[x×]\s*(?=\d|amrap|al\s+fallo)|series?\b\s*(?:de\s+)?)(?:(\d+)(?:\s*[-–]\s*(\d+))?|al\s+fallo|amrap)?|\b(\d+)\s+(?:al\s+fallo|amrap)/)
     const explicit = clean.match(/\b(\d+(?:[.,]\d+)?)\s*(kg|lbs?)\b/)
-    const bare = prescription ? null : clean.match(/\s(\d+(?:[.,]\d+)?)$/)
+    const trailingLoad = clean.match(/\s(\d+(?:[.,]\d+)?)$/)
+    const bare = trailingLoad && (!prescription || trailingLoad.index! >= prescription.index! + prescription[0].length) ? trailingLoad : null
     const start = Math.min(prescription?.index ?? clean.length, explicit?.index ?? clean.length, bare?.index ?? clean.length)
-    let name = movement.slice(0, start).trim().replace(/[:—–-]+$/, '').trim() || movement
+    let name = movement.slice(0, start).replace(/\s+sin peso$/i, '').trim().replace(/[:—–-]+$/, '').trim() || movement
     if (prescription && explicit && prescription.index! < explicit.index!) {
       const equipment = clean.slice(prescription.index! + prescription[0].length, explicit.index).trim()
       if (/^(?:c\s+)?manc$/.test(equipment)) name += ' ' + equipment
@@ -180,8 +188,8 @@ export function metrics(series: PerformedSet[], exercise: Exercise) {
   const work = series.filter(set => set.done && set.kg !== null && set.reps > 0)
   return {
     volume: compatible ? work.reduce((sum, set) => sum + set.kg! * set.reps * (exercise.mode === 'per-side' ? 2 : 1), 0) : 0,
-    peak: compatible ? Math.max(0, ...work.map(set => set.kg!)) : 0,
-    estimated: exercise.mode === 'external' ? Math.max(0, ...work.filter(set => set.reps <= 10)
+    peak: compatible ? Math.max(0, ...work.filter(set => set.type !== 'warmup').map(set => set.kg!)) : 0,
+    estimated: exercise.mode === 'external' ? Math.max(0, ...work.filter(set => set.type !== 'warmup' && set.reps <= 10)
       .map(set => set.kg! * (set.reps === 1 ? 1 : 1 + set.reps / 30))) : 0,
   }
 }

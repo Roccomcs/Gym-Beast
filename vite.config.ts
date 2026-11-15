@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [react(), tailwind(), VitePWA({
     registerType: 'prompt',
-    workbox: { clientsClaim: true, globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'] },
+    workbox: { clientsClaim: true, globPatterns: ['**/*.{js,css,html,ico,png,jpg,svg,woff,woff2}'] },
     includeAssets: ['icon.svg', 'apple-touch-icon.png'],
     manifest: {
       name: 'GymBeast', short_name: 'GymBeast', lang: 'es-AR',

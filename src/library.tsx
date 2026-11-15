@@ -87,6 +87,14 @@ function MuscleMap({ primary, secondary }: { primary: Muscle; secondary: Muscle[
   </div>
 }
 
+export function ExerciseTargets({ id }: { id: string | null }) {
+  const entry = id ? anatomy[id as keyof typeof anatomy] : undefined
+  if (!entry) return null
+  const [gear, primary, ...secondary] = entry
+  return <><MuscleMap primary={primary} secondary={secondary} />
+    <small>{gear} · {primary}{secondary.length ? ' · ' + secondary.join(', ') : ''}</small></>
+}
+
 const searchText = (text: string) => text.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').trim()
 
 export function Library() {

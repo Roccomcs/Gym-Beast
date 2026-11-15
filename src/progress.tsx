@@ -1,15 +1,21 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { fromKg, metrics, type Exercise, type Profile } from './domain'
+import { fromKg, metrics, weekDates, type Exercise, type Profile } from './domain'
 import type { Item } from './store'
 
 const identity = (exercise: Exercise) =>
   (exercise.catalogId ?? exercise.name.trim().toLocaleLowerCase('es-AR')) + ':' + exercise.mode
 
-export function Progress({ sessions, sets, unit }: {
-  sessions: Item<'session'>[]; sets: Item<'set'>[]; unit: Profile['unit']
+export function Progress({ sessions, sets, unit, today, weekStart }: {
+  sessions: Item<'session'>[]; sets: Item<'set'>[]; unit: Profile['unit']; today: string; weekStart: number
 }) {
+  const [calendar, selectDate] = useState(today)
   const [selection, select] = useState('')
+  const dates = weekDates(calendar, weekStart)
+  const weekSessions = sessions.filter(item => dates.includes(item.data.date) && !item.data.incomplete)
+  const weekVolume = weekSessions.reduce((sum, item) => sum + item.data.exercises.reduce((total, exercise) =>
+    total + metrics(sets.filter(set => set.data.sessionId === item.id && set.data.exerciseId === exercise.id)
+      .map(set => set.data), exercise).volume, 0), 0)
   const options = new Map(sessions.flatMap(item =>
     item.data.exercises.map(exercise => [identity(exercise), exercise.name] as const)))
   const selected = options.has(selection) ? selection : options.keys().next().value
@@ -20,6 +26,20 @@ export function Progress({ sessions, sets, unit }: {
   }))
   const peak = Math.max(0, ...points.map(point => point.peak))
   return <><h1>Progreso</h1>
+    <section className="panel">
+      <h2>Calendario de actividad</h2>
+      <label>Semana de<input type="date" value={calendar} onChange={event => {
+        if (event.target.value) selectDate(event.target.value)
+      }}/></label>
+      <p>{weekSessions.length} sesiones completadas · {fromKg(weekVolume, unit)} {unit} de volumen</p>
+      <ol className="activity-calendar">{dates.map(date => {
+        const entries = weekSessions.filter(item => item.data.date === date)
+        return <li key={date}><time dateTime={date}>
+          {new Date(date + 'T12:00:00Z').toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', timeZone: 'UTC' })}
+        </time>{entries.length ? entries.map(item =>
+          <NavLink key={item.id} to={'/sesion/' + item.id}>{item.data.title}</NavLink>) : <span>Sin sesión</span>}</li>
+      })}</ol>
+    </section>
     {!sessions.length && <p>Finalizá una sesión para ver tu historial.</p>}
     {!!options.size && <section className="panel">
       <h2>Evolución de carga</h2>

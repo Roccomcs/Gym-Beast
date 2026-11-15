@@ -1,15 +1,19 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, NavLink, Route, Routes, useNavigate } from 'react-router-dom'
-import { Activity, CalendarDays, Dumbbell, Flame, House, UserRound, Users, Zap } from 'lucide-react'
+import { BrowserRouter, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Activity, CalendarDays, Dumbbell, Flame, House, UserRound, BookOpen, Zap } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { registerSW } from 'virtual:pwa-register'
-import { api, clearAccount, db, list, local, resolveConflict, save, sessionKey, sync } from './store'
-import { dateKey, weekDates, uid, type Profile } from './domain'
+import { api, clearAccount, db, list, local, resolveConflict, retryOperation, save, sessionKey, sync } from './store'
+import { dateKey, fromKg, toKg, weekDates, uid, type Profile, type Routine } from './domain'
 import { Routines } from './routines'
 import { Workout } from './workout'
 import { Progress } from './progress'
-import { Companion, companions } from './companion'
+import { Companion } from './companion'
+import { Onboarding, ProgramLibrary, Train } from './journey'
+import { Library } from './library'
+import { RestoreBackup } from './backup'
+import { PetShop, localRewards, stageFor } from './economy'
 import '@fontsource/press-start-2p/latin-400.css'
 import '@fontsource-variable/atkinson-hyperlegible-next'
 import './style.css'
@@ -114,12 +118,21 @@ function Logo() {
 
 function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }) {
   const navigate = useNavigate()
-  const profile = useLiveQuery(() => list(owner, 'profile'), [owner])?.[0]?.data ?? defaults
+  const [params] = useSearchParams()
+  const { pathname, hash } = useLocation()
+  useEffect(() => { if (!hash) window.scrollTo(0, 0) }, [pathname, hash])
+  const draft = useLiveQuery(async () => (await db.onboarding.get(owner)) ?? null, [owner])
+  const profiles = useLiveQuery(() => list(owner, 'profile'), [owner])
+  const profile = profiles?.[0]?.data ?? defaults
+  const routines = useLiveQuery(() => list(owner, 'routine'), [owner], [])
+  const starting = useRef(false)
   const sessions = useLiveQuery(() => list(owner, 'session'), [owner], [])
   const schedules = useLiveQuery(() => list(owner, 'schedule'), [owner], [])
   const sets = useLiveQuery(() => list(owner, 'set'), [owner], [])
   const operations = useLiveQuery(() => db.operations.where('owner').equals(owner).toArray(), [owner], [])
-  const rewards = useLiveQuery(() => db.rewards.where('owner').equals(owner).toArray(), [owner], [])
+  const remoteRewards = useLiveQuery(() => db.rewards.where('owner').equals(owner).toArray(), [owner], [])
+  const rewards = owner === local ? localRewards(sessions, sets) : remoteRewards
+  const petXp = rewards.filter(reward => reward.companion === profile.companion).reduce((sum, reward) => sum + reward.xp, 0)
   const xp = rewards.reduce((total, reward) => total + reward.xp, 0)
   const [status, setStatus] = useState('')
   const [available, setAvailable] = useState(false)
@@ -127,6 +140,14 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   const today = schedules.filter(item => item.data.date === date && !item.data.skipped)
   const active = sessions.find(item => !item.data.ended)
   const completed = sessions.filter(item => item.data.ended).sort((a, b) => b.data.started - a.data.started)
+  const cycle = profile.cycle
+  const original = routines.find(item => item.id === cycle?.routineId)?.data
+  const routine = original && cycle?.order ? {
+    ...original, days: [...original.days].sort((a, b) => cycle.order!.indexOf(a.id) - cycle.order!.indexOf(b.id)),
+  } : original
+  const index = routine?.days.findIndex(day => !cycle?.skipped.includes(day.id) &&
+    !completed.some(item => item.data.cycleId === cycle?.id && item.data.dayId === day.id && !item.data.incomplete)) ?? -1
+  const nextDay = routine?.days[index]
   const week = weekDates(date, profile.weekStart)
   const weekCount = completed.filter(item => week.includes(item.data.date)).length
   const conflicts = operations.filter(item => item.conflict)
@@ -161,20 +182,54 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
       document.removeEventListener('visibilitychange', refresh)
     }
   }, [owner, operations.length])
-  async function start(scheduleId: string) {
+  async function start(scheduleId?: string) {
     if (active) { navigate('/sesion/' + active.id); return }
-    const schedule = schedules.find(item => item.id === scheduleId)?.data
-    if (!schedule) return
-    const id = uid()
-    await save(owner, 'session', id, {
-      title: schedule.title, exercises: schedule.exercises, started: Date.now(), date, scheduleId,
-    })
-    navigate('/sesion/' + id)
+    if (starting.current) return
+    const schedule = scheduleId ? schedules.find(item => item.id === scheduleId)?.data : undefined
+    const day = scheduleId ? schedule : nextDay
+    if (!day) return
+    if (scheduleId && completed.some(item => item.data.scheduleId === scheduleId && !item.data.incomplete)) {
+      setStatus('Este turno ya está completado.')
+      return
+    }
+    starting.current = true
+    try {
+      const id = uid()
+      await save(owner, 'session', id, {
+        title: day.title, exercises: day.exercises, started: Date.now(), date: schedule?.date ?? date, scheduleId,
+        cycleId: scheduleId ? undefined : cycle?.id, dayId: scheduleId ? undefined : nextDay?.id, companion: profile.companion,
+      })
+      navigate('/sesion/' + id)
+    } catch { setStatus('No pudimos iniciar el entrenamiento.') }
+    finally { starting.current = false }
   }
+  async function activate(routine: Routine, existing?: string) {
+    if (active && !confirm('¿Guardar la sesión actual como incompleta y cambiar de rutina?')) {
+      navigate('/sesion/' + active.id)
+      return
+    }
+    if (active) await save(owner, 'session', active.id, { ...active.data, ended: Date.now(), incomplete: true })
+    const id = existing ?? uid()
+    if (!existing) await save(owner, 'routine', id, routine)
+    await save(owner, 'profile', 'self', { ...profile, cycle: { id: uid(), routineId: id, skipped: [] } })
+    navigate('/entrenar')
+  }
+  function changeCycle(next: Profile['cycle']) {
+    void save(owner, 'profile', 'self', { ...profile, cycle: next }).catch(() => setStatus('No pudimos actualizar el ciclo.'))
+  }
+  if (!profiles || draft === undefined) return <main>Abriendo tu perfil…</main>
+  if (!profile.onboarded) return <main><Onboarding profile={draft?.profile ?? profile}
+    checkpoint={next => { void db.onboarding.put({ owner, profile: next }).catch(() => undefined) }}
+    save={async next => { await save(owner, 'profile', 'self', next); await db.onboarding.delete(owner); navigate('/') }} /></main>
+  const editorProps = { owner, date, weekStart: profile.weekStart, unit: profile.unit, start }
   return <>
     <header><Logo /><span className="sync" role="status">{owner === local ? 'Modo local' : operations.length ? status + ' · ' + operations.length + ' pendientes' : status}</span></header>
     <main>
       {available && !active && <button className="secondary" onClick={() => void update(true)}>Actualizar GymBeast</button>}
+      {operations.filter(item => item.rejected).map(item => <section key={item.op} className="panel">
+        <h2>Un cambio requiere revisión</h2><p>{item.rejected}</p>
+        <button className="secondary" onClick={() => void retryOperation(item)}>Reintentar cambio</button>
+      </section>)}
       {conflicts.map(item => <section key={item.op} className="panel">
         <h2>Hay dos versiones de este registro</h2>
         <details><summary>Revisar ambas versiones</summary><p>En el servidor</p><pre>{JSON.stringify(item.conflict?.data, null, 2)}</pre>
@@ -188,19 +243,29 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
           <h1>{profile.name ? 'Hola, ' + profile.name : 'Tu entrenamiento'}</h1>
           <section className="panel hero"><div className="hero-icon"><Dumbbell size={30} /></div>
             <p className="eyebrow">{active ? 'EN CURSO' : 'PLAN DE HOY'}</p>
-            <h2>{active?.data.title ?? today[0]?.data.title ?? 'Tu próximo entrenamiento'}</h2>
-            {!active && !today.length && <p>Asigná una rutina al día de hoy para empezar.</p>}
-            <button onClick={() => active ? navigate('/sesion/' + active.id) : today.length ? void start(today[0].id) : navigate('/entrenar')}>
-              {active ? 'Continuar entrenamiento' : today.length ? 'Empezar entrenamiento' : 'Preparar entrenamiento'}
+            <h2>{active?.data.title ?? nextDay?.title ?? today[0]?.data.title ?? 'Tu próximo entrenamiento'}</h2>
+            {!active && !nextDay && !today.length && <p>Asigná una rutina al día de hoy para empezar.</p>}
+            <button onClick={() => active ? navigate('/sesion/' + active.id) : nextDay ? void start() : today.length ? void start(today[0].id) : navigate('/entrenar')}>
+              {active ? 'Continuar entrenamiento' : nextDay || today.length ? 'Empezar entrenamiento' : 'Preparar entrenamiento'}
             </button>
           </section>
-          <section className="panel companion-card"><Companion name={profile.companion} /><div><h2>{profile.companion}</h2>{owner !== local && <><p>Nivel {1 + Math.floor(xp / 100)} · {xp} XP</p><progress className="xp-meter" value={xp % 100} max={100} aria-label="Experiencia hacia el próximo nivel" /></>}<NavLink to="/perfil">Elegir compañero</NavLink></div></section>
+          <section className="panel companion-card"><Companion name={profile.companion} stage={stageFor(petXp)} /><div><h2>{profile.companion}</h2>{<><p>Nivel {1 + Math.floor(xp / 100)} · {xp} XP</p><progress className="xp-meter" value={xp % 100} max={100} aria-label="Experiencia hacia el próximo nivel" /></>}<NavLink to="/mascotas">Ver compañero</NavLink></div></section>
           <div className="stats"><section className="panel"><Flame className="lime" /><p>Sesiones esta semana</p><strong>{weekCount}</strong></section>
             <section className="panel"><Activity className="lime" /><p>Sesiones totales</p><strong>{completed.length}</strong></section></div>
         </>} />
-        <Route path="/entrenar" element={<Routines owner={owner} date={date} weekStart={profile.weekStart} unit={profile.unit} start={start} />} />
+        <Route path="/entrenar" element={<Train routine={routine} index={index} active={active?.data.title}
+          companion={profile.companion} stage={stageFor(petXp)} start={() => void start()}
+          skip={() => { if (cycle && nextDay) changeCycle({ ...cycle, skipped: [...cycle.skipped, nextDay.id] }) }}
+          delay={() => { if (cycle && nextDay && routine) changeCycle({ ...cycle, order: [...routine.days.filter(day => day.id !== nextDay.id).map(day => day.id), nextDay.id] }) }}
+          repeat={() => { if (cycle) changeCycle({ id: uid(), routineId: cycle.routineId, skipped: [] }) }} />} />
+        <Route path="/rutinas" element={<ProgramLibrary routines={routines} activate={activate} />} />
+        <Route path="/editor/manual" element={<Routines key="manual" {...editorProps} mode="manual" editId={params.get('rutina') ?? undefined} />} />
+        <Route path="/editor/importar" element={<Routines key="importar" {...editorProps} mode="importar" />} />
+        <Route path="/calendario" element={<Routines key="calendar" {...editorProps} mode="calendar" />} />
+        <Route path="/ejercicios" element={<Library />} />
+        <Route path="/mascotas" element={<PetShop owner={owner} profile={profile} rewards={rewards} />} />
         <Route path="/sesion/:id" element={<Workout owner={owner} profile={profile} sessions={sessions} sets={sets} rewards={rewards} />} />
-        <Route path="/progreso" element={<Progress sessions={completed} sets={sets} unit={profile.unit} />} />
+        <Route path="/progreso" element={<Progress sessions={completed} sets={sets} unit={profile.unit} today={date} weekStart={profile.weekStart} />} />
         <Route path="/amigos" element={<><h1>Amigos</h1><p>Las funciones sociales todavía no están disponibles.</p></>} />
         <Route path="/instalar" element={<Install />} />
         <Route path="/perfil" element={<><h1>Perfil</h1>
@@ -209,23 +274,23 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
             const fields = new FormData(event.currentTarget)
             void save(owner, 'profile', 'self', {
               ...profile, name: String(fields.get('name')).trim(), unit: fields.get('unit') === 'lb' ? 'lb' : 'kg',
+              weightKg: fields.get('weight') ? toKg(Number(fields.get('weight')), profile.unit) : undefined,
               theme: fields.get('theme') === 'light' ? 'light' : 'dark', weekStart: Number(fields.get('weekStart')),
             }).then(() => setStatus('Preferencias guardadas'))
           }} key={JSON.stringify(profile)}>
             <label>Nombre visible<input name="name" defaultValue={profile.name} maxLength={60} /></label>
+            <label>Peso ({profile.unit})<input name="weight" type="number" min="1" step="any" defaultValue={profile.weightKg ? fromKg(profile.weightKg, profile.unit) : ''} /></label>
             <label>Unidad<select name="unit" defaultValue={profile.unit}><option>kg</option><option>lb</option></select></label>
             <label>Tema<select name="theme" defaultValue={profile.theme}><option value="dark">Oscuro</option><option value="light">Claro</option></select></label>
             <label>Inicio de semana<select name="weekStart" defaultValue={profile.weekStart}>
               {['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'].map((day, index) => <option key={day} value={index}>{day}</option>)}</select></label>
             <button>Guardar preferencias</button>
           </form>
-          <section className="panel"><h2>Compañero</h2><div className="companion-picker">
-            {companions.map(name => <button key={name} className="secondary" aria-pressed={profile.companion === name}
-              onClick={() => void save(owner, 'profile', 'self', { ...profile, companion: name }).catch(() => setStatus('No se pudo guardar la mascota'))}>
-              <Companion name={name} />{name}
-            </button>)}
-          </div></section>
-          <section className="panel"><NavLink to="/instalar">Instalar GymBeast</NavLink></section>
+          <section className="panel actions"><NavLink to="/mascotas">Mascotas y tienda</NavLink>
+            <NavLink to="/amigos">Amigos</NavLink><NavLink to="/instalar">Instalar GymBeast</NavLink>
+            <details><summary>Privacidad</summary><p>Tu peso, tus rutinas y tu historial son privados.</p></details>
+          </section>
+          {owner === local && <RestoreBackup />}
           <section className="panel actions">
             <button className="secondary" onClick={async () => {
               const items = await db.items.where('owner').equals(owner).toArray()
@@ -251,7 +316,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
     </main>
     <nav aria-label="Navegación principal">
       <NavLink end to="/"><House />Inicio</NavLink><NavLink to="/entrenar"><Dumbbell />Entrenar</NavLink>
-      <NavLink to="/progreso"><Activity />Progreso</NavLink><NavLink to="/amigos"><Users />Amigos</NavLink>
+      <NavLink to="/rutinas"><BookOpen />Rutinas</NavLink><NavLink to="/progreso"><Activity />Progreso</NavLink>
       <NavLink to="/perfil"><UserRound />Perfil</NavLink>
     </nav>
   </>

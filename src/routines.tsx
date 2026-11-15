@@ -1,18 +1,13 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { catalog, exerciseSchema, parseRoutine, uid, weekDates, type Day, type Exercise, type Profile, type Routine } from './domain'
 import { list, save, saveMany } from './store'
-import { Library } from './library'
 
-const templates = [
-  ['Torso y pierna', 'Día 1 — Torso\nPress banca 3x8-12\nRemo barra 3x8-12\nDía 2 — Pierna\nSentadilla libre 3x8-12\nPrensa 3x10'],
-  ['Push / Pull / Legs', 'Push\nPress banca 3x8-12\nTríceps polea 3x10\nPull\nJalón al pecho 3x8-12\nCurl martillo 3x10\nLegs\nSentadilla libre 3x8\nGemelos 3x12'],
-  ['División de cinco días', 'Día 1 — Espalda y bíceps\nRemo T 3x8-12\nCurl inclinado con mancuernas 3x12\nDía 2 — Posterior de pierna\nHip thrust 3x12\nCamilla de isquios 3x12\nDía 3 — Pecho, hombros y tríceps\nPress banca 3x8\nElevaciones laterales 3x12\nTríceps polea 3x12\nDía 4 — Cuádriceps y abductores\nPrensa de cuádriceps 3x10\nAbductores en máquina 3x12\nDía 5 — Tren superior\nJalón al pecho cerrado 3x10\nPress inclinado mancuernas 3x10'],
-]
 const empty = () => ({ name: '', version: 1, source: '', days: [] })
 
-export function Routines({ owner, date, weekStart, unit, start }: {
-  owner: string; date: string; weekStart: number; unit: Profile['unit']; start: (id: string) => Promise<void>
+export function Routines({ owner, date, weekStart, unit, start, mode, editId }: {
+  owner: string; date: string; weekStart: number; unit: Profile['unit']; start: (id: string) => Promise<void>; mode: 'manual' | 'importar' | 'calendar'; editId?: string
 }) {
   const routines = useLiveQuery(() => list(owner, 'routine'), [owner], [])
   const schedule = useLiveQuery(() => list(owner, 'schedule'), [owner], [])
@@ -20,6 +15,12 @@ export function Routines({ owner, date, weekStart, unit, start }: {
   const [editing, setEditing] = useState('')
   const [message, setMessage] = useState('')
   const [week, setWeek] = useState(date)
+  const requested = routines.find(item => item.id === editId)
+  useEffect(() => {
+    if (!requested) return
+    setEditing(requested.id)
+    setDraft({ ...requested.data, version: requested.data.version + 1 })
+  }, [requested])
   const days = weekDates(week, weekStart)
 
   function changeDay(dayId: string, update: (day: Day) => Day) {
@@ -43,19 +44,8 @@ export function Routines({ owner, date, weekStart, unit, start }: {
     } catch { setMessage('No se pudo guardar la rutina.') }
   }
   return <>
-    <h1>Entrenar</h1>
-    <section className="panel actions" aria-label="Crear una rutina">
-      <a href="#importar">Importar texto</a><a href="#editor" onClick={() => { setDraft(empty()); setEditing('') }}>Crear desde cero</a><a href="#plantillas">Elegir plantilla</a><a href="#biblioteca">Biblioteca</a>
-    </section>
-    <section id="plantillas" className="panel">
-      <h2>Plantillas</h2>
-      <div className="actions">{templates.map(([name, source]) =>
-        <a className="pixel-link" href="#editor" key={name} onClick={() => {
-          setEditing(''); setDraft({ name, source, version: 1, days: parseRoutine(source, unit) })
-        }}>{name}</a>
-      )}</div>
-    </section>
-    <section className="panel">
+    <h1>{mode === 'calendar' ? 'Organizar fechas' : mode === 'importar' ? 'Importar rutina' : 'Crear rutina'}</h1>
+    {mode === 'calendar' && <><section className="panel">
       <h2>Plan semanal</h2>
       <button type="button" className="secondary" onClick={async () => {
         const previousWeek = new Date(days[0] + 'T00:00:00Z')
@@ -121,15 +111,17 @@ export function Routines({ owner, date, weekStart, unit, start }: {
         </form>)}
       </article>)}
     </section>
-    <form id="editor" className="panel" onSubmit={submit}>
+    </>}
+    {(mode !== 'calendar' || !!editing) && <form id="editor" className="panel" onSubmit={submit}>
       <h2>{editing ? 'Editar rutina' : 'Nueva rutina'}</h2>
       {editing && <button type="button" className="secondary" onClick={() => { setDraft(empty()); setEditing('') }}>Cancelar edición</button>}
       <label>Nombre de la rutina<input required value={draft.name} maxLength={100} onChange={event => setDraft({ ...draft, name: event.target.value })} /></label>
-      <label id="importar">Importar desde texto<textarea rows={5} maxLength={40000} value={draft.source}
+      {mode !== 'manual' && <><label id="importar">Importar desde texto<textarea rows={5} maxLength={40000} value={draft.source}
         onChange={event => setDraft({ ...draft, source: event.target.value })} placeholder={'Día 1 — Torso\nPress banca 4×8 — 70 kg'} /></label>
       <div className="actions">
         <button type="button" className="secondary" disabled={!draft.source.trim()} onClick={() => setDraft({ ...draft, days: parseRoutine(draft.source, unit) })}>Preparar vista previa</button>
       </div>
+      </>}
       {!!draft.days.length && <p>{draft.days.length} días · {draft.days.reduce((count, day) => count + day.exercises.length, 0)} ejercicios</p>}
       {draft.days.map(day => <fieldset key={day.id}><legend>Entrenamiento</legend>
         <label>Nombre del día<input required value={day.title} onChange={event => changeDay(day.id, value => ({ ...value, title: event.target.value }))} /></label>
@@ -192,7 +184,7 @@ export function Routines({ owner, date, weekStart, unit, start }: {
         <button>Guardar rutina</button>
       </div>
       {message && <p role="status">{message}</p>}
-    </form>
-    <Library />
+    </form>}
+    {mode !== 'calendar' && <p><Link to="/rutinas">Volver a Rutinas</Link></p>}
   </>
 }
