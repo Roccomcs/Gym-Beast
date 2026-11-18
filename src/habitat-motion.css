@@ -1,0 +1,296 @@
+.habitat-scene[data-species] {
+  --pet-color:#ffd992;
+  --pet-energy:.8;
+  --pet-beat:1s;
+  --effect-reach:24px;
+  --habitat-art:url(/habitat.jpg);
+  background-image:linear-gradient(0deg,#171125a0,transparent 45%),var(--habitat-art);
+  background-size:cover;
+  background-position:center;
+}
+.habitat-scene[data-species="crocodile"] { --pet-color:#8effdf; --habitat-art:url(/habitat-crocodile.webp); }
+.habitat-scene[data-species="bear"] { --pet-color:#ffbd6b; --habitat-art:url(/habitat-bear.webp); }
+.habitat-scene[data-species="wolf"] { --pet-color:#c4e8ff; --habitat-art:url(/habitat-wolf.webp); }
+.habitat-scene[data-species="fox"] { --pet-color:#f9d68a; --habitat-art:url(/habitat-fox.webp); }
+.habitat-scene[data-species="axolotl"] { --pet-color:#ffc5ef; --habitat-art:url(/habitat-axolotl.webp); }
+.habitat-scene[data-species="tiger"] { --pet-color:#dbf791; --habitat-art:url(/habitat-tiger.webp); }
+.habitat-scene[data-species="phoenix"] { --pet-color:#ffe39a; --habitat-art:url(/habitat-phoenix.webp); }
+.habitat-scene[data-species][data-phase="2"] { --pet-energy:1; --pet-beat:.86s; --effect-reach:35px; }
+.habitat-scene[data-species][data-phase="3"] { --pet-energy:1.15; --pet-beat:1.18s; --effect-reach:45px; }
+.habitat-scene[data-species][data-phase="4"] { --pet-energy:1.32; --pet-beat:1.38s; --effect-reach:50px; }
+.habitat-scene[data-species][data-phase="5"] { --pet-energy:1.62; --pet-beat:1.65s; --effect-reach:60px; }
+.habitat-weather {
+  position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+}
+.habitat-scene:is([data-species="wolf"],[data-species="bear"],[data-species="crocodile"],[data-species="fox"],[data-species="tiger"]) .habitat-weather::before,
+.habitat-scene:is([data-species="wolf"],[data-species="bear"],[data-species="crocodile"],[data-species="fox"],[data-species="tiger"]) .habitat-weather::after {
+  content:""; position:absolute; inset:0;
+  background-image:linear-gradient(0deg,#171125a0,transparent 45%),var(--habitat-art);
+  background-size:cover; background-position:center;
+  mask-image:radial-gradient(ellipse 43% 85% at 0% 10%,#000 25%,transparent 95%);
+  transform-origin:0% 84%;
+  animation:habitat-canopy 6.8s ease-in-out infinite alternate;
+}
+.habitat-scene:is([data-species="wolf"],[data-species="bear"],[data-species="crocodile"],[data-species="fox"],[data-species="tiger"]) .habitat-weather::after {
+  z-index:-1;
+  mask-image:radial-gradient(ellipse 48% 83% at 100% 13%,#000 24%,transparent 95%);
+  transform-origin:100% 82%;
+  animation-delay:-3s; animation-direction:alternate-reverse;
+}
+@keyframes habitat-canopy {
+  from { transform:translateX(-1.1%) skewX(-1.6deg) scale(1.025); }
+  to { transform:translateX(1.1%) skewX(1.6deg) scale(1.025); }
+}
+.habitat-weather-detail {
+  --x:8%; --delay:-1s; --duration:9s; --sway:24px; --y:64%;
+  position:absolute; z-index:1; left:var(--x);
+  width:4px; height:4px; opacity:0;
+  animation-delay:var(--delay);
+  animation-duration:var(--duration);
+  animation-timing-function:linear;
+  animation-iteration-count:infinite;
+}
+.habitat-weather-detail:nth-child(2) { --x:21%; --delay:-6s; --duration:10s; --y:79%; --sway:-20px; }
+.habitat-weather-detail:nth-child(3) { --x:37%; --delay:-8s; --duration:11s; --y:62%; }
+.habitat-weather-detail:nth-child(4) { --x:57%; --delay:-3s; --duration:8s; --y:87%; --sway:-26px; }
+.habitat-weather-detail:nth-child(5) { --x:67%; --delay:-6s; --duration:8s; }
+.habitat-weather-detail:nth-child(6) { --x:79%; --delay:-2s; --duration:10s; --sway:-18px; }
+.habitat-weather-detail:nth-child(7) { --x:91%; --delay:-5s; --duration:8.5s; }
+.habitat-weather-detail:nth-child(8) { --x:48%; --delay:-2s; --duration:12s; --sway:-25px; }
+.habitat-scene[data-species="wolf"] .habitat-weather-detail {
+  top:-8px; background:#f2f8ff; box-shadow:0 0 4px #b7deff;
+  animation-name:habitat-snow;
+}
+.habitat-scene[data-species="wolf"] .habitat-weather-detail:nth-child(odd) { width:3px; height:3px; }
+@keyframes habitat-snow {
+  12%,82% { opacity:.85; }
+  48% { transform:translate(var(--sway),126px); opacity:.65; }
+  100% { transform:translate(0,clamp(260px,90vw,385px)); opacity:0; }
+}
+.habitat-scene[data-species="bear"] .habitat-weather-detail {
+  top:-12px; width:10px; height:8px; background:#ffb246;
+  clip-path:polygon(0 25%, 25% 25%, 25% 0, 100% 0, 100% 55%, 78% 55%, 78% 78%, 38% 78%, 38% 100%, 15% 100%, 15% 70%, 0 70%);
+  animation-name:habitat-leaf;
+}
+.habitat-scene[data-species="bear"] .habitat-weather-detail:nth-child(2n) { background:#e77038; }
+@keyframes habitat-leaf {
+  10%,85% { opacity:.9; }
+  44% { transform:translate(var(--sway),106px) rotate(155deg); }
+  72% { transform:translate(calc(-.65 * var(--sway)),176px) rotate(228deg); }
+  100% { transform:translate(9px,clamp(260px,90vw,385px)) rotate(335deg); opacity:0; }
+}
+.habitat-scene[data-species="crocodile"] .habitat-weather-detail {
+  left:calc(16% + var(--x)); top:var(--y); width:clamp(36px,15vw,92px); height:.95rem;
+  border:1px solid #baffeb; border-radius:50%;
+  box-shadow:0 2px 0 #35c9b47a,inset 0 0 4px #baffeb70;
+  animation-name:habitat-ripple; animation-timing-function:ease-out;
+}
+@keyframes habitat-ripple {
+  0%,47% { transform:translateX(-50%) scale(.12); opacity:0; }
+  55% { opacity:.9; }
+  88%,100% { transform:translateX(-50%) scale(1.5); opacity:0; }
+}
+.habitat-scene[data-species="dragon"] .habitat-weather-detail {
+  bottom:14%; color:#ffbc74; background:#ffe2a3; box-shadow:0 0 7px currentColor;
+  animation-name:habitat-ember;
+}
+.habitat-scene[data-species="dragon"] .habitat-weather-detail:nth-child(odd) { bottom:36%; width:3px; height:3px; }
+.habitat-scene:is([data-species="dragon"],[data-species="phoenix"]) .habitat-weather::before {
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 16% 44%,#ffc66a60,transparent 15%),
+    radial-gradient(ellipse at 84% 46%,#ffc66a60,transparent 14%);
+  animation:habitat-lanterns 4.5s ease-in-out infinite;
+}
+@keyframes habitat-lanterns {
+  0%,100% { opacity:.3; }
+  35% { opacity:.8; }
+  55% { opacity:.5; }
+  68% { opacity:.88; }
+}
+@keyframes habitat-ember {
+  10%,66% { opacity:.85; }
+  45% { transform:translate(var(--sway),-43px) rotate(40deg); }
+  100% { transform:translate(4px,-112px) scale(.3); opacity:0; }
+}
+@media (prefers-reduced-motion:reduce) { .habitat-weather { display:none; } }
+.habitat-scene[data-species] .pet-art { position:relative; }
+.habitat-scene[data-species] .dragon-stage { mask-image:none; }
+.habitat-place {
+  position:absolute; z-index:3; pointer-events:none; color:#fff;
+  text-shadow:0 1px 3px #111; font-weight:750; font-size:.78rem;
+  right:.65rem; bottom:.72rem; max-width:58%; text-align:right;
+}
+.habitat-effects { position:absolute; inset:0; pointer-events:none; color:var(--pet-color); }
+.habitat-effects svg {
+  position:absolute; left:54%; top:49%; width:1.15rem; height:1.15rem; opacity:0;
+  filter:drop-shadow(0 1px 3px #161125); animation:pet-effect var(--pet-beat) ease-out both;
+  --effect-x:var(--effect-reach); --effect-y:-27px;
+}
+.habitat-effects svg:nth-child(2) { animation-delay:.12s; --effect-x:calc(-1 * var(--effect-reach)); --effect-y:-35px; }
+.habitat-effects svg:nth-child(3) { animation-delay:.24s; --effect-x:7px; --effect-y:-45px; }
+@keyframes pet-effect {
+  12% { opacity:1; transform:scale(.65); }
+  70% { opacity:.85; }
+  100% { opacity:0; transform:translate(var(--effect-x),var(--effect-y)) scale(1.22); }
+}
+.habitat-scene[data-species]:not([data-phase="0"]) .pet-motion { transform-origin:50% 76%; }
+.habitat-scene[data-species="crocodile"]:not([data-phase="0"]) .pet-motion { animation:pet-swim 6s ease-in-out infinite; }
+.habitat-scene[data-species="bear"]:not([data-phase="0"]) .pet-motion { animation:pet-sniff 5.2s ease-in-out infinite; }
+.habitat-scene[data-species="wolf"]:not([data-phase="0"]) .pet-motion { animation:pet-trot 4.8s ease-in-out infinite; }
+@keyframes pet-swim {
+  25% { transform:translate(-8%,9px) rotate(-3deg) scaleY(.94); }
+  72% { transform:translate(9%,6px) rotate(2deg) scaleY(.97); }
+}
+@keyframes pet-sniff {
+  22% { transform:translate(-3%,3px) rotate(-4deg); }
+  63% { transform:translate(4%,-5px) rotate(4deg) scale(1.02); }
+  80% { transform:rotate(2deg); }
+}
+@keyframes pet-trot {
+  15% { transform:translate(-8%,-5px) rotate(-2deg); }
+  32% { transform:translate(-12%,0); }
+  45% { transform:translate(-7%,-5px) rotate(2deg); }
+  73% { transform:translate(8%,-5px) rotate(-2deg); }
+  87% { transform:translate(6%,0); }
+}
+.habitat-scene[data-phase="0"] .pet-art.pet-play { animation:pet-egg-wiggle .67s ease-in-out; }
+.habitat-scene[data-species="dragon"]:is([data-phase="2"],[data-phase="3"],[data-phase="4"],[data-phase="5"]) .pet-play { animation:pet-dragon-loop var(--pet-beat) ease-in-out; }
+.habitat-scene[data-species="crocodile"]:not([data-phase="0"]) .pet-play { animation:pet-dive var(--pet-beat) ease-in-out; }
+.habitat-scene[data-species="bear"]:not([data-phase="0"]) .pet-play { animation:pet-rear var(--pet-beat) ease-in-out; }
+.habitat-scene[data-species="wolf"]:not([data-phase="0"]) .pet-play { animation:pet-howl var(--pet-beat) ease-in-out; }
+@keyframes pet-egg-wiggle {
+  20%,55% { transform:rotate(-9deg); }
+  36%,72% { transform:rotate(9deg); }
+}
+@keyframes pet-dragon-loop {
+  25% { transform:translate(-3%,calc(-15px * var(--pet-energy))) rotate(-9deg); }
+  60% { transform:translate(4%,-16px) rotate(7deg) scale(.94); }
+  85% { transform:scale(1.04,.96); }
+}
+@keyframes pet-dive {
+  16% { transform:rotate(-7deg) translateY(-5px); }
+  45%,60% { transform:translate(5%,calc(16px * var(--pet-energy))) rotate(5deg); clip-path:inset(0 0 36%); }
+  81% { transform:translate(2%,-4px); clip-path:inset(0); }
+}
+@keyframes pet-rear {
+  19% { transform:translateY(4px) scale(1.055,.94); }
+  45%,62% { transform:translateY(calc(-13px * var(--pet-energy))) rotate(-4deg) scale(.96,1.05); }
+  83% { transform:rotate(3deg); }
+}
+@keyframes pet-howl {
+  19% { transform:rotate(4deg) translateY(3px); }
+  41%,66% { transform:rotate(calc(-8deg * var(--pet-energy))) translateY(-7px); }
+  88% { transform:rotate(2deg); }
+}
+.habitat-scene[data-species="dragon"][data-phase="3"] .pet-play { animation-name:pet-roll; }
+.habitat-scene[data-species="crocodile"][data-phase="1"] .pet-play { animation-name:pet-splash; }
+.habitat-scene[data-species="crocodile"][data-phase="2"] .pet-play { animation-name:pet-tail-flick; }
+.habitat-scene[data-species="crocodile"][data-phase="5"] .pet-play { animation-name:pet-wave; }
+.habitat-scene[data-species="bear"][data-phase="1"] .pet-play { animation-name:pet-stretch; }
+.habitat-scene[data-species="bear"]:is([data-phase="2"],[data-phase="3"]) .pet-play { animation-name:pet-peek; }
+.habitat-scene[data-species="bear"][data-phase="5"] .pet-play { animation-name:pet-stomp; }
+.habitat-scene[data-species="wolf"][data-phase="1"] .pet-play { animation-name:pet-yip; }
+.habitat-scene[data-species="wolf"][data-phase="2"] .pet-play { animation-name:pet-pack-call; }
+.habitat-scene[data-species="wolf"][data-phase="5"] .pet-play { animation-name:pet-pack-call; }
+.habitat-scene[data-species="fox"]:not([data-phase="0"]) .pet-motion { animation:pet-trot 3.8s ease-in-out infinite; }
+.habitat-scene[data-species="tiger"]:not([data-phase="0"]) .pet-motion { animation:pet-sniff 6.6s ease-in-out infinite; }
+.habitat-scene[data-species="axolotl"]:not([data-phase="0"]) .pet-motion { animation:pet-swim 4.5s ease-in-out infinite; }
+.habitat-scene[data-species="fox"]:not([data-phase="0"]) .pet-play { animation:pet-stretch var(--pet-beat) ease-in-out; }
+.habitat-scene[data-species="tiger"]:not([data-phase="0"]) .pet-play { animation:pet-pounce var(--pet-beat) ease-in-out; }
+.habitat-scene[data-species="axolotl"]:not([data-phase="0"]) .pet-play { animation:pet-bubbles var(--pet-beat) ease-in-out; }
+.habitat-scene[data-species="phoenix"]:not([data-phase="0"]) .pet-play { animation:pet-dragon-loop var(--pet-beat) ease-in-out; }
+.habitat-scene:is([data-species="fox"],[data-species="tiger"],[data-species="phoenix"]) .habitat-weather-detail {
+  bottom:24%; background:var(--pet-color); box-shadow:0 0 6px var(--pet-color);
+  animation-name:habitat-ember;
+}
+.habitat-scene[data-species="axolotl"] .habitat-weather-detail {
+  bottom:10%; width:7px; height:7px; border:1px solid #cbf7ff; border-radius:50%;
+  animation-name:habitat-bubble;
+}
+@keyframes habitat-bubble {
+  12%,74% { opacity:.85; }
+  46% { transform:translate(var(--sway),-58px) scale(.85); }
+  100% { transform:translate(-9px,-155px) scale(1.3); opacity:0; }
+}
+@keyframes pet-pounce {
+  20% { transform:scale(1.06,.88) translateX(-5%); }
+  55% { transform:translate(10%,-17px) rotate(4deg); }
+  78% { transform:translateX(6%) scale(1.03,.95); }
+}
+@keyframes pet-bubbles {
+  36% { transform:translate(-7%,-12px) rotate(-9deg); }
+  67% { transform:translate(6%,3px) rotate(7deg); }
+}
+@keyframes pet-roll {
+  0% { transform:rotate(0); }
+  50% { transform:translateY(-24px) rotate(180deg) scale(.83); }
+  100% { transform:rotate(360deg); }
+}
+@keyframes pet-splash {
+  34% { transform:translateY(-12px) rotate(-6deg); }
+  70% { transform:translateY(7px) scale(1.04,.95); }
+}
+@keyframes pet-tail-flick {
+  25% { transform:translateX(-7%) skewX(9deg) rotate(-4deg); }
+  56% { transform:translateX(5%) skewX(-7deg); }
+}
+@keyframes pet-wave {
+  25% { transform:translateY(15px) scaleY(.94); }
+  55% { transform:translateY(-13px) rotate(-7deg) scale(.94); }
+  81% { transform:translateY(8px) rotate(2deg); }
+}
+@keyframes pet-stretch {
+  27% { transform:rotate(-6deg) scale(1.08,.92); }
+  64% { transform:rotate(5deg) scale(.95,1.06); }
+}
+@keyframes pet-peek {
+  24% { transform:translateX(calc(-7% * var(--pet-energy))) rotate(-6deg); }
+  62% { transform:translateX(calc(6% * var(--pet-energy))) rotate(6deg); }
+}
+@keyframes pet-stomp {
+  25% { transform:translateY(-10px) rotate(-5deg); }
+  48% { transform:translateY(9px) scale(1.03,.94); }
+  62% { transform:translateX(-3px); }
+  75% { transform:translateX(3px); }
+}
+@keyframes pet-yip {
+  33% { transform:translateY(-9px) rotate(-7deg); }
+  68% { transform:rotate(4deg); }
+}
+@keyframes pet-pack-call {
+  28%,70% { transform:rotate(calc(-9deg * var(--pet-energy))) translateY(-7px); }
+  50% { transform:rotate(-3deg); }
+}
+.pet-gallery .input-grid { margin-bottom:.65rem; }
+.pet-gallery .habitat { margin-bottom:0; }
+@media (prefers-reduced-motion:reduce) {
+  .habitat-scene[data-species] .pet-art.pet-play { animation:pet-highlight .4s ease-out; }
+  .habitat-effects svg { animation:none; }
+}
+.habitat-scene .habitat-buddy {
+  position:absolute; z-index:3; display:grid; place-items:center; right:10%; bottom:15%;
+  width:clamp(50px,18vw,88px); height:clamp(50px,18vw,88px);
+  min-height:0; padding:0; border:0; border-radius:0; background:none; box-shadow:none;
+  animation:buddy-roam 7s ease-in-out infinite;
+}
+.habitat-buddy .buddy-reaction { display:grid; place-items:center; width:100%; height:100%; }
+.habitat-buddy .fitted-accessory { width:76%; }
+.habitat-buddy .dragon-stage { width:100%; transform:scale(2); }
+.habitat-buddy[data-buddy-art="fish"] .dragon-stage,.habitat-buddy[data-buddy-art="tiger"] .dragon-stage {
+  background-size:300% 200%; pointer-events:none;
+}
+.habitat-buddy:is([data-buddy-art="moon"],[data-buddy-art="flame"],[data-buddy-art="wand"]) { animation-name:buddy-hover; }
+.habitat-buddy[data-buddy-art="slime"] { animation-name:buddy-hop; }
+.buddy-reaction[data-played="true"] { animation:buddy-greet .55s ease-in-out; }
+@keyframes buddy-roam {
+  0%,100% { transform:translate(0,0); }
+  24% { transform:translate(-12px,-5px); }
+  50% { transform:translate(-28px,2px); }
+  76% { transform:translate(-12px,-5px); }
+}
+@keyframes buddy-hover { 50% { transform:translate(-14px,-21px) rotate(8deg); } }
+@keyframes buddy-hop { 25%,70% { transform:translate(-14px,-13px) scale(.91,1.08); } 48% { transform:translate(-25px,0) scale(1.1,.91); } }
+@keyframes buddy-greet { 45% { transform:translateY(-13px) rotate(-12deg) scale(1.13); } }
+@media(prefers-reduced-motion:reduce) {
+  .habitat-scene .habitat-buddy,.buddy-reaction[data-played="true"] { animation:none; }
+}

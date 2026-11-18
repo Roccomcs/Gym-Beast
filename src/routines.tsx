@@ -2,6 +2,9 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { catalog, exerciseSchema, parseRoutine, reviseRoutine, uid, weekDates, type Day, type Exercise, type Profile, type Routine } from './domain'
+import { Plus, Trash2, Camera } from 'lucide-react'
+import { compactPhoto } from './photo'
+import { fromKg, toKg } from './domain'
 import { list, save, saveMany } from './store'
 
 const empty = () => ({ name: '', version: 1, source: '', days: [] })
@@ -14,6 +17,7 @@ export function Routines({ owner, date, weekStart, unit, start, mode, editId }: 
   const [draft, setDraft] = useState<Routine>(empty)
   const [editing, setEditing] = useState('')
   const [message, setMessage] = useState('')
+  const [preparingPhoto, setPreparingPhoto] = useState(false)
   const [week, setWeek] = useState(date)
   const requested = routines.find(item => item.id === editId)
   useEffect(() => {
@@ -127,10 +131,22 @@ export function Routines({ owner, date, weekStart, unit, start, mode, editId }: 
       </details>}
       {editing && <button type="button" className="secondary" onClick={() => { setDraft(empty()); setEditing('') }}>Cancelar edición</button>}
       <label>Nombre de la rutina<input required value={draft.name} maxLength={100} onChange={event => setDraft({ ...draft, name: event.target.value })} /></label>
-      {mode !== 'manual' && <><label id="importar">Importar desde texto<textarea rows={5} maxLength={40000} value={draft.source}
+      <div className="routine-image-field">
+        {draft.photo && <img className="routine-photo" src={draft.photo} alt="Foto de la rutina"/>}
+        <label><Camera size={17}/> Foto de la rutina<input type="file" accept="image/*" onChange={async event => {
+          const file = event.target.files?.[0]
+          if (!file) return
+          setPreparingPhoto(true)
+          try { const photo = await compactPhoto(file); setDraft(current => ({ ...current, photo })) }
+          catch { setMessage('No se pudo cargar esa imagen.') }
+          finally { setPreparingPhoto(false) }
+        }}/></label>
+        {draft.photo && <button className="secondary" type="button" onClick={() => setDraft(current => ({ ...current, photo: undefined }))}>Quitar foto</button>}
+      </div>
+      {mode !== 'manual' && <><p>Si faltan series o repeticiones, sugerimos 3 × 10. Podés editarlas antes de guardar.</p><label id="importar">Importar desde texto<textarea rows={5} maxLength={40000} value={draft.source}
         onChange={event => setDraft({ ...draft, source: event.target.value })} placeholder={'Día 1 — Torso\nPress banca 4×8 — 70 kg'} /></label>
       <div className="actions">
-        <button type="button" className="secondary" disabled={!draft.source.trim()} onClick={() => setDraft({ ...draft, days: parseRoutine(draft.source, unit) })}>Preparar vista previa</button>
+        <button type="button" className="secondary" disabled={!draft.source.trim()} onClick={() => setDraft({ ...draft, name: draft.name || 'Rutina importada', days: parseRoutine(draft.source, unit).map(day => ({ ...day, exercises: day.exercises.map(exercise => ({ ...exercise, sets: exercise.sets ?? 3, min: exercise.min ?? 10, max: exercise.max ?? exercise.min ?? 10 })) })) })}>Preparar vista previa</button>
       </div>
       </>}
       {!!draft.days.length && <p>{draft.days.length} días · {draft.days.reduce((count, day) => count + day.exercises.length, 0)} ejercicios</p>}
@@ -143,56 +159,45 @@ export function Routines({ owner, date, weekStart, unit, start, mode, editId }: 
             <span className="pixel-link">Superserie {exercise.superset.name} · {exercise.superset.rounds} vueltas</span>
             <button type="button" className="secondary" onClick={() => changeExercise(day, exercise.id, { superset: undefined })}>Sacar del grupo</button>
           </div>}
-          <label>Notas<input value={exercise.notes ?? ''} onChange={event => changeExercise(day, exercise.id, { notes: event.target.value })} /></label>
+          {mode === 'importar' && exercise.notes && <small>{exercise.notes}</small>}
           <label>Ejercicio<input list="exercise-catalog" required value={exercise.name}
-            onChange={event => changeExercise(day, exercise.id, { name: event.target.value, catalogId: catalog.find(entry => entry[1] === event.target.value)?.[0] ?? null })} /></label>
-          <div className="input-grid">
-            {([['sets','Series'], ['min','Reps mín.'], ['max','Reps máx.'], ['load','Carga'], ['rest','Descanso (s)']] as const).map(([key, label]) =>
-              <label key={key}>{label}<input type="number" min={key === 'load' || key === 'rest' ? 0 : 1} step={key === 'load' ? 'any' : 1}
-                value={exercise[key] ?? ''} onChange={event => changeExercise(day, exercise.id, { [key]: event.target.value === '' ? null : event.target.valueAsNumber })} /></label>)}
-            <label>Unidad<select value={exercise.unit ?? ''} onChange={event => changeExercise(day, exercise.id, { inferredUnit: false, unit: event.target.value === 'lb' ? 'lb' : event.target.value === 'kg' ? 'kg' : null })}><option value="">Sin unidad</option><option>kg</option><option>lb</option></select></label>
-            <label>Carga<select value={exercise.mode} onChange={event => changeExercise(day, exercise.id, { mode: event.target.value as Exercise['mode'] })}>
-              <option value="unknown">Sin definir</option><option value="external">Externa</option><option value="per-side">Por lado</option>
-              <option value="bodyweight">Corporal</option><option value="assisted">Asistida</option></select></label>
+            onChange={event => {
+              const name = event.target.value
+              const recognized = name.trim() ? parseRoutine(name, unit)[0]?.exercises[0] : undefined
+              changeExercise(day, exercise.id, {
+                name, catalogId: recognized?.catalogId ?? null,
+                ...(recognized?.catalogId && recognized.catalogId !== exercise.catalogId ? { mode: recognized.mode } : {}),
+              })
+            }} /></label>
+          <div className="input-grid compact-fields">
+            <label>Series<input type="number" min="1" value={exercise.sets ?? ''}
+              onChange={event => changeExercise(day, exercise.id, { sets: event.target.valueAsNumber || null })}/></label>
+            <label>Repeticiones<input type="number" min="1" value={exercise.min ?? ''}
+              onChange={event => changeExercise(day, exercise.id, { min: event.target.valueAsNumber || null, max: event.target.valueAsNumber || null })}/></label>
+            <label>Peso ({unit})<input inputMode="decimal" pattern="[0-9]+([.,][0-9]+)?"
+              key={exercise.id + ':' + unit} defaultValue={exercise.load === null ? '' : fromKg(toKg(exercise.load, exercise.unit ?? unit), unit)}
+              onChange={event => {
+                const value = event.target.value
+                if (!value || /^\d+(?:[.,]\d+)?$/.test(value)) changeExercise(day, exercise.id, { load: value ? Number(value.replace(',', '.')) : null, unit, inferredUnit: false })
+              }}/></label>
           </div>
-          <div className="actions">
-            {[-1, 1].map(step => <button key={step} type="button" className="secondary"
-              disabled={!day.exercises[index + step]} onClick={() => changeDay(day.id, current => {
-                const exercises = [...current.exercises]
-                ;[exercises[index], exercises[index + step]] = [exercises[index + step], exercises[index]]
-                return { ...current, exercises }
-              })}>{step < 0 ? 'Subir' : 'Bajar'}</button>)}
-            <button type="button" className="secondary" onClick={() => changeDay(day.id, current => {
-              const exercises = [...current.exercises]
-              exercises.splice(index + 1, 0, { ...exercise, id: uid() })
-              return { ...current, exercises }
-            })}>Duplicar ejercicio</button>
-            <button type="button" className="secondary" onClick={() => changeDay(day.id, current => ({
-              ...current, exercises: current.exercises.filter(entry => entry.id !== exercise.id),
-            }))}>Quitar ejercicio</button>
-          </div>
+          <button type="button" className="secondary icon-action" aria-label="Quitar ejercicio" onClick={() => changeDay(day.id, current => ({
+            ...current, exercises: current.exercises.filter(entry => entry.id !== exercise.id),
+          }))}><Trash2 size={17}/></button>
         </fieldset>)}
         <div className="actions">
           <button type="button" className="secondary" onClick={() => {
             const exercise = parseRoutine('Ejercicio')[0].exercises[0]
             changeDay(day.id, current => ({ ...current, exercises: [...current.exercises, { ...exercise, name: '', original: '', warning: undefined }] }))
-          }}>Agregar ejercicio</button>
-          <button type="button" className="secondary" onClick={() => {
-            const groups = new Map<string, string>()
-            const exercises = day.exercises.map(exercise => {
-              const group = exercise.superset
-              if (group && !groups.has(group.id)) groups.set(group.id, uid())
-              return { ...exercise, id: uid(), superset: group ? { ...group, id: groups.get(group.id)! } : undefined }
-            })
-            setDraft({ ...draft, days: [...draft.days, { ...day, id: uid(), title: day.title + ' (copia)', exercises }] })
-          }}>Duplicar día</button>
-          <button type="button" className="secondary" onClick={() => setDraft({ ...draft, days: draft.days.filter(entry => entry.id !== day.id) })}>Quitar día</button>
+          }}><Plus size={16}/> Agregar ejercicio</button>
+          <button type="button" className="secondary icon-action" aria-label="Quitar día"
+            onClick={() => setDraft(current => ({ ...current, days: current.days.filter(entry => entry.id !== day.id) }))}><Trash2 size={17}/></button>
         </div>
       </fieldset>)}
       <datalist id="exercise-catalog">{catalog.map(([id, name]) => <option key={id} value={name} />)}</datalist>
       <div className="actions">
         <button type="button" className="secondary" onClick={() => setDraft({ ...draft, days: [...draft.days, { id: uid(), title: 'Día ' + (draft.days.length + 1), exercises: [] }] })}>Agregar día</button>
-        <button>Guardar rutina</button>
+        <button disabled={preparingPhoto}>Guardar rutina</button>
       </div>
       {message && <p role="status">{message}</p>}
     </form>}

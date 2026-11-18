@@ -19,3 +19,4 @@ Los límites específicos sin respaldo oficial y la experiencia práctica de cad
 [WebKit](https://webkit.org/blog/17333/webkit-features-in-safari-26-0/) documenta instalación en iOS. [Apple](https://developer.apple.com/documentation/usernotifications/sending-web-push-notifications-in-web-apps-and-browsers) documenta condiciones de Web Push. El registro debe funcionar tras instalar y abrir la aplicación al menos una vez en línea. El sonido y la vibración dependen del navegador.
 
 [Three.js](https://threejs.org/docs/pages/GLTFLoader.html) carga glTF y admite Draco y Meshopt. Usar geometría original exportada a GLB, sin introducir recursos de Meshy o Mixamo hasta comprobar sus derechos de distribución. Medir antes de añadir un decodificador. Las escenas deben cargarse fuera del registro activo.
+- Referencia para los pasos de preparación y ejecución de ejercicios. [Biblioteca de ACE](https://www.acefitness.org/resources/everyone/exercise-library/)

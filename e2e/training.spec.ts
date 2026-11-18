@@ -1,18 +1,18 @@
 import { fiveDayRoutine } from '../tests/five-day-routine'
 import { expect, test, type Page } from '@playwright/test'
 
-async function onboard(page: Page) {
+async function onboard(page: Page, starter = 'Cocodrilo') {
   await page.goto('/')
   await page.getByRole('button', { name: 'Probar en este dispositivo' }).click()
   await page.getByLabel('Tu nombre').fill('Ari')
-  await page.getByRole('button', { name: /Cocodrilo/ }).click()
+  await page.getByRole('button', { name: new RegExp(starter) }).click()
   await page.getByRole('button', { name: 'Confirmar compañero' }).click()
   await expect(page.getByRole('heading', { name: 'Hola, Ari' })).toBeVisible()
 }
 
 test('activa una rutina y completa un día sin conexión, con una recompensa duradera', async ({ page, context }) => {
   await onboard(page)
-  await expect(page.getByText('Faltan 25 EXP para eclosionar.')).toBeVisible()
+  await expect(page.getByLabel('Progreso hacia la siguiente evolución')).toHaveAttribute('value', '0')
   await page.getByRole('link', { name: 'Rutinas', exact: true }).click()
   await expect(page.locator('.program-card')).toHaveCount(11)
   await page.getByRole('button', { name: /Fuerza base/ }).click()
@@ -26,17 +26,26 @@ test('activa una rutina y completa un día sin conexión, con una recompensa dur
   await expect(page.getByText('1 de 5 series')).toHaveCount(3)
   await page.reload()
   await expect(page.getByText('1 de 5 series')).toHaveCount(3)
+  expect(await page.evaluate(async () => {
+    const response = await fetch('/exercise-poses/atlas-3.webp')
+    const image = await createImageBitmap(await response.blob())
+    const width = image.width
+    image.close()
+    return width
+  })).toBe(1280)
   await page.getByRole('button', { name: 'Finalizar entrenamiento' }).click()
   await expect(page.getByRole('status', { name: '+25 EXP · +20 de oro' })).toBeVisible()
+  await expect(page.locator('.victory-stage')).toHaveAttribute('data-celebrate', 'true')
   await page.reload()
   await expect(page.getByRole('status', { name: '+25 EXP · +20 de oro' })).toHaveCount(1)
   await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
   await expect(page.getByText('DÍA 2 DE 3')).toBeVisible()
   await page.getByRole('link', { name: 'Perfil' }).click()
   await page.getByRole('link', { name: 'Mascotas y tienda' }).click()
-  await expect(page.getByText('Saldo: 20 de oro')).toBeVisible()
+  await expect(page.getByTestId('shop-balance')).toHaveText('Saldo: 20 de oro')
   await expect(page.getByRole('button', { name: 'Comprar' }).first()).toBeDisabled()
-  await expect(page.getByRole('button', { name: /Cocodrilo.*bebé/ })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('button', { name: /Cocodrilo.*huevo/ })).toHaveAttribute('aria-pressed', 'true')
+  await page.getByRole('link', { name: 'Perfil', exact: true }).click()
   await page.getByRole('link', { name: 'Progreso', exact: true }).click()
   await expect(page.getByText('Primera sesión · Completada · +25 EXP')).toHaveCount(1)
   await page.reload()
@@ -47,13 +56,13 @@ test('abre el importador desde Entrenar y conserva una carga corregida', async (
   await onboard(page)
   await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
   await expect(page.getByRole('link', { name: 'Importar texto' })).toHaveCount(0)
-  await page.getByRole('button', { name: 'Crear rutina' }).click()
+  await page.getByRole('link', { name: 'Crear rutina' }).click()
   await page.getByRole('link', { name: 'Importar texto' }).click()
   await page.getByLabel('Nombre de la rutina').fill('Plan inicial')
   await page.getByLabel('Importar desde texto').fill('Día 1 — Torso\nPress banca 3x10 70')
   await page.getByRole('button', { name: 'Preparar vista previa' }).click()
   await expect(page.getByText('Unidad inferida: kg')).toBeVisible()
-  await page.getByLabel('Carga', { exact: true }).fill('72.5')
+  await page.getByLabel('Peso (kg)', { exact: true }).fill('72.5')
   await page.getByRole('button', { name: 'Guardar rutina' }).click()
   await page.getByRole('link', { name: 'Rutinas', exact: true }).click()
   await page.getByRole('button', { name: 'Mis rutinas' }).click()
@@ -65,14 +74,14 @@ test('abre el importador desde Entrenar y conserva una carga corregida', async (
 test('importa la rutina real de cinco días y conserva la vista al volver a editar', async ({ page }) => {
   await onboard(page)
   await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
-  await page.getByRole('button', { name: 'Crear rutina' }).click()
+  await page.getByRole('link', { name: 'Crear rutina' }).click()
   await page.getByRole('link', { name: 'Importar texto' }).click()
   await page.getByLabel('Nombre de la rutina').fill('Mi división')
   await page.getByLabel('Importar desde texto').fill(fiveDayRoutine)
   await page.getByRole('button', { name: 'Preparar vista previa' }).click()
   await expect(page.getByText('5 días · 31 ejercicios')).toBeVisible()
   await expect(page.getByText('Superserie vuelos · 2 vueltas')).toHaveCount(2)
-  await expect(page.locator('input[value="intento 60"]')).toHaveCount(1)
+  await expect(page.getByText('intento 60', { exact: true })).toHaveCount(1)
   await page.getByRole('button', { name: 'Guardar rutina' }).click()
   await page.getByRole('link', { name: 'Volver a Rutinas' }).click()
   await page.getByRole('button', { name: 'Mis rutinas' }).click()
@@ -80,37 +89,14 @@ test('importa la rutina real de cinco días y conserva la vista al volver a edit
   await expect(page.getByText('5 días · 31 ejercicios')).toBeVisible()
 })
 
-test('vista de mascotas respeta movimiento reducido y sirve el GLB', async ({ page, request }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' })
-  await onboard(page)
-  await page.getByRole('link', { name: 'Ver compañero' }).click()
-  await page.getByRole('button', { name: 'Ver en 3D' }).click()
-  await expect(page.getByText('Vista fija por tu preferencia de movimiento reducido.')).toBeVisible()
-  const response = await request.get('/pets/crocodile-baby.glb')
-  expect((await response.body()).subarray(0, 4).toString()).toBe('glTF')
-})
-
-test('carga y dibuja el modelo 3D en Chromium', async ({ browser }) => {
-  const context = await browser.newContext()
-  const page = await context.newPage()
-  await onboard(page)
-  await page.getByRole('link', { name: 'Ver compañero' }).click()
-  const model = page.waitForResponse(response => response.url().endsWith('/pets/crocodile-baby.glb'))
-  await page.getByRole('button', { name: 'Ver en 3D' }).click()
-  expect((await model).ok()).toBe(true)
-  await expect(page.locator('.pet-canvas canvas')).toBeVisible()
-  await expect(page.getByText('Vista 3D no disponible en este dispositivo.')).toHaveCount(0)
-  await context.close()
-})
-
-test('evoluciona al bebé y conserva un accesorio comprado', async ({ page }) => {
+test('evoluciona al bebé con cuatro sesiones el mismo día y conserva el saldo al recargar', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-11-12T12:00:00Z'))
   await onboard(page)
   await page.getByRole('link', { name: 'Rutinas', exact: true }).click()
   await page.getByRole('button', { name: /Fuerza base/ }).click()
   await page.getByRole('button', { name: 'Usar rutina' }).click()
   for (let index = 0; index < 4; index++) {
-    await page.clock.setFixedTime(new Date(Date.UTC(2026, 10, 12 + index, 12)))
+    await page.clock.setFixedTime(new Date(Date.UTC(2026, 10, 12, 12 + index)))
     if (index === 3) await page.getByRole('button', { name: 'Repetir ciclo' }).click()
     await page.getByRole('button', { name: 'Empezar', exact: true }).click()
     const series = page.getByRole('button', { name: 'Registrar serie 1', exact: true })
@@ -118,20 +104,145 @@ test('evoluciona al bebé y conserva un accesorio comprado', async ({ page }) =>
     for (const exercise of await page.locator('.exercise-session').all()) await exercise.getByRole('button', { name: 'Registrar serie 1', exact: true }).click()
     await expect(page.getByRole('button', { name: 'Finalizar entrenamiento' })).toBeEnabled()
     await page.getByRole('button', { name: 'Finalizar entrenamiento' }).click()
-    await expect(page.getByRole('status', { name: '+25 EXP · +20 de oro' })).toBeVisible()
+    await expect(page.getByRole('status', { name: '+25 EXP · +20 de oro', exact: true })).toBeVisible()
     await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
   }
   await page.getByRole('link', { name: 'Perfil' }).click()
   await page.getByRole('link', { name: 'Mascotas y tienda' }).click()
-  await expect(page.getByText('joven · 100 EXP')).toBeVisible()
-  await expect(page.getByText('Saldo: 80 de oro')).toBeVisible()
-  const bandana = page.locator('.shop-row').filter({ hasText: 'Bandana dorada' })
-  await bandana.getByRole('button', { name: 'Comprar' }).click()
-  await bandana.getByRole('button', { name: 'Equipar' }).click()
-  await expect(bandana.getByRole('button', { name: 'Quitar' })).toBeVisible()
+  await expect(page.getByText('bebé · 100 EXP')).toBeVisible()
+  await expect(page.getByTestId('shop-balance')).toHaveText('Saldo: 80 de oro')
+  await expect(page.locator('.shop-row').filter({ hasText: /Bandana|Medalla de entrenamiento|Cadena|Gafas|Guantes/ })).toHaveCount(0)
   await page.reload()
-  await expect(page.getByText('Saldo: 40 de oro')).toBeVisible()
-  await expect(bandana.getByRole('button', { name: 'Quitar' })).toBeVisible()
+  await expect(page.getByTestId('shop-balance')).toHaveText('Saldo: 80 de oro')
+})
+
+test('el bazar guarda compras y muestra la ropa dibujada sobre la mascota a 320 px', async ({ page, context }, info) => {
+  test.setTimeout(60000)
+  await page.setViewportSize({ width: 320, height: 740 })
+  await onboard(page, 'Dragón')
+  await page.evaluate(async () => {
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('gymbeast')
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    const transaction = database.transaction('items', 'readwrite')
+    const items = transaction.objectStore('items')
+    for (let index = 0; index < 24; index++) {
+      const date = new Date(Date.UTC(2026, 9, 1 + index, 12))
+      const id = 'bazar-' + index
+      items.put({ owner: 'local', kind: 'session', id, version: 1, data: {
+        title: 'Entrenamiento', date: date.toISOString().slice(0, 10), started: date.getTime() - 60000,
+        ended: date.getTime(), companion: 'Dragón', cycleId: 'bazar', dayId: id, exercises: [{ id: 'press' }],
+      } })
+      items.put({ owner: 'local', kind: 'set', id, version: 1, data: {
+        sessionId: id, exerciseId: 'press', reps: 10, kg: 25, done: true, created: date.getTime(),
+      } })
+    }
+    await new Promise<void>((resolve, reject) => {
+      transaction.oncomplete = () => resolve()
+      transaction.onerror = () => reject(transaction.error)
+    })
+    database.close()
+  })
+  await page.reload()
+  await page.getByRole('navigation').getByRole('link', { name: 'Tienda', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Tienda mágica' })).toBeVisible()
+  await expect(page.getByTestId('shop-balance')).toHaveText('Saldo: 480 de oro')
+  await page.getByRole('button', { name: 'Huevos', exact: true }).click()
+  await page.locator('.shop-row').filter({ hasText: 'Huevo de zorro' }).getByRole('button', { name: 'Comprar' }).click()
+  await expect(page.getByTestId('shop-balance')).toHaveText('Saldo: 220 de oro')
+  await expect(page.getByRole('button', { name: /Zorro.*huevo/ })).toBeVisible()
+  await page.getByRole('button', { name: 'Fútbol', exact: true }).click()
+  await expect(page.locator('.shop-row')).toHaveCount(15)
+  await page.getByRole('button', { name: 'Página 2', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Página 2', exact: true })).toHaveAttribute('aria-current', 'page')
+  await page.getByRole('button', { name: 'Página 1', exact: true }).click()
+  await page.screenshot({ path: info.outputPath('bazar-futbol-320.png'), fullPage: true })
+  const boca = page.locator('.shop-row').filter({ hasText: 'Boca Juniors' })
+  await boca.getByRole('button', { name: 'Comprar' }).click()
+  await boca.getByRole('button', { name: 'Equipar' }).click()
+  await page.getByRole('button', { name: 'Accesorios', exact: true }).click()
+  await page.getByRole('button', { name: 'Página 2', exact: true }).click()
+  const cap = page.locator('.shop-row').filter({ hasText: 'Gorra GymBeast' })
+  await cap.getByRole('button', { name: 'Comprar' }).click()
+  await cap.getByRole('button', { name: 'Equipar' }).click()
+  await expect(cap.getByRole('button', { name: 'Quitar' })).toBeVisible()
+  await page.reload()
+  await expect(page.locator('.shop-row[data-equipped="true"]')).toHaveCount(2)
+  await expect(page.getByTestId('shop-balance')).toHaveText('Saldo: 55 de oro')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+  await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+  await expect(page.locator('.habitat [data-dressed-sprite=boca]')).toBeVisible()
+  await expect(page.locator('.habitat [data-dressed-head="gym-cap"]')).toBeVisible()
+  await page.locator('.habitat-scene').screenshot({ path: info.outputPath('atuendo-320.png') })
+  await page.getByRole('navigation').getByRole('link', { name: 'Tienda', exact: true }).click()
+  await page.locator('.shop-row').filter({ hasText: 'Boca Juniors' }).getByRole('button', { name: 'Quitar' }).click()
+  await expect(page.locator('.shop-row').filter({ hasText: 'Boca Juniors' }).getByRole('button', { name: 'Equipar' })).toBeVisible()
+  await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+  await expect(page.locator('.habitat [data-dressed-sprite=boca]')).toHaveCount(0)
+  await page.getByRole('link', { name: 'Perfil', exact: true }).click()
+  await page.getByRole('button', { name: 'Acreditar 10.000 de oro de prueba' }).click()
+  await expect(page.getByRole('button', { name: 'Oro de prueba acreditado' })).toBeDisabled()
+  await page.getByRole('navigation').getByRole('link', { name: 'Tienda', exact: true }).click()
+  await expect(page.getByTestId('shop-balance')).toHaveText('Saldo: 10055 de oro')
+  await expect(page.getByRole('button', { name: 'Galería local de mascotas' })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Fútbol', exact: true }).click()
+  const river = page.locator('.shop-row').filter({ hasText: 'River Plate' })
+  await river.getByRole('button', { name: 'Comprar' }).click()
+  await river.getByRole('button', { name: 'Equipar' }).click()
+  await expect(river.getByRole('button', { name: 'Quitar' })).toBeVisible()
+  await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+  const riverSprite = page.locator('.habitat [data-dressed-sprite=river]')
+  await expect(riverSprite).toBeVisible()
+  await expect(riverSprite).toHaveCSS('background-image', /^url\("data:image\/png/)
+  await page.locator('.habitat-scene').screenshot({ path: info.outputPath('river-320.png') })
+  for (const [label, key] of [['Musculosa Lima', 'tank-lime'], ['Buzo Oversize', 'hoodie']]) {
+    await page.getByRole('navigation').getByRole('link', { name: 'Tienda', exact: true }).click()
+    await page.getByRole('button', { name: 'Gym', exact: true }).click()
+    if (key === 'hoodie') await page.getByRole('button', { name: 'Página 2', exact: true }).click()
+    const item = page.locator('.shop-row').filter({ hasText: label })
+    await item.getByRole('button', { name: 'Comprar' }).click()
+    await item.getByRole('button', { name: 'Equipar' }).click()
+    await expect(item.getByRole('button', { name: 'Quitar' })).toBeVisible()
+    await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+    await expect(page.locator('.habitat [data-dressed-sprite="' + key + '"]')).toBeVisible()
+    await expect(page.locator('.habitat .pet-outfit-piece[data-slot="top"]')).toHaveCount(0)
+    await page.locator('.habitat-scene').screenshot({ path: info.outputPath(key + '-320.png') })
+  }
+  await page.waitForFunction(() => !!navigator.serviceWorker.controller)
+  for (const [label, key] of [['Jogger Carbón', 'jogger'], ['Short de entrenamiento', 'shorts']]) {
+    await page.getByRole('navigation').getByRole('link', { name: 'Tienda', exact: true }).click()
+    await page.getByRole('button', { name: 'Gym', exact: true }).click()
+    await page.getByRole('button', { name: 'Página 2', exact: true }).click()
+    const item = page.locator('.shop-row').filter({ hasText: label })
+    await item.getByRole('button', { name: 'Comprar' }).click()
+    await item.getByRole('button', { name: 'Equipar' }).click()
+    await expect(item.getByRole('button', { name: 'Quitar' })).toBeVisible()
+    await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+    await expect(page.locator('.habitat [data-dressed-sprite="hoodie"][data-dressed-bottom="' + key + '"]')).toBeVisible()
+    await expect(page.locator('.habitat [data-dressed-head="gym-cap"]')).toBeVisible()
+    await page.locator('.habitat-scene').screenshot({ path: info.outputPath(key + '-320.png') })
+  }
+  for (const [category, label] of [['Familiares', 'Mini tigre de peluche']]) {
+    await page.getByRole('navigation').getByRole('link', { name: 'Tienda', exact: true }).click()
+    await page.getByRole('button', { name: category, exact: true }).click()
+    if (category === 'Familiares') await page.getByRole('button', { name: 'Página 2', exact: true }).click()
+    const card = page.locator('.shop-row').filter({ hasText: label })
+    await card.getByRole('button', { name: 'Comprar' }).click()
+    await card.getByRole('button', { name: 'Equipar' }).click()
+    await expect(card.getByRole('button', { name: 'Quitar' })).toBeVisible()
+  }
+  await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+  const buddy = page.getByRole('button', { name: 'Jugar con Mini tigre de peluche' })
+  await expect(buddy).toHaveCSS('animation-name', 'buddy-roam')
+  await buddy.tap({ force: true })
+  await expect(buddy.locator('.buddy-reaction')).toHaveCSS('animation-name', 'buddy-greet')
+  await expect(page.locator('.habitat-pet .pet-play')).toHaveCount(0)
+  await context.setOffline(true)
+  await page.reload()
+  await expect(page.locator('.habitat [data-dressed-sprite="hoodie"][data-dressed-bottom="shorts"]')).toBeVisible()
+  await expect(buddy).toBeVisible()
 })
 
 test('retoma el alta y muestra las diez portadas en pantalla angosta', async ({ page }, info) => {
@@ -164,11 +275,48 @@ test('retoma el alta y muestra las diez portadas en pantalla angosta', async ({ 
   await page.screenshot({ path: info.outputPath('rutinas-320.png') })
 })
 
+test('crea una rutina con foto y permite cambiar la pose con movimiento reducido', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 740 })
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await onboard(page)
+  await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
+  await page.getByRole('link', { name: 'Crear rutina' }).click()
+  await page.getByRole('link', { name: /Crear manualmente/ }).click()
+  await page.getByLabel('Nombre de la rutina').fill('Pecho con foto')
+  await page.getByLabel('Foto de la rutina').setInputFiles('public/icon-192.png')
+  await expect(page.getByRole('img', { name: 'Foto de la rutina' })).toBeVisible()
+  await page.getByRole('button', { name: 'Agregar día' }).click()
+  await page.getByRole('button', { name: 'Agregar ejercicio' }).click()
+  await page.getByLabel('Ejercicio', { exact: true }).fill('Press banca')
+  await page.getByLabel('Series', { exact: true }).fill('3')
+  await page.getByLabel('Repeticiones', { exact: true }).fill('10')
+  await page.getByLabel('Peso (kg)', { exact: true }).fill('72,5')
+  await page.getByRole('button', { name: 'Agregar ejercicio' }).click()
+  await page.getByLabel('Ejercicio', { exact: true }).last().fill('Prensa de cuádriceps')
+  await page.getByRole('button', { name: 'Guardar rutina' }).click()
+  await page.getByRole('link', { name: 'Volver a Rutinas' }).click()
+  await page.getByRole('button', { name: 'Mis rutinas' }).click()
+  await expect(page.locator('.my-routine .routine-photo')).toBeVisible()
+  await page.getByRole('button', { name: 'Usar rutina' }).click()
+  await page.getByRole('button', { name: 'Empezar', exact: true }).click()
+  await expect(page.getByLabel('kg', { exact: true }).first()).toHaveValue('72.5')
+  await page.getByRole('button', { name: 'Ver posición final' }).first().click()
+  await expect(page.locator('.exercise-demonstration').first()).toHaveAttribute('data-phase', '1')
+  await expect(page.locator('.demo-leg-press').first()).toHaveCSS('background-image', /leg-press-poses/)
+  for (const frame of await page.locator('.demo-frames-cutout').all()) {
+    await expect(frame).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
+    await expect(frame).toHaveCSS('border-top-width', '0px')
+  }
+  await expect(page.getByText('Técnica del ejercicio', { exact: true })).toHaveCount(0)
+  await page.setViewportSize({ width: 390, height: 740 })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+})
+
 test('edita y recupera una versión desde el celular', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 })
   await onboard(page)
   const nav = page.getByRole('navigation')
-  for (const label of ['Inicio', 'Entrenar', 'Rutinas', 'Progreso', 'Perfil']) {
+  for (const label of ['Inicio', 'Entrenar', 'Rutinas', 'Tienda', 'Perfil']) {
     await nav.getByRole('link', { name: label, exact: true }).click()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
   }
@@ -213,26 +361,125 @@ test('el hábitat refleja una semana pendiente y la eclosión a 320 px', async (
   await page.getByLabel('Tu nombre').fill('Ari')
   await page.getByRole('button', { name: 'Confirmar compañero' }).click()
   const habitat = page.getByRole('region', { name: 'Hábitat de tu mascota' })
-  await expect(habitat.getByText('Huevo', { exact: true })).toBeVisible()
+  await expect(habitat.locator('[data-form="0"]')).toBeVisible()
   await expect(habitat.getByLabel('Vida de la mascota')).toHaveAttribute('value', '100')
   await page.getByRole('link', { name: 'Rutinas', exact: true }).click()
   await page.getByRole('button', { name: /Fuerza base/ }).click()
   await page.getByRole('button', { name: 'Usar rutina' }).click()
   await page.clock.setFixedTime(new Date('2026-11-16T12:00:00Z'))
   await page.getByRole('link', { name: 'Inicio', exact: true }).click()
-  await expect(habitat.getByLabel('Vida de la mascota')).toHaveAttribute('value', '55')
+  await expect(habitat.getByLabel('Vida de la mascota')).toHaveAttribute('value', '50')
   await page.getByRole('button', { name: 'Empezar entrenamiento' }).click()
-  const series = page.getByRole('button', { name: 'Registrar serie 1', exact: true })
-  await expect(series).toHaveCount(3)
-  for (const exercise of await page.locator('.exercise-session').all()) await exercise.getByRole('button', { name: 'Registrar serie 1', exact: true }).click()
-  await page.getByRole('button', { name: 'Finalizar entrenamiento' }).click()
-  await expect(page.getByText('Sesión completada', { exact: true })).toBeVisible()
+  for (let index = 0; index < 4; index++) {
+    if (index > 0) {
+      await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
+      if (index === 3) await page.getByRole('button', { name: 'Repetir ciclo' }).click()
+      await page.getByRole('button', { name: 'Empezar', exact: true }).click()
+    }
+    const series = page.getByRole('button', { name: 'Registrar serie 1', exact: true })
+    await expect(series).toHaveCount(3)
+    for (const exercise of await page.locator('.exercise-session').all()) await exercise.getByRole('button', { name: 'Registrar serie 1', exact: true }).click()
+    await page.getByRole('button', { name: 'Finalizar entrenamiento' }).click()
+    await expect(page.getByText('Sesión completada', { exact: true })).toBeVisible()
+    if (index === 0) {
+      await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+      await expect(page.getByRole('heading', { name: '¡Felicitaciones! Ya entrenaste hoy' })).toBeVisible()
+      await expect(page.getByText('PLAN DE HOY', { exact: true })).toHaveCount(0)
+      await expect(habitat.getByLabel('Vida de la mascota')).toHaveAttribute('value', '50')
+    }
+  }
   await page.getByRole('link', { name: 'Inicio', exact: true }).click()
-  await expect(habitat.getByText('Bebé', { exact: true })).toBeVisible()
-  await expect(habitat.getByLabel('Vida de la mascota')).toHaveAttribute('value', '65')
+  await expect(habitat.locator('[data-form="1"]')).toBeVisible()
+  await expect(habitat.getByLabel('Vida de la mascota')).toHaveAttribute('value', '100')
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
-  await habitat.getByRole('button', { name: 'Jugar con Dragón' }).click()
-  await expect(habitat.locator('.pet-fire-tap')).toHaveCount(1)
+  const pet = habitat.getByRole('button', { name: 'Jugar con Dragón' })
+  const patrol = pet.locator('.pet-patrol')
+  await expect(patrol).toBeVisible()
+  for (const direction of [1, -1, 1]) {
+    await page.waitForFunction(sign => {
+      const path = document.querySelector('.habitat-pet .pet-patrol')!
+      return sign * (path.getBoundingClientRect().left - path.parentElement!.getBoundingClientRect().left) > 20
+    }, direction, { timeout: 8000 })
+  }
+  await page.waitForFunction(() => {
+    const path = document.querySelector('.habitat-pet .pet-patrol')!
+    return path.getBoundingClientRect().top < path.parentElement!.getBoundingClientRect().top - 24
+  }, undefined, { timeout: 8000 })
+  await page.waitForFunction(() => {
+    const path = document.querySelector('.habitat-pet .pet-patrol')!
+    return Math.abs(path.getBoundingClientRect().top - path.parentElement!.getBoundingClientRect().top) < 3
+  }, undefined, { timeout: 8000 })
+  await expect(pet.locator('.pet-motion')).toHaveCSS('animation-iteration-count', 'infinite')
+  await page.waitForFunction(() => {
+    const idle = document.querySelector('.habitat-pet .pet-motion')!
+    return idle.getBoundingClientRect().top < idle.parentElement!.getBoundingClientRect().top - 4
+  })
+  for (let tap = 0; tap < 2; tap++) {
+    await pet.tap()
+    await page.waitForFunction(() => {
+      const sprite = document.querySelector('.habitat-pet .pet-play')!
+      return sprite.getBoundingClientRect().top < sprite.parentElement!.getBoundingClientRect().top - 20
+    })
+    await expect(pet.locator('.pet-play')).toHaveCSS('transform', 'none')
+  }
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(patrol).toHaveCSS('animation-name', 'none')
+  await expect(habitat.locator('.pet-motion')).toHaveCSS('animation-name', 'none')
+  await expect(pet.locator('.pet-play')).toHaveCSS('animation-name', 'pet-highlight')
+  await expect(habitat.locator('.dragon-stage')).toBeVisible()
+  await page.getByRole('navigation').getByRole('link', { name: 'Tienda', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Tienda' })).toBeVisible()
+  await expect(page.getByRole('button', { name: /3D/ })).toHaveCount(0)
+})
+
+test('la galería local muestra las 48 mascotas y etapas sin cambiar el compañero activo', async ({ page, request }) => {
+  await page.setViewportSize({ width: 320, height: 720 })
+  await onboard(page)
+  await page.getByRole('link', { name: 'Perfil', exact: true }).click()
+  await page.getByRole('button', { name: 'Galería local de mascotas' }).tap()
+  const gallery = page.locator('#pet-gallery-preview')
+  const species = gallery.getByLabel('Mascota de muestra')
+  const stage = gallery.getByLabel('Etapa de muestra')
+  for (const [name, asset, idle, adultReaction, weather] of [
+    ['Dragón', 'habitat.jpg', 'habitat-sway', 'pet-dragon-loop', 'habitat-ember'],
+    ['Cocodrilo', 'habitat-crocodile.webp', 'pet-swim', 'pet-dive', 'habitat-ripple'],
+    ['Oso', 'habitat-bear.webp', 'pet-sniff', 'pet-rear', 'habitat-leaf'],
+    ['Lobo', 'habitat-wolf.webp', 'pet-trot', 'pet-howl', 'habitat-snow'],
+    ['Zorro', 'habitat-fox.webp', 'pet-trot', 'pet-stretch', 'habitat-ember'],
+    ['Tigre', 'habitat-tiger.webp', 'pet-sniff', 'pet-pounce', 'habitat-ember'],
+    ['Ajolote', 'habitat-axolotl.webp', 'pet-swim', 'pet-bubbles', 'habitat-bubble'],
+    ['Fénix', 'habitat-phoenix.webp', 'habitat-sway', 'pet-dragon-loop', 'habitat-ember'],
+  ]) {
+    expect((await request.get('/' + asset)).headers()['content-type']).toMatch(/^image\//)
+    const artName = asset === 'habitat.jpg' ? 'dragon' : asset.slice('habitat-'.length, -'.webp'.length)
+    for (const family of ['tank', 'hoodie', 'pants', 'shorts']) {
+      for (const file of [artName + '.webp', artName + '-fabric.png']) {
+        const response = await request.get('/garments/' + family + '/' + file)
+        expect(response.ok()).toBe(true)
+        expect(response.headers()['content-type']).toMatch(/^image\//)
+      }
+    }
+    await species.selectOption(name)
+    for (let phase = 0; phase < 6; phase++) {
+      await stage.selectOption(String(phase))
+      await expect(gallery.locator('.dragon-stage')).toHaveAttribute('data-companion', name)
+      await expect(gallery.locator('.dragon-stage')).toHaveAttribute('data-form', String(phase))
+    }
+    await stage.selectOption('4')
+    await expect(gallery.locator('.pet-motion')).toHaveCSS('animation-name', idle)
+    const ambient = gallery.locator('.habitat-weather')
+    await expect(ambient.locator('.habitat-weather-detail').first()).toHaveCSS('animation-name', weather)
+    expect(await ambient.evaluate(layer => getComputedStyle(layer, '::before').animationName))
+      .toBe(name === 'Dragón' || name === 'Fénix' ? 'habitat-lanterns' : name === 'Ajolote' ? 'none' : 'habitat-canopy')
+    await gallery.getByRole('button', { name: 'Jugar con ' + name }).tap()
+    await expect(gallery.locator('.pet-play')).toHaveCSS('animation-name', adultReaction)
+  }
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(gallery.locator('.habitat-weather')).toBeHidden()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+  await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+  await expect(page.locator('.habitat .dragon-stage')).toHaveAttribute('data-companion', 'Cocodrilo')
+  await expect(page.locator('.habitat .dragon-stage')).toHaveAttribute('data-form', '0')
 })
 
 test('cada ejercicio del catálogo tiene una ilustración y mapas musculares', async ({ page, request }) => {
@@ -243,7 +490,15 @@ test('cada ejercicio del catálogo tiene una ilustración y mapas musculares', a
   await expect(catalog.locator('.exercise-card')).toHaveCount(41)
   await expect(catalog.locator('.exercise-sprite')).toHaveCount(41)
   await expect(catalog.locator('.muscle-map')).toHaveCount(41)
-  for (const path of ['/habitat.jpg', '/dragon-stages.png', ...[1, 2, 3, 4, 5].map(index => '/exercise-atlas-' + index + '.jpg')]) {
+  await expect(catalog.locator('.technique-steps')).toHaveCount(41)
+  await expect(catalog.getByLabel('Posición inicial', { exact: true })).toHaveCount(41)
+  await expect(catalog.getByLabel('Posición final', { exact: true })).toHaveCount(41)
+  await catalog.locator('summary').filter({ hasText: 'Jalón al pecho abierto' }).click()
+  await expect(catalog.getByText('Bajá la barra por delante', { exact: false })).toBeVisible()
+  for (const path of ['/habitat.jpg', '/dragon-stages.webp', '/crocodile-stages.webp', '/bear-stages.webp', '/wolf-stages.webp',
+    '/exercise-poses/basics.webp', '/leg-press-poses.webp',
+    ...Array.from({ length: 9 }, (_, i) => '/exercise-poses/atlas-' + (i + 1) + '.webp'),
+    ...[1, 2, 3, 4, 5].map(index => '/exercise-atlas-' + index + '.jpg')]) {
     const response = await request.get(path)
     expect(response.ok()).toBe(true)
     expect(response.headers()['content-type']).toMatch(/^image\//)
@@ -282,11 +537,12 @@ test('mantiene el mismo dragón y destaca el siguiente ejercicio a 320 px', asyn
   const victory = page.locator('.victory-card')
   await expect(victory).toBeFocused()
   await expect(victory.getByRole('status', { name: '+25 EXP · +20 de oro' })).toBeVisible()
-  await expect(victory.locator('[data-companion="Dragón"]')).toHaveAttribute('data-form', '1')
+  await expect(victory.locator('[data-companion="Dragón"]')).toHaveAttribute('data-form', '0')
   await expect(victory.getByRole('button', { name: 'Ver o corregir series' })).toHaveCount(0)
   await page.getByRole('link', { name: 'Inicio', exact: true }).click()
-  await expect(habitat.locator('[data-companion="Dragón"]')).toHaveAttribute('data-form', '1')
-  await page.getByRole('navigation').getByRole('link', { name: 'Progreso' }).click()
+  await expect(habitat.locator('[data-companion="Dragón"]')).toHaveAttribute('data-form', '0')
+  await page.getByRole('link', { name: 'Perfil', exact: true }).click()
+  await page.getByRole('link', { name: 'Progreso', exact: true }).click()
   await expect(page.getByRole('img', { name: 'Tendencia de carga máxima en las últimas sesiones' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Músculos trabajados' })).toBeVisible()
   for (const width of [320, 390]) {
@@ -296,7 +552,7 @@ test('mantiene el mismo dragón y destaca el siguiente ejercicio a 320 px', asyn
   await page.screenshot({ path: info.outputPath('progreso-mobile.png'), fullPage: true })
   await page.getByRole('link', { name: 'Perfil', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Tus datos' })).toBeVisible()
-  await expect(page.locator('.profile-banner [data-companion="Dragón"]')).toHaveAttribute('data-form', '1')
+  await expect(page.locator('.profile-banner [data-companion="Dragón"]')).toHaveAttribute('data-form', '0')
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
   await page.screenshot({ path: info.outputPath('perfil-mobile.png'), fullPage: true })
 })
@@ -327,7 +583,7 @@ test('precarga las series editables y deja fuera las que no se marcan', async ({
   await page.getByRole('button', { name: 'Empezar', exact: true }).click()
   await expect(first.getByLabel('kg', { exact: true }).first()).toHaveValue('60')
   await expect(first.getByLabel('Reps', { exact: true }).first()).toHaveValue('10')
-  await expect(first.getByRole('img', { name: 'Esquema animado del movimiento' })).toBeVisible()
+  await expect(first.locator('.demo-frames-cutout .demo-illustration')).toHaveCount(2)
   await expect(first.getByLabel('kg', { exact: true }).nth(1)).toHaveValue('62.5')
   await expect(first.getByLabel('Reps', { exact: true }).nth(1)).toHaveValue('8')
   await expect(first.getByText('0 de 2 series')).toBeVisible()
@@ -345,4 +601,112 @@ test('el perfil guarda cambios sin botón a 320 px', async ({ page }) => {
   await expect(page.getByLabel('Peso (kg)', { exact: true })).toHaveValue('72')
   await expect(page.getByRole('button', { name: 'Guardar preferencias' })).toHaveCount(0)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+})
+
+test('sugiere subir carga sin cambiar los valores hasta aceptar', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 })
+  await page.clock.setFixedTime(new Date('2026-11-09T12:00:00Z'))
+  await onboard(page)
+  await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
+  await page.getByRole('link', { name: 'Crear rutina' }).click()
+  await page.getByRole('link', { name: 'Importar texto' }).click()
+  await page.getByLabel('Nombre de la rutina').fill('Progresión')
+  await page.getByLabel('Importar desde texto').fill('Día 1 — Fuerza\nPress banca 2x8-10 50kg')
+  await page.getByRole('button', { name: 'Preparar vista previa' }).click()
+  await page.getByRole('button', { name: 'Guardar rutina' }).click()
+  await page.getByRole('link', { name: 'Rutinas', exact: true }).click()
+  await page.getByRole('button', { name: 'Mis rutinas' }).click()
+  await page.getByRole('button', { name: 'Usar rutina' }).click()
+  await page.getByRole('button', { name: 'Empezar', exact: true }).click()
+  for (const index of [0, 1]) {
+    await page.getByLabel('Reps', { exact: true }).nth(index).fill('10')
+    await page.getByRole('button', { name: 'Registrar serie ' + (index + 1), exact: true }).click()
+  }
+  await page.getByRole('button', { name: 'Finalizar entrenamiento' }).click()
+  await page.getByRole('heading', { name: 'Sesión completada' }).waitFor()
+  await page.clock.setFixedTime(new Date('2026-11-16T12:00:00Z'))
+  await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
+  await page.getByRole('button', { name: 'Repetir ciclo' }).click()
+  await page.getByRole('button', { name: 'Empezar', exact: true }).click()
+  const weight = page.getByLabel('kg', { exact: true }).first()
+  await expect(weight).toHaveValue('50')
+  await page.getByRole('button', { name: 'Probar 52.5 kg' }).click()
+  await expect(weight).toHaveValue('52.5')
+  await expect(page.getByText('0 de 2 series')).toBeVisible()
+  for (const index of [1, 2]) {
+    await page.getByRole('button', { name: 'Registrar serie ' + index, exact: true }).click()
+  }
+  await page.getByRole('button', { name: 'Finalizar entrenamiento' }).click()
+  await page.getByRole('heading', { name: 'Sesión completada' }).waitFor()
+  await page.getByRole('link', { name: 'Perfil', exact: true }).click()
+  await page.getByRole('link', { name: 'Progreso', exact: true }).click()
+  await expect(page.getByText('Volumen frente a la semana anterior: +50 kg')).toBeVisible()
+  await expect(page.getByText('Máxima carga frente a la semana anterior: +2,5 kg')).toBeVisible()
+  await page.getByText('Logros avanzados', { exact: true }).click()
+  const personalBest = page.locator('.achievement').filter({ hasText: 'Marca personal' })
+  await expect(personalBest.getByText('Desbloqueado')).toBeVisible()
+  await expect(page.locator('.achievement').filter({ hasText: 'Cinco récords' }).getByText('1 / 5')).toBeVisible()
+  await expect(page.getByLabel('Semana de')).toHaveValue('2026-11-16')
+  await page.getByLabel('Semana de').fill('2026-11-09')
+  await expect(page.getByText('Volumen frente a la semana anterior:', { exact: false })).toHaveCount(0)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+})
+
+test('avisa al terminar el descanso y conserva la carga habitual después de una descarga', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 })
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'vibrate', { value: () => {
+      document.documentElement.dataset.restAlerts = String(Number(document.documentElement.dataset.restAlerts ?? 0) + 1)
+      return true
+    } })
+  })
+  await page.clock.setFixedTime(new Date('2026-11-09T12:00:00Z'))
+  await onboard(page)
+  await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
+  await page.getByRole('link', { name: 'Crear rutina' }).click()
+  await page.getByRole('link', { name: 'Importar texto' }).click()
+  await page.getByLabel('Nombre de la rutina').fill('Carga habitual')
+  await page.getByLabel('Importar desde texto').fill('Día 1 — Fuerza\nPress banca 1x8 50kg descanso 60s')
+  await page.getByRole('button', { name: 'Preparar vista previa' }).click()
+  await page.getByRole('button', { name: 'Guardar rutina' }).click()
+  await page.getByRole('link', { name: 'Rutinas', exact: true }).click()
+  await page.getByRole('button', { name: 'Mis rutinas' }).click()
+  await page.getByRole('button', { name: 'Usar rutina' }).click()
+  await page.getByRole('button', { name: 'Empezar', exact: true }).click()
+  await page.getByText('Opciones de sesión', { exact: true }).click()
+  await page.getByRole('button', { name: 'Activar aviso de descanso' }).click()
+  await expect(page.getByRole('button', { name: 'Silenciar aviso de descanso' })).toBeVisible()
+  await page.getByRole('button', { name: 'Registrar serie 1', exact: true }).click()
+  await expect(page.getByText('Descanso · 01:00')).toBeVisible()
+  await page.clock.setFixedTime(new Date('2026-11-09T12:01:05Z'))
+  await expect(page.getByText('Descanso terminado')).toBeVisible()
+  await expect(page.locator('html')).toHaveAttribute('data-rest-alerts', '1')
+  async function nextSession() {
+    await page.getByRole('button', { name: 'Finalizar entrenamiento' }).click()
+    await page.getByRole('heading', { name: 'Sesión completada' }).waitFor()
+    await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
+    await page.getByRole('button', { name: 'Repetir ciclo' }).click()
+    await page.getByRole('button', { name: 'Empezar', exact: true }).click()
+  }
+  await nextSession()
+  await page.getByText('Opciones de sesión', { exact: true }).click()
+  await page.getByRole('button', { name: 'Entrenar en descarga' }).click()
+  await expect(page.getByLabel('kg', { exact: true })).toHaveValue('40')
+  await page.reload()
+  await expect(page.getByText('Sesión de descarga')).toBeVisible()
+  await page.getByRole('button', { name: 'Registrar serie 1', exact: true }).click()
+  await nextSession()
+  await expect(page.getByLabel('kg', { exact: true })).toHaveValue('50')
+})
+
+test('usa Obsidiana dorada en Perfil y Entrenar', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 })
+  await page.addInitScript(() => localStorage.setItem('gymbeast.palette', 'peach'))
+  await onboard(page)
+  await page.getByRole('link', { name: 'Perfil', exact: true }).click()
+  await expect(page.getByRole('link', { name: /Paletas de colores/ })).toHaveCount(0)
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(19, 19, 22)')
+  await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
+  await page.reload()
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(19, 19, 22)')
 })

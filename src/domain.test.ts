@@ -1,6 +1,16 @@
 import { fiveDayRoutine } from '../tests/five-day-routine'
 import { describe, expect, it } from 'vitest'
-import { companionHealth, suggestedLoad, fromKg, metrics, parseRoutine, toKg, weekDates } from './domain'
+import { catalog, weeklyStreaks, suggestedLoad, fromKg, metrics, parseRoutine, toKg, weekDates } from './domain'
+import { exercisePoses } from './exercise-poses'
+
+it('asigna dos posiciones ilustradas a todo el catálogo', () => {
+  for (const [id] of catalog) {
+    const start = exercisePoses(id, 0)
+    const end = exercisePoses(id, 1)
+    expect(start, id).toBeDefined()
+    expect(end, id).toMatchObject({ image: start!.image, x: start!.x + 1, y: start!.y })
+  }
+})
 
 describe('importar rutinas', () => {
   it.each(['x', ' x ', '×', ' × '].flatMap(separator =>
@@ -106,10 +116,8 @@ it('sugiere subir carga solo tras completar el rango de todas las series', () =>
   expect(suggestedLoad(exercise, [set, { ...set, type: 'warmup' }], 2.5)).toBeNull()
 })
 
-it('reduce la vida por sesiones omitidas y permite recuperarla sin superar 100', () => {
-  expect(companionHealth(0, 0)).toBe(100)
-  expect(companionHealth(2, 0)).toBe(70)
-  expect(companionHealth(2, 1)).toBe(80)
-  expect(companionHealth(2, 4)).toBe(100)
-  expect(companionHealth(8, 0)).toBe(25)
+it('conserva la mejor racha y deja abierta la semana actual', () => {
+  const weeks = ['2026-10-19', '2026-10-26', '2026-11-09', '2026-11-09']
+  expect(weeklyStreaks(weeks, '2026-11-16')).toEqual({ current: 1, best: 2 })
+  expect(weeklyStreaks(weeks, '2026-11-23')).toEqual({ current: 0, best: 2 })
 })

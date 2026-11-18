@@ -10,16 +10,15 @@
 | 9 · Catálogo visual | Parcial | Mapas musculares y cuatro movimientos ilustrados. Faltan dos poses por movimiento, técnica por ficha y catálogo personalizado persistente. |
 | 10 · Entrenamiento | Parcial | Registro durable local, omisiones, RPE/RIR, notas, descanso y resumen. La sesión permite agregar, reemplazar y reordenar ejercicios, y duplicar y recuperar series. Hay aviso visual de fin de descanso. Faltan avisos sonoros y aplicar la edición a la plantilla. |
 | 11–12 · Progresión | Parcial | Historial, gráfico básico, volumen, récord de carga y e1RM excluyendo calentamientos. El calendario de actividad muestra frecuencia y volumen semanal. Faltan volumen muscular, comparaciones y progresión doble integrada. |
-| 13–14 · Mascotas y economía | Parcial | EXP, oro, tienda, crecimiento a 100 y 300 EXP, 12 GLB originales y 2D alternativo. Faltan rachas, misiones, logros, eclosión 3D y transición de evolución en la celebración. |
+| 13–14 · Mascotas y economía | Parcial | EXP, oro, tienda, crecimiento a 100 y 300 EXP, mascotas 2D. Faltan rachas, misiones, logros y transición de evolución en la celebración. |
 | 15 · Amigos | Pendiente | Acceso desde Perfil. Faltan relaciones, permisos sociales, feed, desafíos y rankings. |
 | 16–17 · UX | Parcial | Barra reorganizada, Entrenar enfocado, portadas y sprites. Faltan revisión visual completa, VoiceOver, TalkBack y todos los estados de errores y conflictos. |
 | 18–20 · Datos y seguridad | Parcial | Validación estructural inicial y aislamiento SQL, deduplicación, compra transaccional y cambios rechazados con reintento. Falta normalizar el núcleo JSONB, validar todas las relaciones de entrenamiento, registrar compensaciones en una bitácora, restauración en cuentas, descarga incremental y sincronización por lotes. |
-| 21–23 · Notificaciones, rendimiento y calidad | Parcial | Visor 3D diferido y 2D por movimiento reducido. Faltan recordatorios, mediciones físicas, lint y cierre de avisos de desarrollo. |
+| 21–23 · Notificaciones, rendimiento y calidad | Parcial | Animación 2D de Inicio con soporte para movimiento reducido. Faltan recordatorios, mediciones físicas, lint y cierre de avisos de desarrollo. |
 | 24–30 · Pruebas y salida | Bloqueado para publicación | Pruebas locales y de PostgreSQL embebido. Se necesitan un proyecto Supabase, cliente OAuth y proyecto Cloudflare Pages del titular para validar el entorno público, e iPhone y Android físicos para instalación, accesibilidad y rendimiento. |
 
 ## 2. Revisión de pendientes realizables localmente
 
-- Los modelos 3D se generaron por código con Three.js. Los 12 GLB se incluyen en el repositorio. Chromium cargó y dibujó el modelo de bebé.
 - Se probó la compra del accesorio y su persistencia, el ascenso a joven, el saldo insuficiente, la deduplicación de una compra y el aislamiento entre dos identidades SQL.
 - Las ilustraciones restantes requieren un lote por movimiento con revisión del agarre, equipo y poses. El catálogo sigue abierto.
 - La simulación SQL usa PostgreSQL embebido. No cubre OAuth, caída de red durante una compra real, dos instalaciones ni reglas sociales todavía pendientes.
@@ -31,7 +30,7 @@
 - La prueba principal inicia en Día 1, registra offline, recarga y termina con un premio único y Día 2. Otra prueba recorre cuatro días y conserva el accesorio equipado al recargar.
 - El entorno local puede usarse desde el README. La salida del piloto depende del QA hospedado y físico, además de los pendientes funcionales de esta tabla.
 
-La restauración local valida el respaldo y se aplica en una transacción. Requiere un espacio sin rutinas ni sesiones. La tienda dibuja la bandana y la medalla equipadas en el visor 3D.
+La restauración local valida el respaldo y se aplica en una transacción. Requiere un espacio sin rutinas ni sesiones. La ficha de la mascota indica el accesorio equipado.
 
 ## Seguimiento
 
@@ -45,7 +44,7 @@ El hábitat de Inicio muestra huevo, bebé, cría, adolescente, adulto y titán 
 
 ## Revisión visual de Inicio, Entrenar, Progreso y Perfil
 
-- El sprite de cada acompañante se obtiene de la misma selección de especie y EXP en Inicio, Entrenar, Perfil, tienda y cierre. El visor 3D opcional usa los modelos low-poly existentes.
+- El sprite de cada acompañante se obtiene de la misma selección de especie y EXP en Inicio, Entrenar, Perfil, tienda y cierre.
 - Se comprobó la entrada animada de Inicio, el foco al pasar al ejercicio siguiente, la aparición del cierre y el detalle desplegable. Las láminas se muestran más grandes en la rutina y durante la sesión.
 - Progreso presenta métricas, mapa corporal y tendencia de carga. Se inspeccionaron capturas de Progreso y Perfil a 390 px y se comprobó el ancho del flujo a 320 px.
 - Se revisó la disponibilidad de las ilustraciones de los 41 ejercicios. Se probó el catálogo de compras disponible para una cuenta con dragón inicial en PostgreSQL embebido, incluyendo reintentos y saldo insuficiente. Sigue pendiente validar la tienda alojada y el comportamiento en iPhone y Android físicos.
@@ -53,3 +52,4 @@ El hábitat de Inicio muestra huevo, bebé, cría, adolescente, adulto y titán 
 ## Registro simplificado y perfil
 
 Las filas de peso y repeticiones se reutilizan por ejercicio desde el historial y solo cuentan al marcarlas. El cierre muestra el resultado y dos tarjetas animadas de recompensa. El equipo, la lámina y el mapa muscular se muestran en la sesión. El esquema animado ilustra familias de movimiento y la lámina permite distinguir la variante. Mis rutinas admite fotos y las portadas del catálogo. Perfil guarda automáticamente y muestra el acceso a Amigos con estado vacío. El calendario y la constancia se enfocan en el plan activo. La tienda y la sincronización alojadas siguen pendientes de prueba.
+El estado actualizado de las entregas y sus pendientes está en [Seguimiento de pendientes](pendientes.md).

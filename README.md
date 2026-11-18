@@ -29,6 +29,6 @@ En iPhone abrí el sitio HTTPS en Safari y elegí **Compartir → Agregar a inic
 
 El alta local permite elegir un compañero y activar una de diez rutinas ilustradas. El entrenamiento registra series sin conexión y conserva el avance del ciclo al recargar. La economía incluye EXP, oro, tienda y crecimiento, con recompensas locales de demostración y funciones PostgreSQL para cuentas.
 
-La vista 3D se abre desde Perfil → Mascotas y tienda. Para regenerar los modelos locales, ejecutá: node make-pets.mjs.
+La mascota de Inicio se mueve con su ilustración 2D y da un salto al tocarla.
 
 El piloto todavía requiere las validaciones alojadas y físicas. Consultá el [registro de QA](docs/pilot-qa.md) y los [créditos visuales](docs/assets-licenses.md).

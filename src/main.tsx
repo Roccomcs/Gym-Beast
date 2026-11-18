@@ -1,20 +1,23 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-import { Activity, CalendarDays, Dumbbell, Flame, House, UserRound, BookOpen, Zap } from 'lucide-react'
+import { Activity, CalendarDays, Dumbbell, House, UserRound, BookOpen, ShoppingBag } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { registerSW } from 'virtual:pwa-register'
 import { api, clearAccount, db, list, local, resolveConflict, retryOperation, save, sessionKey, sync } from './store'
-import { companionHealth, dateKey, weekDates, uid, type Profile, type Routine } from './domain'
+import { dateKey, weekDates, uid, type Profile, type Routine } from './domain'
+import { initialVitals, petProgress } from './pet-progress'
 import { Routines } from './routines'
 import { Workout } from './workout'
 import { Progress } from './progress'
 import { Companion } from './companion'
 import { Habitat } from './habitat'
-import { Onboarding, ProgramLibrary, Train } from './journey'
+import { outfitFor } from './shop-catalog'
+import { Onboarding, ProgramLibrary, Train, CreateRoutine } from './journey'
 import { Library } from './library'
+import { Friends } from './friends'
 import { ProfileSettings } from './profile-settings'
-import { PetShop, localRewards } from './economy'
+import { PetShop, LocalPetTools, localRewards } from './economy'
 import '@fontsource/press-start-2p/latin-400.css'
 import '@fontsource-variable/atkinson-hyperlegible-next'
 import './style.css'
@@ -114,7 +117,7 @@ function EmailForm() {
 }
 
 function Logo() {
-  return <NavLink to="/" className="brand"><span><Zap size={20} fill="currentColor" /></span>Gym<span className="lime">Beast</span></NavLink>
+  return <NavLink to="/" className="brand"><img className="brand-mark" src="/icon.svg" alt=""/>Gym<span className="lime">Beast</span></NavLink>
 }
 
 function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }) {
@@ -132,9 +135,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   const sets = useLiveQuery(() => list(owner, 'set'), [owner], [])
   const operations = useLiveQuery(() => db.operations.where('owner').equals(owner).toArray(), [owner], [])
   const remoteRewards = useLiveQuery(() => db.rewards.where('owner').equals(owner).toArray(), [owner], [])
-  const rewards = owner === local ? localRewards(sessions, sets) : remoteRewards
-  const petXp = rewards.filter(reward => reward.companion === profile.companion).reduce((sum, reward) => sum + reward.xp, 0)
-  const xp = rewards.reduce((total, reward) => total + reward.xp, 0)
+  const rewards = useMemo(() => owner === local ? localRewards(sessions, sets) : remoteRewards, [owner, sessions, sets, remoteRewards])
   const [status, setStatus] = useState('')
   const [available, setAvailable] = useState(false)
   const [, refreshClock] = useState(0)
@@ -165,17 +166,15 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   const week = weekDates(date, 1)
   const eligibleSessions = completed.filter(item => !item.data.incomplete)
   const weekCount = eligibleSessions.filter(item => week.includes(item.data.date)).length
-  const previous = weekDates(dateKey(new Date(Date.parse(week[0] + 'T12:00:00Z') - 7 * 86400000), 'UTC'), 1)
-  const previousPlan = schedules.filter(item => previous.includes(item.data.date) && !item.data.skipped)
-  const previousCompleted = eligibleSessions.filter(item => previous.includes(item.data.date)).length
-  const missed = previousPlan.length
-    ? previousPlan.filter(item => !eligibleSessions.some(session => session.data.scheduleId === item.id)).length
-    : (previousCompleted || (cycle?.startedOn && cycle.startedOn <= previous[0])) ? Math.max(0, (routine?.days.length ?? 0) - previousCompleted) : 0
-  const health = companionHealth(missed, weekCount)
+  const completedToday = eligibleSessions.find(item => dateKey(new Date(item.data.ended!), profile.timezone) === date)
+  const target = routine?.days.length ?? 0
+  const petPlans = useMemo(() => profile.petPlans ?? (cycle?.startedOn && target
+    ? [{ from: cycle.startedOn, target, companion: profile.companion }] : []),
+  [profile.petPlans, cycle?.startedOn, target, profile.companion])
+  const pets = useMemo(() => petProgress(date, profile.timezone, profile.companion, petPlans, sessions, schedules, rewards),
+    [date, profile.timezone, profile.companion, petPlans, sessions, schedules, rewards])
+  const { xp: petXp, health } = pets.get(profile.companion) ?? initialVitals
   const conflicts = operations.filter(item => item.conflict)
-  useEffect(() => {
-    document.documentElement.dataset.theme = profile.theme
-  }, [profile.theme])
   useEffect(() => {
     const refresh = () => setAvailable(true)
     window.addEventListener('gymbeast-update', refresh)
@@ -219,7 +218,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
       const id = uid()
       await save(owner, 'session', id, {
         title: day.title, exercises: day.exercises, started: Date.now(), date: schedule?.date ?? date, scheduleId,
-        cycleId: scheduleId ? undefined : cycle?.id, dayId: scheduleId ? undefined : nextDay?.id, routineId: scheduleId ? undefined : cycle?.routineId, routineVersion: scheduleId ? undefined : routine?.version, companion: profile.companion,
+        cycleId: scheduleId ? undefined : cycle?.id, dayId: scheduleId ? undefined : nextDay?.id, routineId: scheduleId ? undefined : cycle?.routineId, routineVersion: scheduleId ? undefined : routine?.version, weeklyTarget: routine?.days.length, companion: profile.companion,
       })
       navigate('/sesion/' + id)
     } catch { setStatus('No pudimos iniciar el entrenamiento.') }
@@ -233,7 +232,10 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
     if (active) await save(owner, 'session', active.id, { ...active.data, ended: Date.now(), incomplete: true })
     const id = existing ?? uid()
     if (!existing) await save(owner, 'routine', id, routine)
-    await save(owner, 'profile', 'self', { ...profile, cycle: { id: uid(), routineId: id, skipped: [], startedOn: date } })
+    await save(owner, 'profile', 'self', { ...profile,
+      cycle: { id: uid(), routineId: id, skipped: [], startedOn: date },
+      petPlans: [...petPlans.filter(plan => plan.from !== date), { from: date, target: routine.days.length, companion: profile.companion }],
+    })
     navigate('/entrenar')
   }
   function changeCycle(next: Profile['cycle']) {
@@ -245,7 +247,6 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
     save={async next => { await save(owner, 'profile', 'self', next); await db.onboarding.delete(owner); navigate('/') }} /></main>
   const editorProps = { owner, date, weekStart: 1, unit: profile.unit, start }
   return <>
-    <header><Logo /><span className="sync" role="status">{owner === local ? 'Modo local' : operations.length ? status + ' · ' + operations.length + ' pendientes' : status}</span></header>
     <main>
       {available && !active && <button className="secondary" onClick={() => void update(true)}>Actualizar GymBeast</button>}
       {operations.filter(item => item.rejected).map(item => <section key={item.op} className="panel">
@@ -263,39 +264,46 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
         <Route index element={<>
           <p className="eyebrow"><CalendarDays size={16} /> {new Date(date + 'T12:00:00Z').toLocaleDateString('es-AR', { dateStyle: 'full', timeZone: 'UTC' })}</p>
           <h1>{profile.name ? 'Hola, ' + profile.name : 'Tu entrenamiento'}</h1>
-          <Habitat name={profile.companion} xp={petXp} health={health}/>
-          <section className="panel hero"><div className="hero-icon"><Dumbbell size={30} /></div>
+          <Habitat name={profile.companion} xp={petXp} health={health} outfit={outfitFor(profile, profile.companion)}/>
+          {completedToday && !active ? <section className="panel hero">
+            <h2>¡Felicitaciones! Ya entrenaste hoy</h2>
+            <p>Completaste {completedToday.data.title}.</p>
+          </section> : <section className="panel hero"><div className="hero-icon"><Dumbbell size={30} /></div>
             <p className="eyebrow">{active ? 'EN CURSO' : 'PLAN DE HOY'}</p>
             <h2>{active?.data.title ?? nextDay?.title ?? today[0]?.data.title ?? 'Tu próximo entrenamiento'}</h2>
             {!active && !nextDay && !today.length && <p>Asigná una rutina al día de hoy para empezar.</p>}
             <button onClick={() => active ? navigate('/sesion/' + active.id) : nextDay ? void start() : today.length ? void start(today[0].id) : navigate('/entrenar')}>
               {active ? 'Continuar entrenamiento' : nextDay || today.length ? 'Empezar entrenamiento' : 'Preparar entrenamiento'}
             </button>
-          </section>
-          <div className="stats"><section className="panel"><Flame className="lime" /><p>Sesiones esta semana</p><strong>{weekCount}</strong></section>
-            <section className="panel"><Activity className="lime" /><p>Sesiones totales</p><strong>{completed.length}</strong><p>{xp} EXP de cuenta</p></section></div>
+          </section>}
+          <div className="stats"><section className="panel"><p>Sesiones esta semana</p><strong>{weekCount}</strong></section>
+            <section className="panel"><p>Sesiones totales</p><strong>{completed.length}</strong></section></div>
         </>} />
         <Route path="/entrenar" element={<Train routine={routine} index={index} active={active?.data.title}
           companion={profile.companion} xp={petXp} start={() => void start()}
-          skip={() => { if (cycle && nextDay) changeCycle({ ...cycle, skipped: [...cycle.skipped, nextDay.id] }) }}
-          delay={() => { if (cycle && nextDay && routine) changeCycle({ ...cycle, order: [...routine.days.filter(day => day.id !== nextDay.id).map(day => day.id), nextDay.id] }) }}
           repeat={() => { if (cycle) changeCycle({ id: uid(), routineId: cycle.routineId, skipped: [], startedOn: date }) }} />} />
         <Route path="/rutinas" element={<ProgramLibrary routines={routines} activate={activate} updateCover={(id, routine) => save(owner, 'routine', id, routine)} />} />
+        <Route path="/editor" element={<CreateRoutine/>} />
         <Route path="/editor/manual" element={<Routines key="manual" {...editorProps} mode="manual" editId={params.get('rutina') ?? undefined} />} />
         <Route path="/editor/importar" element={<Routines key="importar" {...editorProps} mode="importar" />} />
         <Route path="/calendario" element={<Routines key="calendar" {...editorProps} mode="calendar" />} />
         <Route path="/ejercicios" element={<Library />} />
-        <Route path="/mascotas" element={<PetShop owner={owner} profile={profile} rewards={rewards} />} />
-        <Route path="/sesion/:id" element={<Workout owner={owner} profile={profile} sessions={sessions} sets={sets} rewards={rewards} />} />
+        <Route path="/mascotas" element={<PetShop owner={owner} profile={profile} rewards={rewards} pets={pets} petPlans={petPlans} date={date} target={target} />} />
+        <Route path="/tienda" element={<PetShop owner={owner} profile={profile} rewards={rewards} pets={pets} petPlans={petPlans} date={date} target={target} />} />
+        <Route path="/sesion/:id" element={<Workout owner={owner} profile={profile} sessions={sessions} sets={sets} rewards={rewards} pets={pets} />} />
         <Route path="/progreso" element={<Progress sessions={completed} sets={sets} unit={profile.unit} today={date} weekStart={1} goal={routine?.days.length || 0} schedules={schedules} rewards={rewards} />} />
-        <Route path="/amigos" element={<><h1>Amigos</h1><section className="panel friends-empty"><span className="friend-avatar" aria-hidden="true"><UserRound/></span><h2>Tu círculo</h2><p>Todavía no hay amigos en tu lista.</p></section></>} />
+        <Route path="/amigos" element={<Friends owner={owner} sessions={completed.filter(item => rewards.some(reward => reward.session_id === item.id && reward.occurrence))
+          .slice(0, 15).map(item => ({ id: item.id, title: item.data.title + ' · ' + item.data.date }))}/>} />
         <Route path="/instalar" element={<Install />} />
         <Route path="/perfil" element={<><h1>Perfil</h1>
+          <Logo /><span className="sync" role="status">{owner === local ? 'Modo local' : operations.length ? status + ' · ' + operations.length + ' pendientes' : status}</span>
           <section className="panel profile-banner"><div><p className="eyebrow">TU EQUIPO</p><h2>{profile.name || 'Atleta'}</h2>
-            <p>{profile.companion} · {petXp} EXP de compañero</p><NavLink className="pixel-link" to="/mascotas"><Zap size={17}/> Mascotas y tienda</NavLink></div>
-            <Companion name={profile.companion} xp={petXp}/>
+            <p>{profile.companion} · {petXp} EXP de compañero</p><NavLink className="profile-shop-link" to="/tienda"><ShoppingBag size={17}/> Mascotas y tienda</NavLink></div>
+            <Companion name={profile.companion} xp={petXp} outfit={outfitFor(profile, profile.companion)}/>
           </section>
           <ProfileSettings profile={profile} persist={next => save(owner, 'profile', 'self', next)} />
+          {owner === local && <LocalPetTools profile={profile} />}
+          <NavLink className="panel friends-link" to="/progreso"><Activity size={20}/> <strong>Progreso</strong></NavLink>
           <NavLink className="panel friends-link" to="/amigos"><span className="friend-avatar" aria-hidden="true"><UserRound/></span>
             <span><strong>Amigos</strong><small>Tu círculo de entrenamiento</small></span><span aria-hidden="true">›</span>
           </NavLink>
@@ -305,7 +313,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
     </main>
     <nav aria-label="Navegación principal">
       <NavLink end to="/"><House />Inicio</NavLink><NavLink to="/entrenar"><Dumbbell />Entrenar</NavLink>
-      <NavLink to="/rutinas"><BookOpen />Rutinas</NavLink><NavLink to="/progreso"><Activity />Progreso</NavLink>
+      <NavLink to="/rutinas"><BookOpen />Rutinas</NavLink><NavLink to="/tienda"><ShoppingBag />Tienda</NavLink>
       <NavLink to="/perfil"><UserRound />Perfil</NavLink>
     </nav>
   </>

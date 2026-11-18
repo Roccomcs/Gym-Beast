@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Dumbbell } from 'lucide-react'
+import { Technique } from './movement'
 import { catalog } from './domain'
 
 const groups = ['Pecho', 'Espalda', 'Hombros', 'Bíceps', 'Tríceps', 'Abdominales', 'Glúteos', 'Cuádriceps', 'Isquiotibiales', 'Aductores', 'Abductores', 'Gemelos', 'Cuerpo completo'] as const
@@ -142,7 +143,7 @@ export function Library() {
     {results.map(([id, name]) => {
       const [required, primary, ...secondary] = anatomy[id]
       return <details className="exercise-card" key={id}><summary>{name}</summary>
-        <div className="exercise-visual"><ExerciseArt id={id} /><MuscleMap primary={primary} secondary={secondary} /></div>
+        <div className="exercise-visual"><ExerciseArt id={id} /><MuscleMap primary={primary} secondary={secondary} /></div><Technique id={id} poses/>
         <p>{required} · Principal: {primary}{secondary.length > 0 && ' · Secundarios: ' + secondary.join(', ')}</p>
       </details>
     })}

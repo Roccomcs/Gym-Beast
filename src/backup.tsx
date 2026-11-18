@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { z } from 'zod'
 import { exerciseSchema } from './domain'
+import { companions, starters } from './companion'
 import { db, local, type Item } from './store'
 
 const id = z.string().min(1).max(80)
@@ -9,7 +10,7 @@ const day = z.object({ id, title: z.string().min(1), exercises: z.array(exercise
 const date = z.iso.date()
 const session = z.object({
   title: z.string().min(1), exercises: z.array(exerciseSchema), started: number, ended: number.optional(),
-  date, scheduleId: id.optional(), cycleId: id.optional(), dayId: id.optional(), routineId: id.optional(), routineVersion: z.number().int().positive().optional(), companion: z.string().optional(),
+  date, scheduleId: id.optional(), cycleId: id.optional(), dayId: id.optional(), routineId: id.optional(), routineVersion: z.number().int().positive().optional(), weeklyTarget: z.number().int().positive().optional(), deload: z.boolean().optional(), companion: z.string().optional(),
   incomplete: z.boolean().optional(), omitted: z.array(id).optional(), restUntil: number.optional(), pausedRest: number.optional(),
 })
 const profile = z.object({
@@ -18,16 +19,18 @@ const profile = z.object({
     try { new Intl.DateTimeFormat('es', { timeZone: zone }); return true }
     catch { return false }
   }),
-  companion: z.enum(['Dragón','Cocodrilo','Oso','Lobo']), onboarded: z.boolean().optional(),
-  starter: z.enum(['Dragón','Cocodrilo','Oso','Lobo']).optional(),
+  companion: z.enum(companions), onboarded: z.boolean().optional(),
+  starter: z.enum(starters).optional(),
   weightKg: number.optional(), cycle: z.object({ id, routineId: id, skipped: z.array(id), startedOn: date.optional(), order: z.array(id).optional() }).optional(),
   purchases: z.array(z.string()).optional(), equipped: z.string().optional(),
   petGear: z.record(z.string(), z.string().nullable()).optional(),
+  petOutfits: z.record(z.string(), z.record(z.string(), z.string().nullable())).optional(),
+  petPlans: z.array(z.object({ from: date, target: z.number().int().nonnegative(), companion: z.string() })).optional(),
 })
 const row = z.object({ id, version: z.number().int().positive() })
 const backup = z.object({ version: z.literal(1), items: z.array(z.discriminatedUnion('kind', [
   row.extend({ kind: z.literal('routine'), data: z.object({ name: z.string().min(1), version: z.number().int().positive(),
-    source: z.string(), days: z.array(day), archived: z.boolean().optional(), cover: z.number().int().min(0).max(9).optional(), photo: z.string().max(90000).optional(),
+    source: z.string(), days: z.array(day), archived: z.boolean().optional(), cover: z.number().int().min(0).max(10).optional(), photo: z.string().max(90000).optional(),
     history: z.array(z.object({ name: z.string().min(1), version: z.number().int().positive(),
       source: z.string(), days: z.array(day) })).max(3).optional() }) }),
   row.extend({ kind: z.literal('session'), data: session }),

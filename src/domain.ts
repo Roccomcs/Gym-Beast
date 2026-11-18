@@ -1,3 +1,4 @@
+import type { PetPlan } from './pet-progress'
 import { z } from 'zod'
 
 export const catalog = [
@@ -71,10 +72,10 @@ export type RoutineVersion = { name: string; version: number; source: string; da
 export type Routine = RoutineVersion & { archived?: boolean; cover?: number; photo?: string; history?: RoutineVersion[] }
 export type Session = {
   title: string; exercises: Exercise[]; started: number; ended?: number;
-  date: string; scheduleId?: string; cycleId?: string; dayId?: string; routineId?: string; routineVersion?: number; companion?: string; incomplete?: boolean; omitted?: string[]; restUntil?: number; pausedRest?: number;
+  date: string; scheduleId?: string; cycleId?: string; dayId?: string; routineId?: string; routineVersion?: number; weeklyTarget?: number; deload?: boolean; companion?: string; incomplete?: boolean; omitted?: string[]; restUntil?: number; pausedRest?: number;
 }
 export type PerformedSet = { sessionId: string; exerciseId: string; reps: number; kg: number | null; done: boolean; created: number; slot?: number; rpe?: number; rir?: number; notes?: string; type?: Exercise['type'] }
-export type Profile = { name: string; unit: 'kg' | 'lb'; theme: 'dark' | 'light'; weekStart: number; weeklyGoal?: number; reminderTime?: string; loadIncrementKg?: number; timezone: string; companion: string; onboarded?: boolean; starter?: string; weightKg?: number; cycle?: { id: string; routineId: string; skipped: string[]; startedOn?: string; order?: string[] }; purchases?: string[]; equipped?: string; petGear?: Record<string, string | null> }
+export type Profile = { name: string; unit: 'kg' | 'lb'; theme: 'dark' | 'light'; weekStart: number; weeklyGoal?: number; reminderTime?: string; loadIncrementKg?: number; timezone: string; companion: string; onboarded?: boolean; starter?: string; weightKg?: number; cycle?: { id: string; routineId: string; skipped: string[]; startedOn?: string; order?: string[] }; purchases?: string[]; equipped?: string; petGear?: Record<string, string | null>; petPlans?: PetPlan[]; petOutfits?: Record<string, Record<string, string | null>> }
 export type Schedule = { date: string; title: string; exercises: Exercise[]; routineId: string; version: number; skipped?: boolean }
 
 export const uid = () => crypto.randomUUID()
@@ -88,7 +89,7 @@ export function parseRoutine(source: string, preferredUnit: 'kg' | 'lb' = 'kg'):
   let group: Exercise['superset']
   let groupRemaining = 0
   const lines = source.split(/\r?\n/).flatMap(line => {
-    const moves = line.replace(/\\+$/, '').split(/\s+\+\s+/)
+    const moves = line.trimEnd().replace(/\\+$/, '').trimEnd().split(/\s+\+\s+/)
     if (moves.length < 2 || !moves.every(move => /\d+\s*[x×]\s*\d+/i.test(move))) return [line]
     const rounds = moves.map(move => Number(move.match(/(\d+)\s*[x×]/i)?.[1]))
     return rounds.every(count => count === rounds[0]) && moves.length === 2
@@ -96,7 +97,7 @@ export function parseRoutine(source: string, preferredUnit: 'kg' | 'lb' = 'kg'):
   })
   for (const input of lines) {
     const original = input.trim()
-    const row = original.replace(/\\+$/, '').trim().replace(/^(?:[-*•]\s+|\d+[.)]\s+)/, '')
+    const row = original.replace(/\\+$/, '').trim().replace(/[\t ]+/g, ' ').replace(/^(?:[-*•]\s+|\d+[.)]\s+)/, '')
     if (!row) continue
     const plain = normalize(row)
     if (/^(?:(?:dia|entrenamiento)\s+[\da-z]+(?:\s*[:—–-].*)?|(?:lunes|martes|miercoles|jueves|viernes|sabado|domingo|push|pull|legs|piernas|torso)(?:\s+[ab])?(?:\s*[:—–-].*)?)[:\s]*$/.test(plain)) {
@@ -226,6 +227,16 @@ export function suggestedLoad(exercise: Exercise, sets: PerformedSet[], incremen
   return kg + incrementKg
 }
 
-export function companionHealth(missedSessions: number, completedThisWeek: number) {
-  return Math.min(100, Math.max(25, 100 - 15 * missedSessions + 10 * completedThisWeek))
+export function weeklyStreaks(fulfilled: Iterable<string>, current: string) {
+  const prior = (value: string) => new Date(Date.parse(value + 'T00:00:00Z') - 604800000).toISOString().slice(0, 10)
+  const weeks = [...new Set(fulfilled)].filter(week => week <= current).sort()
+  let previous = ''
+  let best = 0
+  let ongoing = 0
+  for (const week of weeks) {
+    ongoing = previous === prior(week) ? ongoing + 1 : 1
+    previous = week
+    best = Math.max(best, ongoing)
+  }
+  return { best, current: previous === current || previous === prior(current) ? ongoing : 0 }
 }
