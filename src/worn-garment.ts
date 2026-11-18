@@ -123,16 +123,19 @@ async function renderOutfit(species: string, cell: number, top?: ShopGood, botto
 }
 
 export async function wornOutfit(species: string, cell: number, top?: ShopGood, bottom?: ShopGood, accessories: ShopGood[] = []) {
-  const outfit = await renderOutfit(species, cell, top, bottom)
-  if (!accessories.length) return outfit
+  const illustratedWatch = species === 'dragon' && cell === 2 && top?.id === 'hoodie' && !bottom &&
+    accessories.some(item => item.id === 'watch')
+  const outfit = illustratedWatch ? '/wardrobe/dragon-cria-hoodie-watch-v2.png' : await renderOutfit(species, cell, top, bottom)
+  const remaining = illustratedWatch ? accessories.filter(item => item.id !== 'watch') : accessories
+  if (!remaining.length) return outfit
   const art = await image(outfit ?? '/dragon-stages.webp')
   const canvas = document.createElement('canvas')
   canvas.width = canvas.height = size
   const context = canvas.getContext('2d')
   if (!context) throw new Error('Canvas no disponible')
-  if (outfit) context.drawImage(art, 0, 0)
+  if (outfit) context.drawImage(art, 0, 0, size, size)
   else context.drawImage(art, cell % 3 * size, Math.floor(cell / 3) * size, size, size, 0, 0, size, size)
 
-  accessories.forEach(item => paintDragonAccessory(context, item))
+  remaining.forEach(item => paintDragonAccessory(context, item))
   return canvas.toDataURL('image/png')
 }

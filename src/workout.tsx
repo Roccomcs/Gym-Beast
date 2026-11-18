@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { Check, Coins, Sparkles } from 'lucide-react'
 import { toKg, fromKg, suggestedLoad, uid, type Exercise, type PerformedSet, type Profile } from './domain'
-import { save, local, type Item, type Reward } from './store'
+import { recordSet, save, local, type Item, type Reward } from './store'
 import { ExerciseArt, ExerciseTargets } from './library'
 import { ExerciseDemonstration } from './movement'
 import { Companion } from './companion'
@@ -102,10 +102,8 @@ export function Workout({ owner, profile, sessions, sets, rewards, pets }: {
       reps: Number(fields.get('reps')), kg: weight === '' ? null : toKg(Number(weight), profile.unit), done: true,
       created: existing?.data.created ?? Date.now(), slot: index, type: existing?.data.type ?? exercise.type }
     void run(async () => {
-      await save(owner, 'set', existing?.id ?? uid(), next)
-      if (!existing && exercise.rest) await save(owner, 'session', item!.id, {
-        ...session, restUntil: Date.now() + exercise.rest * 1000, pausedRest: undefined,
-      })
+      await recordSet(owner, existing?.id ?? uid(), next,
+        !existing && exercise.rest ? { id: item!.id, until: Date.now() + exercise.rest * 1000 } : undefined)
       if (!existing && next.type !== 'warmup' && index + 1 >= count) {
         const nextExercise = session.exercises.slice(session.exercises.indexOf(exercise) + 1)
           .find(move => entriesByExercise(move).length < (move.sets ?? (previousSets(move).length || 1)))

@@ -7,7 +7,11 @@
     "preview": "vite preview",
     "dev": "vite",
     "build": "tsc && vite build",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "demo": "playwright test e2e/pilot-demo.spec.ts --workers=1 --output=demo-results",
+    "test:accounts": "playwright test --config playwright.accounts.config.ts --workers=1",
+    "accounts:admin": "node scripts/accounts-admin.mjs",
+    "test:wardrobe": "playwright test --config playwright.wardrobe.config.ts --workers=1"
   },
   "repository": {
     "type": "git",

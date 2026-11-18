@@ -1,5 +1,6 @@
 import { milestoneId, trainingMilestones } from './milestones'
 import { useRef, useState } from 'react'
+import { useLiveQuery } from 'dexie-react-hooks'
 import { Coins, Sparkles, Egg, Shirt, Dumbbell, Gem, PawPrint } from 'lucide-react'
 import { Companion, companions, companionStage, companionStages } from './companion'
 import { GoodArt } from './good-art'
@@ -57,7 +58,8 @@ export function PetShop({ owner, profile, rewards, pets, petPlans, date, target 
   const acquired = profile.purchases ?? []
   const initial = profile.starter ?? profile.companion
   const bonus = owner === local && localStorage.getItem(testGoldKey) === 'yes' ? testGold : 0
-  const gold = bonus + goldBalance(rewards, acquired)
+  const confirmed = useLiveQuery(() => db.syncState.get(owner), [owner])
+  const gold = owner === local ? bonus + goldBalance(rewards, acquired) : confirmed?.balance?.gold ?? goldBalance(rewards, acquired)
   const owned = companions.filter(name => name === initial || acquired.includes('egg:' + name))
   const activeOutfit = outfitFor(profile, profile.companion)
   const visible = goods.filter(item => item.id !== 'egg:' + initial && filters[filter].matches(item))
@@ -176,6 +178,7 @@ export function LocalPetTools({ profile }: { profile: Profile }) {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewPet, setPreviewPet] = useState(profile.companion)
   const [previewStage, setPreviewStage] = useState(1)
+  const [sampleOutfit, setSampleOutfit] = useState(false)
   const [credited, setCredited] = useState(() => localStorage.getItem(testGoldKey) === 'yes')
   return <><section className="panel pet-gallery">
       <button type="button" className="secondary" aria-expanded={previewOpen} aria-controls="pet-gallery-preview"
@@ -184,15 +187,19 @@ export function LocalPetTools({ profile }: { profile: Profile }) {
         {previewOpen && <>
           <p>Probá cualquier mascota y etapa. Tocala para ver su reacción.</p>
           <div className="input-grid">
-            <label>Mascota de muestra<select value={previewPet} onChange={event => setPreviewPet(event.target.value)}>
+            <label>Mascota de muestra<select value={previewPet} onChange={event => { setPreviewPet(event.target.value); setSampleOutfit(false) }}>
               {companions.map(name => <option key={name}>{name}</option>)}
             </select></label>
-            <label>Etapa de muestra<select value={previewStage} onChange={event => setPreviewStage(Number(event.target.value))}>
+            <label>Etapa de muestra<select value={previewStage} onChange={event => { setPreviewStage(Number(event.target.value)); setSampleOutfit(false) }}>
               {companionStages.map((stage, index) => <option key={stage.name} value={index}>{stage.name}</option>)}
             </select></label>
           </div>
+          <button type="button" className="secondary" onClick={() => {
+            setPreviewPet('Dragón'); setPreviewStage(2); setSampleOutfit(true)
+          }}>Ver muestra de ropa</button>
+          {sampleOutfit && <p>Buzo Oversize y Reloj cronógrafo · muestra de calce</p>}
           <Habitat key={previewPet + previewStage} name={previewPet} xp={companionStages[previewStage].xp} health={100}
-            outfit={outfitFor(profile, previewPet)} preview/>
+            outfit={sampleOutfit ? goods.filter(item => ['hoodie', 'watch'].includes(item.id)) : outfitFor(profile, previewPet)} preview/>
         </>}
       </div>
     </section>

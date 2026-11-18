@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { PGlite } from '@electric-sql/pglite'
 import { afterAll, beforeAll, expect, it } from 'vitest'
 import catalog from '../src/shop-catalog.json'
+import { pilotFriends } from './pilot-fixture'
 
 const db = new PGlite()
 const athlete = 'ec43b31a-e211-4734-9c2b-bad81ed24bc8'
@@ -163,8 +164,9 @@ it('limita las solicitudes, la aceptación y el bloqueo a las dos cuentas', asyn
 }, 15000)
 
 it('comparte solo sesiones confirmadas y limita el feed y el desafío a amigos', async () => {
-  const first = '2c26454f-a45b-4a18-8bd1-580944496611'
-  const second = 'ebdf948a-90af-426c-a531-264d1b276115'
+  const [firstFriend, secondFriend] = pilotFriends
+  const first = firstFriend.id
+  const second = secondFriend.id
   const stranger = friend
   await db.exec('reset role')
   await db.query('insert into auth.users values ($1), ($2)', [first, second])
@@ -181,12 +183,12 @@ it('comparte solo sesiones confirmadas y limita el feed y el desafío a amigos',
     return out.rows[0].result
   }
   await signIn(first)
-  await social('handle', 'gabi')
+  await social('handle', firstFriend.handle)
   await expect(activity('publish', 'missing')).rejects.toThrow(/confirmada/)
   const post = (await activity('publish','confirmed')).posts[0]
   expect((await activity('publish','confirmed')).posts).toHaveLength(1)
   await signIn(second)
-  await social('handle','leo')
+  await social('handle', secondFriend.handle)
   await social('request','gabi')
   expect((await activity('list')).posts).toHaveLength(0)
   await signIn(first)

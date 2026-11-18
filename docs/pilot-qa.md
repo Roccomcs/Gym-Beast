@@ -1,4 +1,7 @@
-# Revisión del piloto
+# Registro histórico de QA
+
+El cierre vigente del 18 de noviembre de 2026 está en [Etapa 1](etapa-1.md), [Etapa 2](etapa-2.md), [Etapa 3](etapa-3.md) y [Pendientes](pendientes.md). Las secciones siguientes conservan resultados de entregas anteriores y pueden mencionar funciones retiradas o reemplazadas.
+
 
 ## 1. Cierre de implementación
 

@@ -10,6 +10,12 @@ export function ProfileSettings({ profile, persist }: { profile: Profile; persis
   const [weight, setWeight] = useState(profile.weightKg ? String(fromKg(profile.weightKg, profile.unit)) : '')
   const [name, setName] = useState(profile.name)
   const [status, setStatus] = useState('')
+  useEffect(() => {
+    if (pending.current) return
+    setName(profile.name)
+    setUnit(profile.unit)
+    setWeight(profile.weightKg ? String(fromKg(profile.weightKg, profile.unit)) : '')
+  }, [profile])
   const persisted = useRef(persist)
   persisted.current = persist
   const flush = () => {

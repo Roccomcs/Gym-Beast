@@ -4,3 +4,7 @@ dist/
 !.env.example
 playwright-report/
 test-results/
+demo-results/
+.auth-dist/
+accounts-results/
+wardrobe-results/

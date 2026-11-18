@@ -11,6 +11,7 @@ export function Friends({ owner, sessions }: { owner: string; sessions: { id: st
   const [data, setData] = useState<Social>()
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
+  const [loginHandle, setLoginHandle] = useState('')
   const [online, setOnline] = useState(navigator.onLine)
   useEffect(() => {
     const refresh = () => setOnline(navigator.onLine)
@@ -24,6 +25,9 @@ export function Friends({ owner, sessions }: { owner: string; sessions: { id: st
   useEffect(() => {
     if (owner === local || !api || !online) return
     let active = true
+    void api.auth.getSession().then(({ data }) => {
+      if (active) setLoginHandle(data.session?.user.app_metadata.gymbeast_registration?.handle ?? '')
+    })
     void api.rpc('social_action', { p_action: 'list' }).then(result => {
       if (!active) return
       if (result.error) setMessage('No pudimos cargar Amigos.')
@@ -53,9 +57,9 @@ export function Friends({ owner, sessions }: { owner: string; sessions: { id: st
     {data && <><form className="panel" onSubmit={event => {
       event.preventDefault()
       void action('handle', String(new FormData(event.currentTarget).get('handle')))
-    }}><h2>Tu usuario</h2><label>Nombre de usuario<input key={data.handle} name="handle" required minLength={3} maxLength={24}
+    }}><h2>Tu usuario</h2><label>Nombre de usuario<input key={data.handle} name="handle" required minLength={3} maxLength={24} readOnly={!!loginHandle}
       pattern="[a-zA-Z0-9_]+" autoCapitalize="none" defaultValue={data.handle ?? ''}/></label>
-      <button disabled={busy || !online}>Guardar usuario</button></form>
+      {!loginHandle && <button disabled={busy || !online}>Guardar usuario</button>}</form>
     {data.handle && <section className="panel">
       <h2>Tu foto</h2>
       {data.avatar && <img className="friend-avatar" src={data.avatar} alt="Tu foto"/>}

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { Activity, CalendarDays, Dumbbell, House, UserRound, BookOpen, ShoppingBag } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { registerSW } from 'virtual:pwa-register'
-import { api, clearAccount, db, list, local, resolveConflict, retryOperation, save, sessionKey, sync } from './store'
+import { api, clearAccount, db, list, local, save, sessionKey, sync } from './store'
 import { dateKey, weekDates, uid, type Profile, type Routine } from './domain'
 import { initialVitals, petProgress } from './pet-progress'
 import { Routines } from './routines'
@@ -17,6 +17,8 @@ import { Onboarding, ProgramLibrary, Train, CreateRoutine } from './journey'
 import { Library } from './library'
 import { Friends } from './friends'
 import { ProfileSettings } from './profile-settings'
+import { SyncIssue } from './sync-issues'
+import { AccountForm, AccountSettings, PasswordForm } from './accounts'
 import { PetShop, LocalPetTools, localRewards } from './economy'
 import '@fontsource/press-start-2p/latin-400.css'
 import '@fontsource-variable/atkinson-hyperlegible-next'
@@ -36,16 +38,45 @@ const defaults: Profile = {
 function Root() {
   const [owner, setOwner] = useState(() => localStorage.getItem(sessionKey) ?? '')
   const [ready, setReady] = useState(!api || !navigator.onLine)
-  const [problem, setProblem] = useState('')
-  const [recovery, setRecovery] = useState(false)
+  const [passwordUser, setPasswordUser] = useState('')
+  useEffect(() => {
+    if (!api || !owner || owner === local) return
+    let live = true
+    const verify = () => {
+      if (!navigator.onLine) return
+      void api!.auth.getUser().then(async ({ data, error }) => {
+        if (!live) return
+        if (error?.code === 'user_not_found') {
+          await clearAccount(owner)
+          if (!live) return
+          await api!.auth.signOut({ scope: 'local' })
+          localStorage.removeItem(sessionKey)
+          setOwner(''); setPasswordUser('')
+          return
+        }
+        if (data.user) setPasswordUser(data.user.app_metadata.temporary_password_required
+          ? data.user.app_metadata.gymbeast_registration?.handle ?? '' : '')
+      }).catch(() => undefined)
+    }
+    verify()
+    window.addEventListener('focus', verify)
+    window.addEventListener('online', verify)
+    return () => {
+      live = false
+      window.removeEventListener('focus', verify)
+      window.removeEventListener('online', verify)
+    }
+  }, [owner])
   useEffect(() => {
     if (!api) return
     const { data } = api.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY') setRecovery(true)
       if (session) {
+        setPasswordUser(session.user.app_metadata.temporary_password_required
+          ? session.user.app_metadata.gymbeast_registration?.handle ?? '' : '')
         localStorage.setItem(sessionKey, session.user.id)
         setOwner(session.user.id)
       } else if (event === 'SIGNED_OUT' || navigator.onLine) {
+        setPasswordUser('')
         setOwner(current => {
           if (current === local) return current
           localStorage.removeItem(sessionKey)
@@ -57,63 +88,25 @@ function Root() {
     return () => data.subscription.unsubscribe()
   }, [])
   const startLocal = () => { localStorage.setItem(sessionKey, local); setOwner(local) }
-  if (!ready) return <main>Abriendo GymBeast…</main>
-  if (recovery) return <main><h1>Nueva contraseña</h1><form onSubmit={async event => {
-    event.preventDefault()
-    const password = String(new FormData(event.currentTarget).get('password'))
-    const result = await api?.auth.updateUser({ password })
-    if (result?.error) setProblem(result.error.message)
-    else { setRecovery(false); setProblem('') }
-  }}><label>Contraseña nueva<input name="password" type="password" minLength={8} required /></label>
-    <button>Guardar contraseña</button></form>{problem && <p role="alert">{problem}</p>}</main>
-  if (!owner) return <main className="welcome">
-    <Logo /><Companion name="Dragón" /><p className="eyebrow">TU DIARIO DE FUERZA</p>
-    <h1>Cada repetición cuenta.</h1>
-    <p>Planificá tu semana, registrá tus series y seguí tu progreso.</p>
-    {api && <button onClick={async () => {
-      if (!api) return
-      const result = await api.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin } })
-      if (result.error) setProblem(result.error.message)
-    }}>Continuar con Google</button>}
-    {api && import.meta.env.VITE_ENABLE_EMAIL_AUTH === 'true' && <EmailForm />}
-    <button className="secondary" onClick={startLocal}>Probar en este dispositivo</button>
-    {problem && <p role="alert">{problem}</p>}
-  </main>
-  return <Dashboard key={owner} owner={owner} exit={async () => {
+  const exit = async () => {
     if (owner !== local && api) {
       const { error } = await api.auth.signOut({ scope: 'local' })
       if (error) throw error
     }
     localStorage.removeItem(sessionKey)
+    setPasswordUser('')
     setOwner('')
-  }} />
-}
-
-function EmailForm() {
-  const [message, setMessage] = useState('')
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (!api) return
-    const fields = new FormData(event.currentTarget)
-    const action = (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value')
-    const email = String(fields.get('email'))
-    const password = String(fields.get('password'))
-    if (action !== 'reset' && password.length < 8) {
-      setMessage('Ingresá al menos 8 caracteres de contraseña.')
-      return
-    }
-    const result = action === 'reset' ? await api.auth.resetPasswordForEmail(email, { redirectTo: location.origin })
-      : action === 'register' ? await api.auth.signUp({ email, password, options: { emailRedirectTo: location.origin } })
-      : await api.auth.signInWithPassword({ email, password })
-    setMessage(result.error?.message ?? 'Si el flujo requiere verificación, revisá tu correo.')
   }
-  return <form onSubmit={submit}>
-    <label>Email<input type="email" name="email" required autoComplete="email" /></label>
-    <label>Contraseña<input type="password" name="password" /></label>
-    <div className="actions"><button value="login">Entrar</button><button value="register" className="secondary">Crear cuenta</button>
-      <button value="reset" className="secondary">Recuperar</button></div>
-    {message && <p role="status">{message}</p>}
-  </form>
+  if (!ready) return <main>Abriendo GymBeast…</main>
+  if (passwordUser && owner !== local) return <main><PasswordForm username={passwordUser} forced onExit={exit}/></main>
+  if (!owner) return <main className="welcome">
+    <Logo /><Companion name="Dragón" /><p className="eyebrow">TU DIARIO DE FUERZA</p>
+    <h1>Cada repetición cuenta.</h1>
+    <p>Planificá tu semana, registrá tus series y seguí tu progreso.</p>
+    <AccountForm />
+    <button className="secondary" onClick={startLocal}>Probar en este dispositivo</button>
+  </main>
+  return <Dashboard key={owner} owner={owner} exit={exit} />
 }
 
 function Logo() {
@@ -127,6 +120,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   useEffect(() => { if (!hash) window.scrollTo(0, 0) }, [pathname, hash])
   const draft = useLiveQuery(async () => (await db.onboarding.get(owner)) ?? null, [owner])
   const profiles = useLiveQuery(() => list(owner, 'profile'), [owner])
+  const syncState = useLiveQuery(() => db.syncState.get(owner), [owner])
   const profile = profiles?.[0]?.data ?? defaults
   const routines = useLiveQuery(() => list(owner, 'routine'), [owner], [])
   const starting = useRef(false)
@@ -174,7 +168,6 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   const pets = useMemo(() => petProgress(date, profile.timezone, profile.companion, petPlans, sessions, schedules, rewards),
     [date, profile.timezone, profile.companion, petPlans, sessions, schedules, rewards])
   const { xp: petXp, health } = pets.get(profile.companion) ?? initialVitals
-  const conflicts = operations.filter(item => item.conflict)
   useEffect(() => {
     const refresh = () => setAvailable(true)
     window.addEventListener('gymbeast-update', refresh)
@@ -242,6 +235,14 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
     void save(owner, 'profile', 'self', { ...profile, cycle: next }).catch(() => setStatus('No pudimos actualizar el ciclo.'))
   }
   if (!profiles || draft === undefined) return <main>Abriendo tu perfil…</main>
+  if (owner !== local && !syncState?.initialized && (!profiles.length || (syncState?.cursor ?? 0) > 0)) {
+    return <main><h1>Recuperando tus datos</h1>
+      <p role="status">{status || 'Estamos abriendo tu cuenta.'}</p>
+      <p>Para abrir esta cuenta por primera vez necesitás conexión.</p>
+      <button className="secondary" onClick={() => void sync(owner).catch(() => setStatus('No pudimos conectar. Probá de nuevo.'))}>Reintentar</button>
+      <button className="secondary" onClick={() => void exit().catch(() => setStatus('No pudimos cerrar la sesión.'))}>Cerrar sesión</button>
+    </main>
+  }
   if (!profile.onboarded) return <main><Onboarding profile={draft?.profile ?? profile}
     checkpoint={next => { void db.onboarding.put({ owner, profile: next }).catch(() => undefined) }}
     save={async next => { await save(owner, 'profile', 'self', next); await db.onboarding.delete(owner); navigate('/') }} /></main>
@@ -249,17 +250,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   return <>
     <main>
       {available && !active && <button className="secondary" onClick={() => void update(true)}>Actualizar GymBeast</button>}
-      {operations.filter(item => item.rejected).map(item => <section key={item.op} className="panel">
-        <h2>Un cambio requiere revisión</h2><p>{item.rejected}</p>
-        <button className="secondary" onClick={() => void retryOperation(item)}>Reintentar cambio</button>
-      </section>)}
-      {conflicts.map(item => <section key={item.op} className="panel">
-        <h2>Hay dos versiones de este registro</h2>
-        <details><summary>Revisar ambas versiones</summary><p>En el servidor</p><pre>{JSON.stringify(item.conflict?.data, null, 2)}</pre>
-          <p>En este dispositivo</p><pre>{JSON.stringify(item.data, null, 2)}</pre></details>
-        <div className="actions"><button onClick={() => void resolveConflict(item, true)}>Conservar local</button>
-          <button className="secondary" onClick={() => void resolveConflict(item, false)}>Usar servidor</button></div>
-      </section>)}
+      {operations.filter(item => item.rejected || item.conflict).map(item => <SyncIssue key={item.op} operation={item}/>)}
       <div className="route-enter" key={pathname}><Routes>
         <Route index element={<>
           <p className="eyebrow"><CalendarDays size={16} /> {new Date(date + 'T12:00:00Z').toLocaleDateString('es-AR', { dateStyle: 'full', timeZone: 'UTC' })}</p>
@@ -302,7 +293,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
             <Companion name={profile.companion} xp={petXp} outfit={outfitFor(profile, profile.companion)}/>
           </section>
           <ProfileSettings profile={profile} persist={next => save(owner, 'profile', 'self', next)} />
-          {owner === local && <LocalPetTools profile={profile} />}
+          {owner === local ? <LocalPetTools profile={profile} /> : <AccountSettings exit={exit}/>}
           <NavLink className="panel friends-link" to="/progreso"><Activity size={20}/> <strong>Progreso</strong></NavLink>
           <NavLink className="panel friends-link" to="/amigos"><span className="friend-avatar" aria-hidden="true"><UserRound/></span>
             <span><strong>Amigos</strong><small>Tu círculo de entrenamiento</small></span><span aria-hidden="true">›</span>

@@ -334,3 +334,16 @@ img.friend-avatar{object-fit:cover;flex:none}
 .create-options a span { align-self:start; }
 .demo-leg-press { background-image:url(/leg-press-poses.webp); background-size:200% 100%; }
 .demo-frames-cutout { background:none; border:0; }
+
+.account-access { width:100%; max-width:28rem; }
+.account-access .tabs { margin-bottom:1rem; }
+.account-access form>button { display:flex; align-items:center; justify-content:center; gap:.5rem; }
+.account-help { font-size:.9rem; line-height:1.45; margin:.25rem 0; }
+.account-password { margin-top:.8rem; }
+.welcome:has(.account-access) { padding-top:1.2rem; }
+.welcome:has(.account-access) > .dragon-stage { display:none; }
+
+.sync-versions { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr)); gap:.65rem; margin-bottom:.8rem; }
+.sync-versions>div { padding:.7rem; border:1px solid var(--line); background:var(--bg); min-width:0; }
+.sync-issue details summary { cursor:pointer; min-height:44px; display:flex; align-items:center; }
+.sync-issue pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:.8rem; }

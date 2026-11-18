@@ -19,3 +19,5 @@
 - Las láminas de evolución crocodile-stages.webp, bear-stages.webp y wolf-stages.webp son ilustraciones originales de GymBeast generadas con OpenAI ImageGen.
 - Fondos en public/habitat-crocodile.webp, public/habitat-bear.webp y public/habitat-wolf.webp. Escenarios originales generados con OpenAI ImageGen para la laguna de mangles, el claro otoñal y el bosque nevado de noche.
 - Tienda en public/magic-shop.webp, láminas public/{fox,axolotl,tiger,phoenix}-stages.webp y hábitats public/habitat-{fox,axolotl,tiger,phoenix}.webp. Escenario de bazar, sprites y fondos originales generados con OpenAI ImageGen. Las camisetas dibujadas en la app usan paletas inspiradas en sus equipos y no incorporan escudos, auspiciantes ni diseños oficiales.
+
+- La muestra public/wardrobe/dragon-cria-hoodie-watch-v2.png se generó con OpenAI ImageGen el 18 de noviembre de 2026 usando el sprite vestido de GymBeast como referencia. Integra buzo y reloj ilustrado para el dragón Cría. Su aprobación visual está pendiente.

@@ -710,3 +710,27 @@ test('usa Obsidiana dorada en Perfil y Entrenar', async ({ page }) => {
   await page.reload()
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(19, 19, 22)')
 })
+
+test('la muestra de ropa local usa el reloj ilustrado sin cambiar el equipamiento', async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await onboard(page, 'Dragón')
+  await page.getByRole('link', { name: 'Perfil', exact: true }).click()
+  await page.getByRole('button', { name: 'Galería local de mascotas' }).click()
+  await page.getByRole('button', { name: 'Ver muestra de ropa' }).click()
+  const sample = page.locator('.pet-gallery [data-dressed-sprite="hoodie"]')
+  await expect(sample).toBeVisible()
+  await expect(sample).toHaveCSS('background-image', /dragon-cria-hoodie-watch-v2\.png/)
+  await expect(page.locator('.profile-banner [data-form="0"]')).toBeVisible()
+  await page.locator('.pet-gallery .habitat-scene').screenshot({ path: info.outputPath('muestra-reloj-local.png'), scale: 'css' })
+  const equipment = await page.evaluate(async () => {
+    const database = await new Promise<IDBDatabase>(resolve => { const request = indexedDB.open('gymbeast'); request.onsuccess = () => resolve(request.result) })
+    const result = await new Promise<{ purchases: string[]; outfit: unknown }>(resolve => {
+      const request = database.transaction('items').objectStore('items').get(['local', 'profile', 'self'])
+      request.onsuccess = () => resolve({ purchases: request.result.data.purchases ?? [], outfit: request.result.data.petOutfits ?? null })
+    })
+    database.close(); return result
+  })
+  expect(equipment).toEqual({ purchases: [], outfit: null })
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Galería local de mascotas' })).toHaveAttribute('aria-expanded', 'false')
+})

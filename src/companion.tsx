@@ -5,15 +5,10 @@ import { DragonJersey } from './dragon-jersey'
 import type { ShopGood } from './shop-catalog'
 import { useEffect, useState, type CSSProperties } from 'react'
 import { wornOutfit } from './worn-garment'
+import { petSources as sources } from './pet-species'
+export { starters, companions } from './pet-species'
 
 export { companionStages } from './pet-progress'
-
-export const starters = ['Dragón', 'Cocodrilo', 'Oso', 'Lobo'] as const
-export const companions = [...starters, 'Zorro', 'Ajolote', 'Tigre', 'Fénix'] as const
-const sources: Record<string, string> = {
-  Dragón: 'dragon', Cocodrilo: 'crocodile', Oso: 'bear', Lobo: 'wolf',
-  Zorro: 'fox', Ajolote: 'axolotl', Tigre: 'tiger', Fénix: 'phoenix',
-}
 
 // Head and chest anchors as percentages of each transparent sprite cell.
 const outfitAnchors: Record<string, number[][]> = {
