@@ -18,8 +18,11 @@ const backend: AccountBackend = {
     const { error } = await service.auth.admin.createUser({ email, password, email_confirm: true,
       app_metadata: { gymbeast_registration: { handle, operation } },
     })
-    if (error && (!error.status || error.status >= 502)) throw error
-    return !error
+    if (!error) return true
+    if (error.code === 'email_exists' || error.code === 'user_already_exists') return false
+    if (error.code === 'weak_password') return 'weak_password'
+    console.error('GymBeast account registration failed', { status: error.status, code: error.code })
+    throw error
   },
   async matchesRegistration(handle, operation) {
     const { data, error } = await service.from('account_logins').select('owner')

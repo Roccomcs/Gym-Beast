@@ -36,6 +36,7 @@ async function device(browser: Browser, handle = 'rocco', legacy?: { items: obje
   const current = session(handle)
   const page = await context.newPage()
   let dropNext = false
+  let lostResponses = 0
   const cursors: number[] = []
   await context.route('http://127.0.0.1:54321/**', async route => {
     const request = route.request()
@@ -62,7 +63,11 @@ async function device(browser: Browser, handle = 'rocco', legacy?: { items: obje
         const values = inputs[name]
         return (await db.query<{ result: unknown }>('select public.' + name + '(' + values.map((_, index) => '$' + (index + 1)).join(',') + ') as result', values)).rows[0].result
       })
-      if (name === 'sync_push' && dropNext) { dropNext = false; return route.abort('failed') }
+      if (name === 'sync_push' && dropNext) {
+        dropNext = false
+        lostResponses++
+        return route.abort('failed')
+      }
       return route.fulfill({ headers, json: result })
     } catch (error) { return route.fulfill({ status: 400, headers, json: { code: 'P0001', message: String(error) } }) }
   })
@@ -97,7 +102,7 @@ async function device(browser: Browser, handle = 'rocco', legacy?: { items: obje
   await page.getByLabel('Usuario', { exact: true }).fill(handle)
   await page.getByLabel('Contraseña', { exact: true }).fill('mi-clave-segura')
   await page.getByRole('button', { name: 'Iniciar sesión' }).click()
-  return { page, context, cursors, loseNextResponse: () => { dropNext = true } }
+  return { page, context, cursors, lostResponses: () => lostResponses, loseNextResponse: () => { dropNext = true } }
 }
 
 async function onboard(page: Page, name = 'Rocco') {
@@ -212,8 +217,7 @@ test('sincroniza un día offline con respuesta perdida y lo recupera en otro dis
   a.loseNextResponse()
   await a.context.setOffline(false); await focus(a.page)
   await expect.poll(async () => (await query('select session_id from public.session_rewards where owner=$1 and occurrence is not null', [first])).length).toBe(1)
-  await a.page.getByRole('link', { name: 'Perfil', exact: true }).click()
-  await expect(a.page.getByRole('status').filter({ hasText: 'Error de sincronización' })).toBeVisible()
+  await expect.poll(a.lostResponses).toBe(1)
   await focus(a.page)
   await expect.poll(() => pending(a.page)).toBe(0)
   await a.page.getByRole('link', { name: 'Tienda', exact: true }).click()

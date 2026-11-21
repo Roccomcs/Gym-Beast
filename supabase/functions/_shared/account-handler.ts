@@ -3,7 +3,7 @@ import { accountEmail, normalizeUsername, usernamePattern, registrationUsernameP
 type Identity = { id: string; app_metadata: Record<string, unknown> }
 export type AccountBackend = {
   allowAttempt: (bucket: string) => Promise<boolean>
-  register: (input: { email: string; password: string; handle: string; operation: string }) => Promise<boolean>
+  register: (input: { email: string; password: string; handle: string; operation: string }) => Promise<boolean | 'weak_password'>
   matchesRegistration: (handle: string, operation: string) => Promise<boolean>
   signIn: (email: string, password: string) => Promise<{ user: Identity; tokens: AccountTokens } | null>
   changePassword: (user: Identity, password: string) => Promise<boolean>
@@ -53,8 +53,9 @@ export function accountHandler(backend: AccountBackend, origins: string[]) {
           return reply(400, { error: 'Volvé a intentar crear la cuenta.' })
         }
         const created = await backend.register({ email, password, handle, operation })
+        if (created === 'weak_password') return reply(400, { error: 'Elegí una contraseña más segura.' })
         if (!created && !await backend.matchesRegistration(handle, operation)) {
-          return reply(409, { error: 'No se pudo crear la cuenta. El usuario puede estar ocupado.' })
+          return reply(409, { error: 'Ese usuario ya está ocupado. Elegí otro.' })
         }
       }
       const signedIn = await backend.signIn(email, password)
@@ -70,7 +71,7 @@ export function accountHandler(backend: AccountBackend, origins: string[]) {
       }
       return reply(200, { session: signedIn.tokens })
     } catch {
-      return reply(503, { error: 'No pudimos conectar. Tus datos quedan guardados en este dispositivo.' })
+      return reply(503, { error: 'El servicio de cuentas no está disponible en este momento. Probá de nuevo.' })
     }
   }
 }

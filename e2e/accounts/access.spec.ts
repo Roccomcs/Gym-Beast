@@ -15,7 +15,7 @@ function session(temporary = false, handle = 'rocco') {
   return { access_token: token, refresh_token: 'browser-test-refresh', token_type: 'bearer', expires_in: 3600, expires_at: now + 3600, user }
 }
 
-async function mockServer(page: Page, temporary = false) {
+async function mockServer(page: Page, temporary = false, waitForFirstSync?: Promise<void>) {
   let current = session(temporary)
   const calls: Record<string, string>[] = []
   await page.route('http://127.0.0.1:54321/**', async route => {
@@ -38,8 +38,10 @@ async function mockServer(page: Page, temporary = false) {
     if (path.endsWith('/auth/v1/logout')) return route.fulfill({ status: 204, headers })
     if (path.endsWith('/rpc/sync_push')) return route.fulfill({ headers, json:
       request.postDataJSON().p_operations.map((operation: { op: string }) => ({ op: operation.op, status: 'applied' })) })
-    if (path.endsWith('/rpc/sync_pull')) return route.fulfill({ headers, json:
-      { changes: [], cursor: request.postDataJSON().p_cursor, more: false } })
+    if (path.endsWith('/rpc/sync_pull')) {
+      await waitForFirstSync
+      return route.fulfill({ headers, json: { changes: [], cursor: request.postDataJSON().p_cursor, more: false } })
+    }
     if (path.includes('/rpc/')) return route.fulfill({ headers, json: { status: 'applied' } })
     return route.fulfill({ headers, json: [] })
   })
@@ -72,8 +74,9 @@ test('entra con usuario, conserva la sesión y reabre offline sin pedir contrase
 })
 
 test('muestra errores y permite registrarse sin invitación', async ({ page }) => {
-  const { calls } = await mockServer(page)
-  await page.goto('/')
+  const firstSync = Promise.withResolvers<void>()
+  const { calls } = await mockServer(page, false, firstSync.promise)
+  await page.goto('/perfil')
   await page.getByLabel('Usuario', { exact: true }).fill('rocco')
   await page.getByLabel('Contraseña', { exact: true }).fill('incorrecta')
   await page.getByRole('button', { name: 'Iniciar sesión' }).click()
@@ -98,6 +101,14 @@ test('muestra errores y permite registrarse sin invitación', async ({ page }) =
   await page.getByLabel('Repetir contraseña', { exact: true }).fill('12345678')
   await expect(page.getByLabel('Código de invitación')).toHaveCount(0)
   await page.getByRole('button', { name: 'Crear mi cuenta' }).click()
+  try {
+    await expect(page.getByRole('status')).toHaveText('Abriendo tu cuenta…')
+    await expect(page.getByRole('heading', { name: 'GymBeast' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Reintentar' })).toHaveCount(0)
+    await expect(page).toHaveURL(/\/$/)
+  } finally {
+    firstSync.resolve()
+  }
   await expect(page.getByLabel('Tu nombre')).toBeVisible()
   const registrations = calls.filter(call => call.action === 'register')
   expect(registrations).toHaveLength(1)
@@ -158,7 +169,7 @@ test('separa los datos de dos cuentas en el mismo teléfono', async ({ page }) =
   await page.getByLabel('Usuario', { exact: true }).fill('rocco')
   await page.getByLabel('Contraseña', { exact: true }).fill('mi-clave-segura')
   await page.getByRole('button', { name: 'Iniciar sesión' }).click()
-  await page.getByRole('link', { name: 'Inicio', exact: true }).click()
+  await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { name: 'Hola, Rocco' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Hola, Gabi' })).toHaveCount(0)
 })

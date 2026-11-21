@@ -1,6 +1,6 @@
 import { useMotionVisibility } from './motion'
 import {useMobileViewport,useScreenFocus,useOfflineRoutineArt} from './mobile-behavior'
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Navigate, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { Activity, CalendarDays, Dumbbell, House, UserRound, BookOpen, ShoppingBag } from 'lucide-react'
@@ -41,7 +41,21 @@ const defaults: Profile = {
   timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, companion: 'Dragón',
 }
 
+function AccessScreen({ children }: { children: ReactNode }) {
+  return <main className="welcome">
+    <header className="access-heading">
+      <h1>Gym<span>Beast</span></h1>
+      <img className="access-flight" src="/access-titans-flight.webp" alt="Dragón y fénix Titán en vuelo"/>
+    </header>
+    {children}
+    <div className="access-hero">
+      <img className="access-ground" src="/access-titans-ground.webp" alt="Lobo, oso y cocodrilo Titán en el patio"/>
+    </div>
+  </main>
+}
+
 function Root() {
+  const navigate = useNavigate()
   useMotionVisibility()
   useMobileViewport()
   const [owner, setOwner] = useState(() => localStorage.getItem(sessionKey) ?? '')
@@ -106,16 +120,7 @@ function Root() {
   }
   if (!ready) return <main>Abriendo GymBeast…</main>
   if (passwordUser && owner !== local) return <main><PasswordForm username={passwordUser} forced onExit={exit}/></main>
-  if (!owner) return <main className="welcome">
-    <header className="access-heading">
-      <h1>Gym<span>Beast</span></h1>
-      <img className="access-flight" src="/access-titans-flight.webp" alt="Dragón y fénix Titán en vuelo"/>
-    </header>
-    <AccountForm />
-    <div className="access-hero">
-      <img className="access-ground" src="/access-titans-ground.webp" alt="Lobo, oso y cocodrilo Titán en el patio"/>
-    </div>
-  </main>
+  if (!owner) return <AccessScreen><AccountForm onSuccess={() => navigate('/', { replace: true })}/></AccessScreen>
   return <Dashboard key={owner} owner={owner} exit={exit} />
 }
 
@@ -137,6 +142,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   const remoteRewards = useLiveQuery(() => db.rewards.where('owner').equals(owner).toArray(), [owner], [])
   const rewards = useMemo(() => owner === local ? localRewards(sessions, sets) : remoteRewards, [owner, sessions, sets, remoteRewards])
   const [status, setStatus] = useState('')
+  const [exitError, setExitError] = useState(false)
   const [available, setAvailable] = useState(false)
   const [, refreshClock] = useState(0)
   const now = new Date()
@@ -242,14 +248,24 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   function changeCycle(next: Profile['cycle']) {
     void save(owner, 'profile', 'self', { ...profile, cycle: next }).catch(() => setStatus('No pudimos actualizar el ciclo.'))
   }
-  if (!profiles || draft === undefined) return <main>Abriendo tu perfil…</main>
-  if (owner !== local && !syncState?.initialized && (!profiles.length || (syncState?.cursor ?? 0) > 0)) {
-    return <main><h1>Recuperando tus datos</h1>
-      <p role="status">{status || 'Estamos abriendo tu cuenta.'}</p>
-      <p>Para abrir esta cuenta por primera vez necesitás conexión.</p>
-      <button className="secondary" onClick={() => void sync(owner).catch(() => setStatus('No pudimos conectar. Probá de nuevo.'))}>Reintentar</button>
-      <button className="secondary" onClick={() => void exit().catch(() => setStatus('No pudimos cerrar la sesión.'))}>Cerrar sesión</button>
-    </main>
+  if (!profiles || draft === undefined ||
+    (owner !== local && !syncState?.initialized && (!profiles.length || (syncState?.cursor ?? 0) > 0))) {
+    const blocked = status === 'Sin conexión' || status === 'Error de sincronización'
+    return <AccessScreen><section className="panel account-access">
+      <p role="status">{blocked
+        ? status === 'Sin conexión' ? 'Necesitás conexión para abrir esta cuenta por primera vez.'
+          : 'No pudimos cargar tu cuenta. Probá de nuevo.'
+        : 'Abriendo tu cuenta…'}</p>
+      {blocked && <div className="actions">
+        <button className="secondary" onClick={() => {
+          if (!navigator.onLine) return
+          setStatus('Sincronizando')
+          void sync(owner).catch(() => setStatus('Error de sincronización'))
+        }}>Reintentar</button>
+        <button className="secondary" onClick={() => void exit().catch(() => setExitError(true))}>Cerrar sesión</button>
+      </div>}
+      {blocked && exitError && <p className="account-error" role="alert">No pudimos cerrar la sesión. Probá de nuevo.</p>}
+    </section></AccessScreen>
   }
   if (!profile.onboarded) return <main><Onboarding profile={draft?.profile ?? profile}
     checkpoint={next => { void db.onboarding.put({ owner, profile: next }).catch(() => undefined) }}

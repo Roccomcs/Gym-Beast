@@ -35,7 +35,7 @@ function PasswordField({ label, name, autoComplete, disabled }: {
   </span></label>
 }
 
-export function AccountForm() {
+export function AccountForm({ onSuccess }: { onSuccess: () => void }) {
   const [register, setRegister] = useState(false)
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
@@ -59,6 +59,7 @@ export function AccountForm() {
         operation: register ? operation : undefined,
       })
       sessionStorage.removeItem(key)
+      onSuccess()
     } catch (error) { setMessage(error instanceof Error ? error.message : 'No pudimos entrar.') }
     finally { setBusy(false) }
   }
