@@ -6,12 +6,20 @@
     "test": "vitest run src tests",
     "preview": "vite preview",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "node scripts/check-training-art.mjs && node scripts/generate-notices.mjs && tsc && vite build",
     "test:e2e": "playwright test",
     "demo": "playwright test e2e/pilot-demo.spec.ts --workers=1 --output=demo-results",
     "test:accounts": "playwright test --config playwright.accounts.config.ts --workers=1",
+    "test:mobile": "playwright test --config playwright.mobile.config.ts --workers=1",
+    "test:mobile-social": "playwright test --config playwright.mobile-social.config.ts --workers=1",
+    "test:performance": "playwright test --config playwright.performance.config.ts --workers=1",
+    "test:capacity": "vitest run capacity/pilot.test.ts",
+    "test:recovery": "playwright test --config playwright.recovery.config.ts --workers=1",
+    "check:release": "node scripts/check-release.mjs",
+    "check:published": "node scripts/check-published.mjs",
     "accounts:admin": "node scripts/accounts-admin.mjs",
-    "test:wardrobe": "playwright test --config playwright.wardrobe.config.ts --workers=1"
+    "test:wardrobe": "playwright test --config playwright.wardrobe.config.ts --workers=1",
+    "test:pets": "playwright test --config playwright.pets.config.ts --workers=1"
   },
   "repository": {
     "type": "git",
@@ -38,6 +46,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@electric-sql/pglite": "^0.5.16",
     "@playwright/test": "^1.65.1",
     "@tailwindcss/vite": "^4.3.5",

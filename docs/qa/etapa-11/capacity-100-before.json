@@ -1,0 +1,127 @@
+{
+  "environment": "PGlite PostgreSQL embedded, bulk settled fixture; no Auth/HTTP/concurrency",
+  "accounts": 100,
+  "weeks": 52,
+  "sessionsPerWeek": 5,
+  "setsPerSession": 20,
+  "photoBytesPerAccount": 173382,
+  "counts": {
+    "entities": 546200,
+    "sessions": 26000,
+    "sets": 520000,
+    "operations": 650200,
+    "changes": 572200,
+    "ledger": 26000
+  },
+  "publicRelationBytes": 650330112,
+  "tables": [
+    {
+      "name": "account_attempts",
+      "bytes": "16384",
+      "index_bytes": "8192"
+    },
+    {
+      "name": "account_invitations",
+      "bytes": "24576",
+      "index_bytes": "16384"
+    },
+    {
+      "name": "account_logins",
+      "bytes": "32768",
+      "index_bytes": "24576"
+    },
+    {
+      "name": "account_restores",
+      "bytes": "16384",
+      "index_bytes": "8192"
+    },
+    {
+      "name": "friend_challenges",
+      "bytes": "24576",
+      "index_bytes": "16384"
+    },
+    {
+      "name": "friend_cheers",
+      "bytes": "8192",
+      "index_bytes": "8192"
+    },
+    {
+      "name": "friend_posts",
+      "bytes": "24576",
+      "index_bytes": "16384"
+    },
+    {
+      "name": "pet_goods",
+      "bytes": "32768",
+      "index_bytes": "16384"
+    },
+    {
+      "name": "pet_purchases",
+      "bytes": "16384",
+      "index_bytes": "8192"
+    },
+    {
+      "name": "session_rewards",
+      "bytes": "7176192",
+      "index_bytes": "4096000"
+    },
+    {
+      "name": "social_profiles",
+      "bytes": "9199616",
+      "index_bytes": "32768"
+    },
+    {
+      "name": "social_relationships",
+      "bytes": "16384",
+      "index_bytes": "8192"
+    },
+    {
+      "name": "sync_changes",
+      "bytes": "214433792",
+      "index_bytes": "23257088"
+    },
+    {
+      "name": "sync_heads",
+      "bytes": "28721152",
+      "index_bytes": "16384"
+    },
+    {
+      "name": "training_items",
+      "bytes": "247578624",
+      "index_bytes": "60383232"
+    },
+    {
+      "name": "training_operations",
+      "bytes": "138854400",
+      "index_bytes": "41959424"
+    },
+    {
+      "name": "training_tombstones",
+      "bytes": "16384",
+      "index_bytes": "8192"
+    },
+    {
+      "name": "wallet_ledger",
+      "bytes": "4136960",
+      "index_bytes": "1679360"
+    }
+  ],
+  "syncFirstPageMs": [
+    10.022100000001956,
+    8.041599999996834,
+    7.6195000000006985,
+    8.15899999999965,
+    9.097999999998137
+  ],
+  "syncFirstPageBytes": [
+    369418,
+    369418,
+    369418,
+    369418,
+    369418
+  ],
+  "elapsedMs": 72589.78600000001,
+  "freeDatabaseBudgetBytes": 500000000,
+  "headroomBytes": -150330112,
+  "note": "Public tables/indexes only. Hosted Auth/system tables, WAL, runtime and workload variation are not included."
+}

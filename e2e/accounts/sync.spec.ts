@@ -1,3 +1,4 @@
+import {selectLegacyProgram} from '../legacy-program'
 import { expect, test, type Browser, type BrowserContext, type Page } from '@playwright/test'
 import type { PGlite } from '@electric-sql/pglite'
 import { createSyncDatabase } from '../../tests/sync-database'
@@ -30,7 +31,7 @@ function session(handle: string) {
 }
 
 async function device(browser: Browser, handle = 'rocco', legacy?: { items: object[]; operations: object[] }) {
-  const context = await browser.newContext({ baseURL: 'http://127.0.0.1:4175', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })
+  const context = await browser.newContext({ baseURL: 'http://127.0.0.1:4175', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers:test.info().project.use.serviceWorkers??'allow' })
   contexts.push(context)
   const current = session(handle)
   const page = await context.newPage()
@@ -95,7 +96,7 @@ async function device(browser: Browser, handle = 'rocco', legacy?: { items: obje
   await page.goto('/')
   await page.getByLabel('Usuario', { exact: true }).fill(handle)
   await page.getByLabel('Contraseña', { exact: true }).fill('mi-clave-segura')
-  await page.getByRole('button', { name: 'Entrar a GymBeast' }).click()
+  await page.getByRole('button', { name: 'Iniciar sesión' }).click()
   return { page, context, cursors, loseNextResponse: () => { dropNext = true } }
 }
 
@@ -108,7 +109,7 @@ async function onboard(page: Page, name = 'Rocco') {
 }
 async function start(page: Page) {
   await page.getByRole('link', { name: 'Rutinas', exact: true }).click()
-  await page.getByRole('button', { name: /Fuerza base/ }).click()
+  await selectLegacyProgram(page)
   await page.getByRole('button', { name: 'Usar rutina', exact: true }).click()
   await page.getByRole('button', { name: 'Empezar', exact: true }).click()
   await expect(page.locator('.exercise-session')).toHaveCount(3)
@@ -123,6 +124,76 @@ async function pending(page: Page) {
   })
 }
 async function focus(page: Page) { await page.evaluate(() => window.dispatchEvent(new Event('focus'))) }
+
+test('una recuperación global vuelve a descargar datos aunque el cursor local sea mayor',async({browser})=>{
+  const a=await device(browser);await onboard(a.page)
+  await expect.poll(()=>pending(a.page)).toBe(0)
+  // A restored project can have lower versions and cursor than a phone.
+  await query("update training_items set version=1,data=jsonb_set(data,'{name}','\"Restaurado\"') where owner=$1 and kind='profile'",[first])
+  await query('select begin_recovery_epoch()')
+  await a.page.evaluate(async owner=>{
+    const database=await new Promise<IDBDatabase>(resolve=>{const request=indexedDB.open('gymbeast');request.onsuccess=()=>resolve(request.result)})
+    await new Promise<void>((resolve,reject)=>{const tx=database.transaction('syncState','readwrite'),store=tx.objectStore('syncState'),get=store.get(owner)
+      get.onsuccess=()=>store.put({...get.result,cursor:999999});tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error)})
+    database.close()
+  },first)
+  await focus(a.page)
+  await expect(a.page.getByRole('heading',{name:'Hola, Restaurado',exact:true})).toBeVisible()
+  await a.page.reload()
+  await expect(a.page.getByRole('heading',{name:'Hola, Restaurado',exact:true})).toBeVisible()
+  await a.context.setOffline(true)
+  await a.page.getByRole('link',{name:'Perfil',exact:true}).click()
+  await a.page.getByLabel('Peso (kg)',{exact:true}).fill('80')
+  await expect.poll(()=>pending(a.page)).toBe(1)
+  await query("update training_items set version=100,data=jsonb_set(data,'{name}','\"Servidor\"') where owner=$1 and kind='profile'",[first])
+  await query('select begin_recovery_epoch()')
+  await a.context.setOffline(false);await focus(a.page)
+  await expect(a.page.getByRole('heading',{name:'Elegí qué versión conservar'})).toBeVisible()
+  expect(await pending(a.page)).toBe(1)
+  await expect(a.page.getByLabel('Peso (kg)',{exact:true})).toHaveValue('80')
+  await a.page.getByRole('button',{name:'Usar versión sincronizada',exact:true}).click()
+  await expect.poll(()=>pending(a.page)).toBe(0)
+  await a.page.goto('/')
+  await expect(a.page.getByRole('heading',{name:'Hola, Servidor',exact:true})).toBeVisible()
+})
+
+test('confirma el premio de carga offline una sola vez y descarga su desglose en otro teléfono',async({browser})=>{
+  test.setTimeout(60000)
+  const a=await device(browser)
+  await onboard(a.page);await start(a.page)
+  await expect.poll(()=>pending(a.page)).toBe(0)
+  const current=(await query<{id:string;data:any}>("select id,data from public.training_items where owner=$1 and kind='session'",[first]))[0]
+  const reference={...current.data,cycleId:'reference-cycle',dayId:'reference-day',started:current.data.started-20000,ended:current.data.started-10000}
+  await query("insert into public.training_items(owner,kind,id,version,data) values($1,'session','reference',1,$2)",[first,reference])
+  for(const e of reference.exercises)await query("insert into public.training_items(owner,kind,id,version,data) values($1,'set',$2,1,$3)",
+    [first,'reference-'+e.id,{sessionId:'reference',exerciseId:e.id,kg:60,reps:10,done:true,created:reference.started+1000,type:'work'}])
+  await focus(a.page)
+  await a.context.setOffline(true)
+  for(const exercise of await a.page.locator('.exercise-session').all()){
+    await exercise.locator('input[name="load"]').first().fill('65')
+    await exercise.locator('input[name="reps"]').first().fill('5')
+    await exercise.getByRole('button',{name:'Registrar serie 1',exact:true}).click()
+  }
+  await a.page.getByRole('button',{name:'Finalizar entrenamiento'}).click()
+  await expect(a.page.getByText('Recompensa pendiente de sincronizar.',{exact:true})).toBeVisible()
+  await a.page.reload()
+  await expect(a.page.getByText('Recompensa pendiente de sincronizar.',{exact:true})).toBeVisible()
+  a.loseNextResponse()
+  await a.context.setOffline(false);await focus(a.page)
+  await expect.poll(async()=>(await query('select xp,gold from public.session_rewards where owner=$1 and session_id=$2',[first,current.id]))[0])
+    .toEqual({xp:40,gold:35})
+  await focus(a.page)
+  await expect.poll(()=>pending(a.page)).toBe(0)
+  await expect(a.page.getByRole('status',{name:'+40 EXP · +35 de oro'})).toBeVisible()
+  const b=await device(browser)
+  await expect(b.page.getByRole('heading',{name:'Hola, Rocco'})).toBeVisible()
+  await b.page.goto('/sesion/'+current.id)
+  await expect(b.page.locator('.load-bonus-summary li')).toHaveCount(3)
+  await expect(b.page.getByRole('status',{name:'+40 EXP · +35 de oro'})).toBeVisible()
+  await b.page.getByRole('link',{name:'Tienda',exact:true}).click()
+  await expect(b.page.getByTestId('shop-balance')).toHaveText('Saldo: 55 de oro')
+  expect((await query('select count(*)::int as count from public.session_rewards where owner=$1 and session_id=$2',[first,current.id]))[0].count).toBe(1)
+})
 
 test('sincroniza un día offline con respuesta perdida y lo recupera en otro dispositivo', async ({ browser }) => {
   test.setTimeout(60000)
@@ -233,10 +304,10 @@ test('limpia el espacio descargado cuando se confirma que la cuenta fue eliminad
   await onboard(a.page)
   await query('delete from auth.users where id=$1', [first])
   await focus(a.page)
-  await expect(a.page.getByRole('button', { name: 'Entrar a GymBeast' })).toBeVisible()
+  await expect(a.page.getByRole('button', { name: 'Iniciar sesión' })).toBeVisible()
   expect(await pending(a.page)).toBe(0)
   await a.page.reload()
-  await expect(a.page.getByRole('button', { name: 'Entrar a GymBeast' })).toBeVisible()
+  await expect(a.page.getByRole('button', { name: 'Iniciar sesión' })).toBeVisible()
 })
 
 test('migra el espacio anterior y ordena la sesión antes de su serie pendiente', async ({ browser }) => {

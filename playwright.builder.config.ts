@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test'
+export default defineConfig({testDir:'./e2e',testMatch:'routine-builder.spec.ts',outputDir:'builder-results',use:{baseURL:'http://127.0.0.1:4187'},projects:['chromium','webkit'].flatMap(browserName=>[320,390].map(width=>({name:browserName+'-'+width,use:{browserName:browserName as 'chromium'|'webkit',viewport:{width,height:780},isMobile:true,hasTouch:true}}))),webServer:{command:'npm run preview -- --host 127.0.0.1 --port 4187',url:'http://127.0.0.1:4187'}})

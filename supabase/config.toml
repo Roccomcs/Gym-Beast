@@ -1,6 +1,6 @@
 [auth]
 enable_signup = false
-minimum_password_length = 10
+minimum_password_length = 8
 
 [functions.accounts]
 verify_jwt = false

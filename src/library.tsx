@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { memo } from 'react'
 import { Dumbbell } from 'lucide-react'
-import { Technique } from './movement'
-import { catalog } from './domain'
+import { type catalog, type Exercise } from './domain'
+import { exercisePoses, poseStyle, poseAspect } from './exercise-poses'
+import { muscleGroups as groups, type Muscle, type Gear } from './exercise-meta'
+import {gymAnatomy,gymExerciseIds} from './gym-exercises'
+import {programAnatomy,programExerciseIds} from './program-exercises'
 
-const groups = ['Pecho', 'Espalda', 'Hombros', 'Bíceps', 'Tríceps', 'Abdominales', 'Glúteos', 'Cuádriceps', 'Isquiotibiales', 'Aductores', 'Abductores', 'Gemelos', 'Cuerpo completo'] as const
-type Muscle = typeof groups[number]
-type Gear = 'Barra' | 'Mancuernas' | 'Máquina' | 'Polea' | 'Disco' | 'Peso corporal' | 'Cinta'
-const anatomy: Record<typeof catalog[number][0], [Gear, Muscle, ...Muscle[]]> = {
+export const anatomy: Record<typeof catalog[number][0], [Gear, Muscle, ...Muscle[]]> = {
+  ...programAnatomy,
+  ...gymAnatomy,
   'bench-barbell': ['Barra', 'Pecho', 'Tríceps', 'Hombros'],
   'bench-smith': ['Máquina', 'Pecho', 'Tríceps', 'Hombros'],
   'bench-dumbbell': ['Mancuernas', 'Pecho', 'Tríceps', 'Hombros'],
@@ -25,11 +27,13 @@ const anatomy: Record<typeof catalog[number][0], [Gear, Muscle, ...Muscle[]]> = 
   'lateral-raise': ['Mancuernas', 'Hombros'],
   'calf-raise': ['Peso corporal', 'Gemelos'],
   'hip-thrust': ['Barra', 'Glúteos', 'Isquiotibiales'],
+  'standing-single-leg-curl': ['Máquina', 'Isquiotibiales', 'Gemelos'],
   'leg-curl': ['Máquina', 'Isquiotibiales'],
   plank: ['Peso corporal', 'Abdominales', 'Hombros'],
   walk: ['Cinta', 'Cuerpo completo'],
   'wide-pulldown': ['Polea', 'Espalda', 'Bíceps'],
   'close-pulldown': ['Polea', 'Espalda', 'Bíceps'],
+  'supported-t-row': ['Máquina', 'Espalda', 'Bíceps'],
   't-row': ['Barra', 'Espalda', 'Bíceps'],
   pullover: ['Mancuernas', 'Espalda', 'Pecho'],
   'rear-delt-machine': ['Máquina', 'Hombros', 'Espalda'],
@@ -46,8 +50,14 @@ const anatomy: Record<typeof catalog[number][0], [Gear, Muscle, ...Muscle[]]> = 
   'leg-extension': ['Máquina', 'Cuádriceps'],
   abductor: ['Máquina', 'Abductores', 'Glúteos'],
   'low-row': ['Polea', 'Espalda', 'Bíceps'],
+  'seated-triceps-extension': ['Mancuernas', 'Tríceps'],
   'overhead-extension': ['Mancuernas', 'Tríceps'],
   'quad-press': ['Máquina', 'Cuádriceps', 'Glúteos'],
+  'overhead-press': ['Barra', 'Hombros', 'Tríceps'],
+  'romanian-deadlift': ['Barra', 'Isquiotibiales', 'Glúteos', 'Espalda'],
+  'inverted-row': ['Peso corporal', 'Espalda', 'Bíceps'],
+  'push-up': ['Peso corporal', 'Pecho', 'Tríceps', 'Hombros'],
+  'bodyweight-squat': ['Peso corporal', 'Cuádriceps', 'Glúteos'],
 }
 const exerciseSheets = [
   ['bench-smith', 'bench-dumbbell', 'incline-dumbbell', 'fly', 'dip', 'pushdown', 'pull-up', 'pulldown', 'curl'],
@@ -59,10 +69,12 @@ const exerciseSheets = [
 const original = ['bench-barbell', 'squat', 'wide-pulldown', 'barbell-row']
 
 export function ExerciseArt({ id }: { id: string | null }) {
-  const pulldown = ['pulldown', 'wide-pulldown', 'close-pulldown'].indexOf(id ?? '')
-  if (pulldown >= 0) return <span className="exercise-sprite exercise-atlas" aria-hidden="true" style={{
-    backgroundImage: 'url(/pulldown-front.jpg)', backgroundSize: '300% 100%', backgroundPosition: pulldown * 50 + '% 0%',
-  }}/>
+  if (id && (gymExerciseIds.has(id)||programExerciseIds.has(id)||['overhead-press', 'romanian-deadlift', 'inverted-row', 'push-up', 'bodyweight-squat', 'french-press', 'standing-single-leg-curl', 'pec-deck', 'seated-triceps-extension', 'supported-t-row', 'overhead-extension', 'walk', 'hip-thrust', 'leg-curl', 'rear-delt-machine', 'hammer-curl', 'pulldown', 'wide-pulldown', 'close-pulldown'].includes(id))) {
+    const art = exercisePoses(id,0)!
+    return <span className="exercise-sprite exercise-atlas" aria-hidden="true" style={{position:'relative',overflow:'hidden',background:'none',aspectRatio:poseAspect(art)}}>
+      <span className="demo-illustration" style={{...poseStyle(art),position:'absolute',top:0,clipPath:id==='hanging-knee-raise'||id==='ab-wheel'?'inset(5% 0 0)':undefined}}/>
+    </span>
+  }
   const originalIndex = original.indexOf(id ?? '')
   if (originalIndex >= 0) return <span className="exercise-sprite" aria-hidden="true"
     style={{ backgroundPosition: (originalIndex % 2 ? '100%' : '0%') + ' ' + (originalIndex >= 2 ? '100%' : '0%') }} />
@@ -109,43 +121,10 @@ export function primaryMuscle(id: string | null): string | undefined {
   return id ? anatomy[id as keyof typeof anatomy]?.[1] : undefined
 }
 
-export function ExerciseTargets({ id }: { id: string | null }) {
-  const entry = id ? anatomy[id as keyof typeof anatomy] : undefined
-  if (!entry) return null
+export const ExerciseTargets = memo(function ExerciseTargets({ id, custom }: { id: string | null; custom?: Exercise['custom'] }) {
+  const entry = id ? anatomy[id as keyof typeof anatomy] : custom ? [custom.equipment, custom.primary, ...custom.secondary] as [Gear, Muscle, ...Muscle[]] : undefined
+  if (!entry) return <><MuscleMap/><small>Ejercicio propio · Músculos sin clasificar</small></>
   const [gear, primary, ...secondary] = entry
   return <><MuscleMap primary={primary} secondary={secondary} />
     <small>{gear} · {primary}{secondary.length ? ' · ' + secondary.join(', ') : ''}</small></>
-}
-
-const searchText = (text: string) => text.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').trim()
-
-export function Library() {
-  const [query, search] = useState('')
-  const [muscle, filter] = useState('')
-  const [gear, equipment] = useState('')
-  const results = catalog.filter(([id, name, aliases]) => {
-    const [required, ...targets] = anatomy[id]
-    return searchText(name + ' ' + aliases).includes(searchText(query))
-      && (!muscle || targets.some(target => target === muscle)) && (!gear || required === gear)
-  })
-  return <section className="panel" id="biblioteca">
-    <h2>Biblioteca</h2>
-    <div className="input-grid library-filters">
-      <label>Buscar ejercicio<input type="search" value={query} onChange={event => search(event.target.value)} /></label>
-      <label>Músculo<select value={muscle} onChange={event => filter(event.target.value)}>
-        <option value="">Todos</option>{groups.map(group => <option key={group}>{group}</option>)}
-      </select></label>
-      <label>Equipo<select value={gear} onChange={event => equipment(event.target.value)}>
-        <option value="">Todos</option>{[...new Set(Object.values(anatomy).map(entry => entry[0]))].map(entry => <option key={entry}>{entry}</option>)}
-      </select></label>
-    </div>
-    {!results.length && <p>No encontramos ejercicios con esos filtros.</p>}
-    {results.map(([id, name]) => {
-      const [required, primary, ...secondary] = anatomy[id]
-      return <details className="exercise-card" key={id}><summary>{name}</summary>
-        <div className="exercise-visual"><ExerciseArt id={id} /><MuscleMap primary={primary} secondary={secondary} /></div><Technique id={id} poses/>
-        <p>{required} · Principal: {primary}{secondary.length > 0 && ' · Secundarios: ' + secondary.join(', ')}</p>
-      </details>
-    })}
-  </section>
-}
+})

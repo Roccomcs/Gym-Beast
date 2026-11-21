@@ -1,10 +1,9 @@
 import { beforeEach, expect, it, vi } from 'vitest'
-import { accountHandler, sha256, type AccountBackend } from '../supabase/functions/_shared/account-handler'
+import { accountHandler, type AccountBackend } from '../supabase/functions/_shared/account-handler'
 import { accountEmail, validPassword } from '../supabase/functions/_shared/account-rules'
 
 const tokens = { access_token: 'test-access', refresh_token: 'test-refresh' }
 let backend: AccountBackend
-const invitation = 'a'.repeat(43)
 const operation = '00000000-0000-0000-0000-000000000001'
 beforeEach(() => {
   backend = {
@@ -19,27 +18,27 @@ function request(input: object, origin = 'https://gymbeast.test') {
     method: 'POST', headers: { origin, 'Content-Type': 'application/json' }, body: JSON.stringify(input),
   }))
 }
-const credentials = { username: ' Rocco_1 ', password: 'mi-clave-segura', invitation, operation }
+const credentials = { username: ' Rocco ', password: 'mi-clave-segura', operation }
 
-it('normaliza el usuario y crea sin almacenar el código original', async () => {
+it('normaliza el usuario y crea sin invitación', async () => {
   const response = await request({ ...credentials, action: 'register' })
   expect(response.status).toBe(200)
   expect(await response.json()).toEqual({ session: tokens })
-  expect(backend.register).toHaveBeenCalledWith({ email: accountEmail('rocco_1'), password: credentials.password,
-    handle: 'rocco_1', invitationHash: await sha256(invitation), operation })
+  expect(backend.register).toHaveBeenCalledWith({ email: accountEmail('rocco'), password: credentials.password,
+    handle: 'rocco', operation })
 })
 it('recupera el mismo registro después de perder una respuesta', async () => {
   vi.mocked(backend.register).mockResolvedValue(false)
   vi.mocked(backend.matchesRegistration).mockResolvedValue(true)
   expect((await request({ ...credentials, action: 'register' })).status).toBe(200)
-  expect(backend.matchesRegistration).toHaveBeenCalledWith('rocco_1', await sha256(invitation), operation)
+  expect(backend.matchesRegistration).toHaveBeenCalledWith('rocco', operation)
 })
-it('rechaza un usuario ocupado o una invitación utilizada por otro registro', async () => {
+it('rechaza un usuario ocupado', async () => {
   vi.mocked(backend.register).mockResolvedValue(false)
   expect((await request({ ...credentials, action: 'register' })).status).toBe(409)
   expect(backend.signIn).not.toHaveBeenCalled()
 })
-it.each(['123456789', 'x'.repeat(129)])('valida la contraseña de alta %s', async password => {
+it.each(['1234567', 'x'.repeat(129)])('valida la contraseña de alta %s', async password => {
   expect((await request({ ...credentials, password, action: 'register' })).status).toBe(400)
   expect(backend.register).not.toHaveBeenCalled()
 })
@@ -53,7 +52,7 @@ it('cambia la contraseña solo después de verificar la actual y devuelve sesió
   const response = await request({ ...credentials, action: 'password', newPassword: 'una-clave-distinta' })
   expect(response.status).toBe(200)
   expect(backend.changePassword).toHaveBeenCalledWith({ id: 'person', app_metadata: {} }, 'una-clave-distinta')
-  expect(backend.signIn).toHaveBeenLastCalledWith(accountEmail('rocco_1'), 'una-clave-distinta')
+  expect(backend.signIn).toHaveBeenLastCalledWith(accountEmail('rocco'), 'una-clave-distinta')
 })
 it('no cambia la contraseña con credenciales inválidas', async () => {
   vi.mocked(backend.signIn).mockResolvedValue(null)
@@ -83,7 +82,7 @@ it('oculta los errores internos', async () => {
 })
 
 it('valida caracteres Unicode y el límite de bcrypt sin truncar la contraseña', () => {
-  expect(validPassword('🐉'.repeat(9))).toBe(false)
+  expect(validPassword('🐉'.repeat(7))).toBe(false)
   expect(validPassword('🐉'.repeat(18))).toBe(true)
   expect(validPassword('🐉'.repeat(19))).toBe(false)
   expect(validPassword('a'.repeat(72))).toBe(true)

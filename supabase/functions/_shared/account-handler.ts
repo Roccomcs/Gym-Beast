@@ -1,10 +1,10 @@
-import { accountEmail, normalizeUsername, usernamePattern, validPassword, passwordProblem, type AccountTokens } from './account-rules.ts'
+import { accountEmail, normalizeUsername, usernamePattern, registrationUsernameProblem, validPassword, passwordProblem, type AccountTokens } from './account-rules.ts'
 
 type Identity = { id: string; app_metadata: Record<string, unknown> }
 export type AccountBackend = {
   allowAttempt: (bucket: string) => Promise<boolean>
-  register: (input: { email: string; password: string; handle: string; invitationHash: string; operation: string }) => Promise<boolean>
-  matchesRegistration: (handle: string, invitationHash: string, operation: string) => Promise<boolean>
+  register: (input: { email: string; password: string; handle: string; operation: string }) => Promise<boolean>
+  matchesRegistration: (handle: string, operation: string) => Promise<boolean>
   signIn: (email: string, password: string) => Promise<{ user: Identity; tokens: AccountTokens } | null>
   changePassword: (user: Identity, password: string) => Promise<boolean>
 }
@@ -35,6 +35,10 @@ export function accountHandler(backend: AccountBackend, origins: string[]) {
       if (!input || Array.isArray(input) || typeof input !== 'object') return reply(400, { error: 'Solicitud inválida.' })
       const handle = normalizeUsername(typeof input.username === 'string' ? input.username : '')
       const password = typeof input.password === 'string' ? input.password : ''
+      if (input.action === 'register') {
+        const problem = registrationUsernameProblem(handle) || passwordProblem(password)
+        if (problem) return reply(400, { error: problem })
+      }
       if (!usernamePattern.test(handle) || !password || password.length > 128) {
         return reply(400, { error: 'Revisá el usuario y la contraseña.' })
       }
@@ -44,17 +48,13 @@ export function accountHandler(backend: AccountBackend, origins: string[]) {
       }
       const email = accountEmail(handle)
       if (input.action === 'register') {
-        const invitation = typeof input.invitation === 'string' ? input.invitation.trim() : ''
         const operation = typeof input.operation === 'string' ? input.operation : ''
-        if (!validPassword(password)) return reply(400, { error: passwordProblem(password) })
-        if (!/^[A-Za-z0-9_-]{32,100}$/.test(invitation) ||
-          !/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(operation)) {
-          return reply(400, { error: 'Ingresá un código de invitación válido.' })
+        if (!/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(operation)) {
+          return reply(400, { error: 'Volvé a intentar crear la cuenta.' })
         }
-        const invitationHash = await sha256(invitation)
-        const created = await backend.register({ email, password, handle, invitationHash, operation })
-        if (!created && !await backend.matchesRegistration(handle, invitationHash, operation)) {
-          return reply(409, { error: 'No se pudo crear la cuenta. El usuario puede estar ocupado o la invitación vencida o utilizada.' })
+        const created = await backend.register({ email, password, handle, operation })
+        if (!created && !await backend.matchesRegistration(handle, operation)) {
+          return reply(409, { error: 'No se pudo crear la cuenta. El usuario puede estar ocupado.' })
         }
       }
       const signedIn = await backend.signIn(email, password)

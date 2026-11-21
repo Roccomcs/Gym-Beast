@@ -7,15 +7,17 @@ export type Kind = keyof Values
 export type Item<K extends Kind = Kind> = {
   owner: string; kind: K; id: string; version: number; data: Values[K]
 }
-export type Reward = { owner: string; session_id: string; xp: number; gold?: number; companion?: string; occurrence?: string | null; revision?: number }
+export type Reward = { owner: string; session_id: string; xp: number; gold?: number; companion?: string; occurrence?: string | null; revision?: number; improvements?: import('./load-bonus').LoadImprovement[] }
 export type Remote = { kind: Kind; id: string; version: number; data: Values[Kind] | null; deleted?: boolean }
 export type Operation = {
   op: string; owner: string; kind: Kind; id: string; base: number; data?: Values[Kind];
   action?: 'put' | 'delete'; sequence?: number; conflict?: Remote; rejected?: string
 }
-type SyncState = { owner: string; cursor: number; nextOperation: number; initialized?: boolean; balance?: { xp: number; gold: number } }
+type SyncState = { owner: string; cursor: number; nextOperation: number; initialized?: boolean; epoch?: string; balance?: { xp: number; gold: number } }
 type Tombstone = { owner: string; kind: Kind | 'reward'; id: string; version: number }
 class Database extends Dexie {
+  routineDrafts!: Table<{owner:string;key:string;state:import('./routine-builder-model').BuilderState},[string,string]>
+  presentations!: Table<{ owner: string; session: string; celebrated: boolean; evolvedStage: number }, [string, string]>
   syncState!: Table<SyncState, string>
   tombstones!: Table<Tombstone, [string, Kind | 'reward', string]>
   items!: Table<Item, [string, Kind, string]>
@@ -45,6 +47,8 @@ class Database extends Dexie {
       for (const [owner, nextOperation] of counters) await transaction.table('syncState').put({ owner, cursor: 0, nextOperation,
         initialized: profiles.some(profile => profile.owner === owner && profile.data.onboarded) })
     })
+    this.version(5).stores({ presentations: '[owner+session], owner' })
+    this.version(6).stores({routineDrafts:'[owner+key], owner'})
   }
 }
 export const db = new Database()
@@ -125,9 +129,21 @@ export async function resolveConflict(operation: Operation, keepLocal: boolean) 
 }
 
 const active = new Map<string, Promise<void>>()
-export function sync(owner: string) {
+const trailing = new Map<string, Promise<void>>()
+export function sync(owner: string): Promise<void> {
   const pending = active.get(owner)
-  if (pending) return pending
+  if (pending) {
+    const queued = trailing.get(owner)
+    if (queued) return queued
+    // A save can arrive after the active pass captured its outbox. Coalesce callers
+    // into one trailing pass instead of acknowledging work that was never sent.
+    const next = pending.then(() => {
+      trailing.delete(owner)
+      return sync(owner)
+    }).finally(() => { if (trailing.get(owner) === next) trailing.delete(owner) })
+    trailing.set(owner, next)
+    return next
+  }
   const run = () => synchronize(owner)
   const work = (navigator.locks ? navigator.locks.request('gymbeast-sync-' + owner, run) : run())
     .finally(() => active.delete(owner))
@@ -137,7 +153,7 @@ export function sync(owner: string) {
 
 type PushResult = { op: string; status: 'applied' | 'conflict' | 'rejected' | 'blocked'; row?: Remote; error?: string }
 type Change = (Remote & { revision: number }) | { kind: 'reward'; id: string; revision: number; version: number; data: Reward | null; deleted: boolean }
-type PullResult = { changes: Change[]; cursor: number; more: boolean; balance?: { xp: number; gold: number } }
+type PullResult = { changes: Change[]; cursor: number; more: boolean; epoch?: string; balance?: { xp: number; gold: number } }
 
 async function synchronize(owner: string) {
   if (!api || owner === local || !navigator.onLine) return
@@ -185,6 +201,18 @@ async function synchronize(owner: string) {
     const { data, error } = await api.rpc('sync_pull', { p_cursor: state.cursor, p_limit: 250 })
     if (error) throw error
     const page = data as PullResult
+    if(page?.epoch && state.epoch!==page.epoch){
+      await db.transaction('rw',db.items,db.operations,db.rewards,db.syncState,db.tombstones,async()=>{
+        const latest=await db.syncState.get(owner)??state
+        if(latest.epoch===page.epoch)return
+        const pending=new Set((await db.operations.where('owner').equals(owner).toArray()).map(op=>op.kind+':'+op.id))
+        await db.items.where('owner').equals(owner).filter(row=>!pending.has(row.kind+':'+row.id)).delete()
+        await db.rewards.where('owner').equals(owner).delete()
+        await db.tombstones.where('owner').equals(owner).delete()
+        await db.syncState.put({...latest,cursor:0,epoch:page.epoch,initialized:false,balance:undefined})
+      })
+      continue
+    }
     if (!page || !Array.isArray(page.changes) || !Number.isSafeInteger(page.cursor) ||
       page.cursor < state.cursor || (page.more && page.cursor === state.cursor)) throw new Error('Punto de sincronización inválido')
     await db.transaction('rw', db.items, db.operations, db.rewards, db.syncState, db.tombstones, async () => {
@@ -233,7 +261,9 @@ export async function retryOperation(operation: Operation, keepLocal = true) {
 }
 
 export async function clearAccount(owner: string) {
-  await db.transaction('rw', [db.items, db.operations, db.rewards, db.onboarding, db.syncState, db.tombstones], async () => {
+  await db.transaction('rw', [db.items, db.operations, db.rewards, db.onboarding, db.syncState, db.tombstones, db.presentations, db.routineDrafts], async () => {
+    await db.routineDrafts.where('owner').equals(owner).delete()
+    await db.presentations.where('owner').equals(owner).delete()
     await db.onboarding.delete(owner)
     await db.rewards.where('owner').equals(owner).delete()
     await db.items.where('owner').equals(owner).delete()

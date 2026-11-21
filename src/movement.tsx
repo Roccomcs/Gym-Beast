@@ -1,6 +1,7 @@
+import { PetTraining } from './pet-training'
 import { technique } from './exercise-technique'
-import { useState, type ReactNode } from 'react'
-import { exercisePoses } from './exercise-poses'
+import { memo, useState, type ReactNode } from 'react'
+import { exercisePoses, poseStyle, poseAspect } from './exercise-poses'
 const families: [string[], number[][], number[][]][] = [
   [['long-lunge','walking-lunge'], [[49,17],[49,29],[48,51],[62,63],[73,84],[54,43],[55,61]], [[48,27],[48,39],[48,63],[68,62],[73,84],[54,52],[55,70]]],
   [['hip-thrust'], [[23,54],[34,60],[54,76],[70,67],[76,86],[43,64],[53,73]], [[23,52],[35,56],[55,59],[70,61],[76,86],[45,56],[55,56]]],
@@ -75,33 +76,20 @@ export function Movement({ id, phase, pet }: { id: string | null; phase?: 0 | 1;
   </svg>
 }
 
-export function ExerciseDemonstration({ id, pet, illustration }: { id: string | null; pet?: string; illustration?: ReactNode }) {
+function ExerciseDemonstrationView({ id, pet, petXp = 0, illustration }: { id: string | null; pet?: string; petXp?: number; illustration?: ReactNode }) {
   const [phase, setPhase] = useState<0 | 1>(0)
-  const row = id && ['bench-barbell'].includes(id) ? 0 : id && ['long-lunge', 'walking-lunge'].includes(id) ? 1 : undefined
-  const illustrated = !pet && id ? exercisePoses(id, 0) : undefined
+  if (pet) return <PetTraining name={pet} xp={petXp} exercise={id}/>
+  const illustrated = id ? exercisePoses(id, 0) : undefined
   const press = !!illustrated && illustrated.image === '/leg-press-poses.webp'
-  const dragonMove = pet === 'Dragón' && id
-    ? [['squat', 'smith-squat'], ['deadlift'], ['pulldown', 'wide-pulldown', 'close-pulldown'], ['hip-thrust']].findIndex(ids => ids.includes(id))
-    : -1
   if (illustration && !illustrated) return illustration
   if (!id || (!illustrated && !families.some(([ids]) => ids.includes(id)))) return illustration ?? null
   return <div className="exercise-demonstration" data-phase={phase}>
-    <div className={'demo-frames' + (illustrated ? ' demo-frames-cutout' : '')} role="img" aria-label="Demostración del movimiento">
+    <div className={'demo-frames' + (illustrated ? ' demo-frames-cutout' : '')} style={{aspectRatio:illustrated ? poseAspect(illustrated) : undefined}} role="img" aria-label="Demostración del movimiento">
       {([0, 1] as const).map(pose => {
         const art = illustrated ? exercisePoses(id, pose) : undefined
         return <div key={pose} className={'demo-frame demo-frame-' + pose} aria-hidden="true">
-          {art ? <span className={'demo-illustration' + (press ? ' demo-leg-press' : '')} style={{
-            backgroundImage: 'url(' + art.image + ')',
-            backgroundSize: art.columns * 100 + '% ' + art.rows * 100 + '%',
-            backgroundPosition: (art.x * 100 / (art.columns - 1)) + '% ' + (art.rows === 1 ? 0 : art.y * 100 / (art.rows - 1)) + '%',
-          }}/>
-          : dragonMove >= 0 ? <span className="demo-illustration" style={{
-            backgroundImage: 'url(/dragon-training-more.webp)', backgroundSize: '400% 200%',
-            backgroundPosition: ((dragonMove % 2 * 2 + pose) * 100 / 3) + '% ' + (dragonMove >= 2 ? '100%' : '0%'),
-          }}/> : row === undefined || pet !== 'Dragón' ? <Movement id={id} phase={pose} pet={pet}/> :
-            <span className="demo-illustration" style={{
-              backgroundImage: 'url(/dragon-training-poses.webp)', backgroundPosition: (pose * 100) + '% ' + (row * 100) + '%',
-            }}/>}
+          {art ? <span className={'demo-illustration' + (press ? ' demo-leg-press' : '')} style={poseStyle(art)}/>
+          : <Movement id={id} phase={pose}/>}
         </div>
       })}
     </div>
@@ -111,12 +99,20 @@ export function ExerciseDemonstration({ id, pet, illustration }: { id: string | 
   </div>
 }
 
+export const ExerciseDemonstration = memo(ExerciseDemonstrationView,(before,after)=>before.id===after.id && before.pet===after.pet && before.petXp===after.petXp &&
+  (before.illustration===after.illustration || !!before.id && !!exercisePoses(before.id,0)))
+
 export function Technique({ id, poses = false }: { id: string | null; poses?: boolean }) {
   const instructions = id ? technique[id as keyof typeof technique] : undefined
   if (!instructions) return null
   return <div className="technique-steps">
     {instructions.map((instruction, index) => <div key={instruction}>
-      {poses && <Movement id={id} phase={index === 0 ? 0 : 1}/>}
+      {poses && (() => {
+        const art = exercisePoses(id!, index === 0 ? 0 : 1)
+        return art ? <div className="technique-pose" role="img" aria-label={index === 0 ? 'Posición inicial' : 'Posición final'} style={{aspectRatio:poseAspect(art) ?? 1}}>
+          <span className="demo-illustration" style={poseStyle(art)}/>
+        </div> : <Movement id={id} phase={index === 0 ? 0 : 1}/>
+      })()}
       <strong>{index === 0 ? 'Inicio' : 'Movimiento'}</strong><p>{instruction}</p>
     </div>)}
   </div>

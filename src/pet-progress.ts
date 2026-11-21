@@ -1,4 +1,5 @@
 import { dateKey, weekDates, type Schedule, type Session } from './domain'
+import { weekStatus } from './weekly-plan'
 
 export const companionStages = [
   { name: 'Huevo', xp: 0 }, { name: 'Bebé', xp: 100 }, { name: 'Cría', xp: 300 },
@@ -22,38 +23,22 @@ export function petProgress(today: string, zone: string, companion: string, plan
   const weekOf = (date: string) => weekDates(date, 1)[0]
   const todayWeek = weekOf(today)
   const first = [today, ...timeline.map(plan => plan.from), ...schedules.map(row => row.data.date)].sort()[0]
-  const completed = new Map<string, Session[]>()
-  const scheduled = new Map<string, TrainingRow<Schedule>[]>()
   const gains = new Map<string, PetReward[]>()
-  for (const { data } of sessions) {
-    if (!data.ended || data.incomplete) continue
-    const week = weekOf(data.date)
-    const items = completed.get(week) ?? []
-    items.push(data)
-    completed.set(week, items)
-  }
-  for (const row of schedules) {
-    const week = weekOf(row.data.date)
-    const items = scheduled.get(week) ?? []
-    items.push(row)
-    scheduled.set(week, items)
-  }
   for (const reward of rewards) {
     if (!reward.companion) continue
-    const ended = byId.get(reward.session_id)?.ended
-    const week = ended ? weekOf(dateKey(new Date(ended), zone)) : weekOf(first)
+    const session = byId.get(reward.session_id)
+    if (!session?.ended || session.incomplete || session.date > today) continue
+    const week = weekOf(session.date || dateKey(new Date(session.started), zone))
     const items = gains.get(week) ?? []
     items.push(reward)
     gains.set(week, items)
   }
 
   const firstWeek = [...gains.keys(), weekOf(first)].sort()[0]
-  let plan: PetPlan | undefined
-  let planIndex = 0
   for (let monday = firstWeek; monday <= todayWeek; monday = new Date(Date.parse(monday) + 604800000).toISOString().slice(0, 10)) {
-    while (planIndex < timeline.length && timeline[planIndex].from <= monday) plan = timeline[planIndex++]
-
-    for (const reward of gains.get(monday) ?? []) {
+    const orderedGains = [...(gains.get(monday) ?? [])].sort((a,b) =>
+      byId.get(a.session_id)!.ended! - byId.get(b.session_id)!.ended! || a.session_id.localeCompare(b.session_id))
+    for (const reward of orderedGains) {
       const name = reward.companion!
       const current = pets.get(name) ?? initialVitals
       const xp = current.xp + reward.xp
@@ -61,13 +46,9 @@ export function petProgress(today: string, zone: string, companion: string, plan
     }
 
     if (monday === todayWeek) break
-    const done = completed.get(monday) ?? []
-    const appointments = scheduled.get(monday)
-    const missed = appointments?.length
-      ? appointments.some(row => !row.data.skipped && !done.some(session => session.scheduleId === row.id))
-      : !!plan && new Set(done.map(session => session.date)).size < plan.target
-    if (!missed) continue
-    const name = plan?.companion ?? companion
+    const status = weekStatus(monday, timeline, sessions, schedules, rewards)
+    if (!status.missed) continue
+    const name = status.plan?.companion ?? companion
     const current = pets.get(name) ?? initialVitals
     if (current.health === 0) continue
     const health = current.health - 50

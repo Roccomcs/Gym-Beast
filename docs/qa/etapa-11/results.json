@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-19",
+  "local_implementation": "complete",
+  "stage_acceptance": "pending hosted projects and physical phones",
+  "build": "passed",
+  "release_check": "passed for local output; production account gate not configured",
+  "domain_sql_tests": 232,
+  "general_browser_tests": 25,
+  "account_browser_tests": 15,
+  "webkit_recovery_tests": 1,
+  "mobile_offline_tests": 6,
+  "capacity_accounts_executed": [
+    1,
+    10,
+    100
+  ],
+  "capacity_100_public_bytes": 447889408,
+  "capacity_100_requires_maintenance": true,
+  "capacity_100_hosted_guaranteed": false,
+  "capacity_method": "PGlite settled bulk fixture, UUID-sized identifiers, two photo-sized payloads per account; live 20-set session and retry also tested",
+  "deno_accounts_check": "passed",
+  "backup_powershell_syntax": "passed",
+  "global_backup_execution": "not run: Supabase CLI/project unavailable and Docker daemon stopped",
+  "third_party_production_packages": 22,
+  "missing_license_files": 0,
+  "published": false,
+  "pilot_ready": false,
+  "remaining": [
+    "Connect owner Supabase Free and Cloudflare Pages Free projects",
+    "Apply migrations through 020 and deploy accounts with exact allowed origin",
+    "Validate real Auth, independent connections, purchases/rewards and social permissions",
+    "Audit historical FK and measure whole hosted database including Auth before increasing to 100",
+    "Execute and restore whole-project backup with real Auth; validate PWA update and hosted rollback",
+    "Test physical iPhone/Android installation, keyboard, VoiceOver/TalkBack and performance"
+  ]
+}

@@ -10,10 +10,11 @@ const day = z.object({ id, title: z.string().min(1), exercises: z.array(exercise
 const date = z.iso.date()
 const session = z.object({
   title: z.string().min(1), exercises: z.array(exerciseSchema), started: number, ended: number.optional(),
-  date, scheduleId: id.optional(), cycleId: id.optional(), dayId: id.optional(), routineId: id.optional(), routineVersion: z.number().int().positive().optional(), weeklyTarget: z.number().int().positive().optional(), deload: z.boolean().optional(), companion: z.string().optional(),
+  date, scheduleId: id.optional(), cycleId: id.optional(), dayId: id.optional(), routineId: id.optional(), routineVersion: z.number().int().positive().optional(), weeklyTarget: z.number().int().positive().optional(), deload: z.boolean().optional(), companion: z.string().optional(), companionXpAtStart: z.number().nonnegative().optional(),
   incomplete: z.boolean().optional(), omitted: z.array(id).optional(), restUntil: number.optional(), pausedRest: number.optional(),
 })
 const profile = z.object({
+  sharedRoutineIds: z.array(id).max(50).optional(),
   name: z.string().max(60), unit: z.enum(['kg','lb']), theme: z.enum(['dark','light']),
   weekStart: z.number().int().min(0).max(6), reminderTime: z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/).optional(), weeklyGoal: z.number().int().min(1).max(7).optional(), loadIncrementKg: z.number().positive().optional(), timezone: z.string().refine(zone => {
     try { new Intl.DateTimeFormat('es', { timeZone: zone }); return true }
@@ -25,12 +26,13 @@ const profile = z.object({
   purchases: z.array(z.string()).optional(), equipped: z.string().optional(),
   petGear: z.record(z.string(), z.string().nullable()).optional(),
   petOutfits: z.record(z.string(), z.record(z.string(), z.string().nullable())).optional(),
+  petNames: z.record(z.string(), z.string().trim().min(1).max(30)).optional(),
   petPlans: z.array(z.object({ from: date, target: z.number().int().nonnegative(), companion: z.string() })).optional(),
 })
 const row = z.object({ id, version: z.number().int().positive() })
 const backup = z.object({ version: z.literal(1), items: z.array(z.discriminatedUnion('kind', [
   row.extend({ kind: z.literal('routine'), data: z.object({ name: z.string().min(1), version: z.number().int().positive(),
-    source: z.string(), days: z.array(day), archived: z.boolean().optional(), cover: z.number().int().min(0).max(10).optional(), photo: z.string().max(90000).optional(),
+    source: z.string(), days: z.array(day), rotateAB: z.boolean().optional(), archived: z.boolean().optional(), cover: z.number().int().min(0).max(14).optional(), photo: z.string().max(90000).optional(),
     history: z.array(z.object({ name: z.string().min(1), version: z.number().int().positive(),
       source: z.string(), days: z.array(day) })).max(3).optional() }) }),
   row.extend({ kind: z.literal('session'), data: session }),

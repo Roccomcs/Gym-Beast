@@ -1,6 +1,15 @@
 import type { catalog } from './domain'
+import {gymTechnique} from './gym-exercises'
+import {programTechnique} from './program-exercises'
 
 export const technique: Record<typeof catalog[number][0], [string, string]> = {
+  ...programTechnique,
+  ...gymTechnique,
+  'overhead-press': ['De pie, sostené la barra frente al pecho con los antebrazos verticales.', 'Empujá sobre la cabeza sin arquear la espalda y volvé al pecho con control.'],
+  'romanian-deadlift': ['Sostené la barra cerca de los muslos con las rodillas ligeramente flexionadas.', 'Llevá la cadera atrás manteniendo la barra cerca del cuerpo y volvé extendiendo la cadera.'],
+  'inverted-row': ['Sujetá una barra fija y segura con el cuerpo alineado y los talones apoyados.', 'Acercá el pecho a la barra flexionando los codos y bajá con control.'],
+  'push-up': ['Apoyá manos y puntas de los pies con el cuerpo alineado.', 'Flexioná los codos para acercar el pecho al suelo y empujá para volver.'],
+  'bodyweight-squat': ['Apoyá los pies separados y extendé los brazos para equilibrarte.', 'Flexioná caderas y rodillas sin despegar los talones y volvé a subir.'],
   'bench-barbell': ['Apoyá los pies y sostené la barra sobre el pecho.', 'Bajá al pecho y empujá la barra hacia arriba con control.'],
   'bench-smith': ['Ubicá el banco para que la barra guiada baje sobre el pecho.', 'Descendé guiando los codos y empujá sobre el recorrido del riel.'],
   'bench-dumbbell': ['Acostate en banco plano, con una mancuerna arriba de cada hombro.', 'Bajá las mancuernas a los lados del pecho y volvé a empujar.'],
@@ -19,11 +28,13 @@ export const technique: Record<typeof catalog[number][0], [string, string]> = {
   'lateral-raise': ['Empezá con las mancuernas a los lados y los codos ligeramente doblados.', 'Elevá los brazos hacia los lados hasta una altura cómoda y bajá despacio.'],
   'calf-raise': ['Apoyá el antepié en un escalón firme. Usá un apoyo para equilibrarte.', 'Elevá los talones y bajalos con control sin rebotar.'],
   'hip-thrust': ['Apoyá la parte alta de la espalda en el banco, con los pies en el suelo.', 'Elevá la cadera con el torso estable y volvé a bajarla sin arquear la zona lumbar.'],
+  'standing-single-leg-curl': ['Apoyá el muslo en la almohadilla y colocá el rodillo detrás del tobillo.', 'Flexioná una rodilla para acercar el talón al glúteo sin mover la cadera. Bajá con control.'],
   'leg-curl': ['Ajustá la máquina sentada con el rodillo detrás de la parte baja de la pierna.', 'Flexioná las rodillas llevando los talones hacia el asiento. Volvé despacio.'],
   plank: ['Apoyá los antebrazos y las puntas de los pies, con los codos bajo los hombros.', 'Mantené el cuerpo alineado y respiración continua durante la serie.'],
   walk: ['Empezá con la cinta lenta y parate en el centro de la banda.', 'Caminá con pasos naturales y ajustá la velocidad antes de aumentar el ritmo.'],
   'wide-pulldown': ['Sentate con el apoyo sobre los muslos y agarrá la barra más ancho que los hombros.', 'Bajá la barra por delante hacia el pecho alto sin llevarla detrás de la nuca.'],
   'close-pulldown': ['Tomá el agarre estrecho neutro y fijá los muslos bajo la almohadilla.', 'Llevá el agarre hacia el pecho con los codos cerca del cuerpo y dejá que suba con control.'],
+  'supported-t-row': ['Apoyá el pecho en la almohadilla inclinada y los pies en las plataformas.', 'Tirá de los agarres hacia las costillas manteniendo el pecho apoyado y bajá con control.'],
   't-row': ['Ubicá los pies en la plataforma y tomá el agarre de la barra T.', 'Remá hacia el torso sin tirar con la espalda baja. Estirá los brazos al volver.'],
   pullover: ['Acostate en el banco con una mancuerna arriba del pecho y los codos semiflexionados.', 'Llevala por encima de la cabeza en arco hasta un rango cómodo, y volvé.'],
   'rear-delt-machine': ['Sentate de frente al respaldo con el pecho apoyado y tomá los agarres.', 'Abrí los brazos hacia atrás con un leve doblez de codo y cerrá despacio.'],
@@ -40,6 +51,7 @@ export const technique: Record<typeof catalog[number][0], [string, string]> = {
   'leg-extension': ['Sentate con la rodilla alineada al eje de la máquina y el rodillo delante de la tibia.', 'Extendé las rodillas con control y bajá el rodillo despacio.'],
   abductor: ['Apoyá la espalda y colocá las almohadillas sobre el lado externo de las piernas.', 'Separá las rodillas y dejá que vuelvan juntas sin soltar la carga.'],
   'low-row': ['Sentate frente a la polea baja, con los pies firmes y el torso erguido.', 'Acercá el agarre a la zona baja del torso sin inclinarte hacia atrás.'],
+  'seated-triceps-extension': ['Sentate y sostené una mancuerna con ambas manos sobre la cabeza.', 'Flexioná los codos para bajar la mancuerna detrás de la cabeza y extendelos manteniendo los brazos junto a las orejas.'],
   'overhead-extension': ['Sostené la mancuerna sobre la cabeza con los codos apuntando arriba.', 'Flexioná los codos para bajarla detrás de la cabeza y volvé a extenderlos.'],
   'quad-press': ['Ubicá los pies algo más abajo en la plataforma sin levantar los talones.', 'Flexioná las rodillas dentro de un rango cómodo y empujá manteniendo la espalda apoyada.'],
 }

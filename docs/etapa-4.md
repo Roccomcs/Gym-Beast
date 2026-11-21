@@ -2,6 +2,8 @@
 
 Primera entrega del 18 de noviembre de 2026. Muestra aplicada, pendiente de aprobación del acabado antes de extenderlo al resto de la matriz.
 
+Actualización del 19/11/2026: el titular pidió conservar la ropa actual y continuar con etapa 6. No se amplía el calce ni la matriz en este cierre. El registro de abajo describe la revisión histórica; no constituye una aprobación visual de todas las combinaciones.
+
 ## Inventario y hallazgos
 
 - 31 prendas y accesorios equipables, ocho especies y seis etapas.

@@ -1,5 +1,7 @@
 # Investigación · 14 de noviembre de 2026
 
+Registro de investigación histórica. Las decisiones vigentes (usuario/contraseña, 2D, Obsidiana dorada y operación gratuita) están en [arquitectura](architecture.md) y [etapa 11](etapa-11.md). Las referencias a OAuth, 3D o cuotas anteriores no son requisitos actuales.
+
 | Producto | Funciones publicadas por el proveedor | Implicación para GymBeast |
 |---|---|---|
 | [Hevy](https://help.hevyapp.com/hc/en-us/articles/33106320824727-Everything-You-Need-to-Know-About-the-Hevy-App-2026-Features-Guide) | Rutinas, registro, sincronización, comunidad y estadísticas. La vista gratuita de historial y estadísticas cubre hasta tres meses. | Mostrar la serie anterior en contexto y conservar todo el historial. |

@@ -18,7 +18,7 @@ export function showWardrobeReview(cases: WardrobeCase[]) {
   root.render(<div style={{ position: 'absolute', top: 0, left: 0, width: '100%', minHeight: '100vh', zIndex: 10000, background: '#131316', padding: 16 }}>
     <div className="wardrobe-sheet" style={{ display: 'grid', gridTemplateColumns: cases.length === 1 ? '1fr' : cases.length === 5 ? 'repeat(5, 1fr)' : 'repeat(6, 1fr)', gap: 8 }}>
       {cases.map(sample => <div key={sample.id} data-wardrobe-case={sample.id} style={{ minWidth: 0, border: '1px solid #55515d', background: '#242429', padding: 8 }}>
-        <p style={{ fontSize: 13, color: '#f7ce68' }}>{sample.name} · {companionStages[sample.stage].name}</p>
+        <p style={{ fontSize: 13, color: '#f7ce68' }}>{sample.name} · {companionStages[sample.stage].name} · {sample.outfit.join(' + ')||'sin ropa'}</p>
         <div className="wardrobe-character" style={{ width: cases.length === 1 ? 352 : '100%', margin: 'auto' }}>
           {sample.scene ? <Habitat name={sample.name} xp={companionStages[sample.stage].xp} health={100}
             outfit={goods.filter(good => sample.outfit.includes(good.id))}/>

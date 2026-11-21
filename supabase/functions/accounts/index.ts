@@ -14,16 +14,16 @@ const backend: AccountBackend = {
     if (error) throw error
     return data === true
   },
-  async register({ email, password, handle, invitationHash, operation }) {
+  async register({ email, password, handle, operation }) {
     const { error } = await service.auth.admin.createUser({ email, password, email_confirm: true,
-      app_metadata: { gymbeast_registration: { handle, invitation_hash: invitationHash, operation } },
+      app_metadata: { gymbeast_registration: { handle, operation } },
     })
     if (error && (!error.status || error.status >= 502)) throw error
     return !error
   },
-  async matchesRegistration(handle, invitationHash, operation) {
+  async matchesRegistration(handle, operation) {
     const { data, error } = await service.from('account_logins').select('owner')
-      .eq('handle', handle).eq('invitation_hash', invitationHash).eq('registration_id', operation).maybeSingle()
+      .eq('handle', handle).eq('registration_id', operation).maybeSingle()
     if (error) throw error
     return !!data
   },

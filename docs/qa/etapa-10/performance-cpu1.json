@@ -1,0 +1,80 @@
+{
+  "scenario": "localhost, Chromium 390x844, CPU ×1; sin limitación de red, 260 sesiones/5200 series",
+  "home": {
+    "lcp": 148,
+    "cls": 0.00019686734506663237,
+    "longTasks": 0,
+    "series": [],
+    "commits": [],
+    "submitted": 0,
+    "sceneReadyMs": 516.4000000003725,
+    "resources": [
+      {
+        "name": "http://127.0.0.1:4182/assets/index-OVo91QDt.js",
+        "bytes": 132680,
+        "duration": 14.5
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/jsx-runtime-BZ45BA69.js",
+        "bytes": 4875,
+        "duration": 6.700000001117587
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/domain-C7u0q6VE.js",
+        "bytes": 28154,
+        "duration": 8.900000000372529
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/index-13usnrsT.css",
+        "bytes": 13829,
+        "duration": 7.400000000372529
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/workbox-window.prod.es5-Bd17z0YL.js",
+        "bytes": 2199,
+        "duration": 5.5
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/atkinson-hyperlegible-next-latin-wght-normal-BcXVPD7q.woff2",
+        "bytes": 33996,
+        "duration": 12.299999998882413
+      },
+      {
+        "name": "http://127.0.0.1:4182/habitat.jpg",
+        "bytes": 193051,
+        "duration": 21.09999999962747
+      },
+      {
+        "name": "http://127.0.0.1:4182/dragon-stages.webp",
+        "bytes": 515822,
+        "duration": 21.5
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2",
+        "bytes": 12512,
+        "duration": 22.09999999962747
+      }
+    ]
+  },
+  "series": [
+    15.400000000372529,
+    85.09999999962747,
+    20.700000001117587,
+    73,
+    68
+  ],
+  "commits": [
+    12.800000000745058,
+    84,
+    18.300000000745058,
+    72.30000000074506,
+    67.29999999888241
+  ],
+  "frames": {
+    "frames": 91,
+    "p95": 16.700000000000273
+  },
+  "heapUsed": 57192960,
+  "recordTargetMs": 100,
+  "lcpTargetMs": 2500
+}

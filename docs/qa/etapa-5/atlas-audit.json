@@ -1,0 +1,9803 @@
+[
+  {
+    "file": "public\\pet-training\\axolotl\\bench.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          160,
+          34,
+          374,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          117,
+          74,
+          352,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          145,
+          18,
+          386,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          104,
+          62,
+          358,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          139,
+          19,
+          403,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          84,
+          72,
+          378,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          96,
+          14,
+          422,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          57,
+          81,
+          413,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          63,
+          18,
+          441,
+          337
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          36,
+          118,
+          450,
+          337
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\axolotl\\curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          187,
+          94,
+          372,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          150,
+          93,
+          331,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          152,
+          32,
+          384,
+          225
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          126,
+          32,
+          364,
+          225
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          121,
+          33,
+          413,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          97,
+          31,
+          375,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          82,
+          23,
+          431,
+          288
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          76,
+          23,
+          418,
+          288
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          23,
+          22,
+          455,
+          373
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          42,
+          20,
+          474,
+          374
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\axolotl\\leg-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          120,
+          118,
+          421,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          86,
+          90,
+          424,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          96,
+          56,
+          430,
+          251
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          70,
+          34,
+          450,
+          251
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          76,
+          51,
+          439,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          56,
+          33,
+          486,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          50,
+          32,
+          449,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          39,
+          25,
+          518,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          19,
+          18,
+          449,
+          316
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          29,
+          16,
+          539,
+          316
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\axolotl\\lunge.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          201,
+          90,
+          363,
+          224
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          147,
+          100,
+          309,
+          227
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          164,
+          39,
+          390,
+          222
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          119,
+          51,
+          343,
+          223
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          131,
+          33,
+          418,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          88,
+          48,
+          375,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          95,
+          23,
+          434,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          70,
+          44,
+          403,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          44,
+          16,
+          463,
+          378
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          35,
+          43,
+          457,
+          379
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\axolotl\\pulldown.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          164,
+          11,
+          393,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          142,
+          11,
+          370,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          138,
+          21,
+          393,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          126,
+          21,
+          386,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          109,
+          22,
+          394,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          116,
+          22,
+          395,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          95,
+          20,
+          395,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          108,
+          21,
+          405,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          59,
+          17,
+          399,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          90,
+          20,
+          422,
+          298
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\axolotl\\squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          138,
+          63,
+          397,
+          227
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          119,
+          91,
+          386,
+          228
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          133,
+          39,
+          420,
+          235
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          105,
+          73,
+          396,
+          235
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          130,
+          29,
+          438,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          94,
+          65,
+          405,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          95,
+          31,
+          453,
+          275
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          70,
+          69,
+          435,
+          275
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          55,
+          22,
+          488,
+          347
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          35,
+          73,
+          469,
+          347
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\bear\\bench.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          134,
+          11,
+          392,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          101,
+          67,
+          363,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          121,
+          12,
+          391,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          100,
+          77,
+          376,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          109,
+          10,
+          394,
+          286
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          94,
+          73,
+          398,
+          286
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          90,
+          10,
+          412,
+          313
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          79,
+          85,
+          418,
+          313
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          71,
+          7,
+          446,
+          342
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          54,
+          88,
+          442,
+          342
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\bear\\curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          198,
+          85,
+          335,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          166,
+          87,
+          311,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          182,
+          34,
+          368,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          147,
+          32,
+          333,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          181,
+          25,
+          357,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          156,
+          21,
+          336,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          148,
+          19,
+          393,
+          300
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          125,
+          14,
+          349,
+          300
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          118,
+          17,
+          431,
+          356
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          97,
+          15,
+          375,
+          356
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\bear\\leg-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          120,
+          124,
+          377,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          120,
+          124,
+          452,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          108,
+          40,
+          386,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          102,
+          40,
+          478,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          101,
+          34,
+          386,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          96,
+          33,
+          490,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          83,
+          29,
+          408,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          79,
+          26,
+          499,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          46,
+          29,
+          419,
+          308
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          55,
+          28,
+          518,
+          308
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\bear\\lunge.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          201,
+          67,
+          347,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          168,
+          82,
+          331,
+          253
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          172,
+          31,
+          364,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          143,
+          53,
+          353,
+          253
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          170,
+          18,
+          377,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          140,
+          49,
+          337,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          149,
+          11,
+          410,
+          304
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          107,
+          40,
+          378,
+          304
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          112,
+          12,
+          456,
+          361
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          71,
+          44,
+          408,
+          361
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\bear\\pulldown.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          140,
+          22,
+          384,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          136,
+          22,
+          376,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          123,
+          21,
+          391,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          123,
+          21,
+          388,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          114,
+          17,
+          395,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          115,
+          17,
+          395,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          105,
+          17,
+          400,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          109,
+          18,
+          401,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          97,
+          13,
+          408,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          97,
+          17,
+          413,
+          301
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\bear\\squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          118,
+          81,
+          390,
+          234
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          121,
+          102,
+          393,
+          238
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          100,
+          38,
+          416,
+          234
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          97,
+          63,
+          414,
+          235
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          100,
+          24,
+          414,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          97,
+          59,
+          419,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          74,
+          15,
+          438,
+          295
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          74,
+          56,
+          439,
+          295
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          43,
+          18,
+          467,
+          368
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          43,
+          66,
+          473,
+          368
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\crocodile\\bench.png",
+    "cornersAlpha": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          118,
+          20,
+          352,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          119,
+          90,
+          362,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          106,
+          14,
+          367,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          107,
+          92,
+          384,
+          283
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          100,
+          8,
+          395,
+          302
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          88,
+          106,
+          396,
+          302
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          88,
+          8,
+          405,
+          314
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          78,
+          114,
+          411,
+          314
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          68,
+          4,
+          439,
+          321
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          50,
+          111,
+          444,
+          321
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\crocodile\\curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          186,
+          84,
+          356,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          158,
+          83,
+          332,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          166,
+          31,
+          376,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          141,
+          28,
+          352,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          160,
+          24,
+          367,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          141,
+          21,
+          362,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          139,
+          18,
+          392,
+          294
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          117,
+          17,
+          378,
+          294
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          114,
+          15,
+          424,
+          358
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          83,
+          15,
+          410,
+          358
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\crocodile\\leg-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          94,
+          103,
+          433,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          75,
+          103,
+          469,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          70,
+          34,
+          436,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          62,
+          34,
+          492,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          61,
+          27,
+          444,
+          263
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          51,
+          27,
+          504,
+          263
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          46,
+          20,
+          450,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          40,
+          22,
+          519,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          31,
+          18,
+          461,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          33,
+          18,
+          512,
+          298
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\crocodile\\lunge.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          180,
+          37,
+          362,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          157,
+          69,
+          326,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          168,
+          23,
+          377,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          145,
+          52,
+          336,
+          260
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          163,
+          19,
+          399,
+          270
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          131,
+          52,
+          330,
+          274
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          149,
+          14,
+          416,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          109,
+          48,
+          353,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          100,
+          9,
+          449,
+          354
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          69,
+          52,
+          392,
+          354
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\crocodile\\pulldown.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          165,
+          24,
+          390,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          125,
+          24,
+          357,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          156,
+          20,
+          393,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          124,
+          21,
+          357,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          153,
+          19,
+          400,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          112,
+          19,
+          370,
+          288
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          145,
+          18,
+          401,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          104,
+          18,
+          379,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          123,
+          17,
+          412,
+          311
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          86,
+          17,
+          403,
+          311
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\crocodile\\squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          131,
+          97,
+          374,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          136,
+          115,
+          381,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          106,
+          38,
+          405,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          108,
+          70,
+          405,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          95,
+          23,
+          416,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          95,
+          66,
+          419,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          71,
+          12,
+          444,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          67,
+          59,
+          447,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          42,
+          16,
+          470,
+          344
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          38,
+          72,
+          475,
+          344
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\abductor.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          184,
+          62,
+          362,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          152,
+          63,
+          339,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          165,
+          33,
+          365,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          142,
+          33,
+          355,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          149,
+          23,
+          381,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          126,
+          24,
+          370,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          108,
+          16,
+          398,
+          294
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          100,
+          15,
+          405,
+          294
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          82,
+          18,
+          431,
+          351
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          65,
+          18,
+          441,
+          351
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\barbell-curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          198,
+          84,
+          377,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          139,
+          84,
+          323,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          166,
+          32,
+          412,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          104,
+          30,
+          346,
+          253
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          153,
+          24,
+          427,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          92,
+          20,
+          355,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          118,
+          19,
+          444,
+          296
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          73,
+          14,
+          374,
+          296
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          89,
+          18,
+          483,
+          359
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          38,
+          12,
+          411,
+          358
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\bench.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          140,
+          16,
+          378,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          117,
+          73,
+          356,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          131,
+          18,
+          393,
+          270
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          103,
+          75,
+          374,
+          270
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          111,
+          12,
+          431,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          74,
+          93,
+          403,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          104,
+          10,
+          446,
+          306
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          61,
+          93,
+          423,
+          306
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          82,
+          9,
+          473,
+          344
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          41,
+          110,
+          449,
+          344
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\bodyweight-squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          187,
+          49,
+          360,
+          243
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          155,
+          70,
+          335,
+          243
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          149,
+          26,
+          375,
+          247
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          130,
+          49,
+          370,
+          247
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          128,
+          18,
+          407,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          107,
+          55,
+          383,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          115,
+          15,
+          419,
+          305
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          88,
+          43,
+          402,
+          306
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          79,
+          14,
+          439,
+          359
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          62,
+          57,
+          436,
+          353
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\calf-raise.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          193,
+          96,
+          334,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          182,
+          81,
+          315,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          176,
+          38,
+          335,
+          248
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          170,
+          20,
+          328,
+          248
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          136,
+          27,
+          354,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          135,
+          14,
+          362,
+          277
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          119,
+          19,
+          396,
+          315
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          110,
+          8,
+          383,
+          315
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          92,
+          17,
+          429,
+          360
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          82,
+          7,
+          418,
+          360
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          197,
+          91,
+          336,
+          242
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          166,
+          89,
+          307,
+          241
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          169,
+          40,
+          367,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          140,
+          39,
+          326,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          143,
+          27,
+          385,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          111,
+          27,
+          351,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          101,
+          21,
+          420,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          74,
+          16,
+          387,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          76,
+          16,
+          452,
+          359
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          46,
+          16,
+          432,
+          360
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\deadlift.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          173,
+          118,
+          376,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          139,
+          77,
+          362,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          169,
+          71,
+          392,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          132,
+          27,
+          363,
+          255
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          141,
+          58,
+          416,
+          283
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          109,
+          13,
+          387,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          111,
+          65,
+          443,
+          303
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          74,
+          13,
+          422,
+          303
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          75,
+          60,
+          477,
+          331
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          44,
+          10,
+          452,
+          333
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\dip.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          187,
+          88,
+          362,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          151,
+          107,
+          325,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          180,
+          27,
+          364,
+          232
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          148,
+          43,
+          333,
+          232
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          165,
+          19,
+          381,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          130,
+          52,
+          350,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          136,
+          10,
+          397,
+          275
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          108,
+          37,
+          371,
+          275
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          126,
+          12,
+          421,
+          350
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          83,
+          56,
+          398,
+          350
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\dumbbell-press.png",
+    "cornersAlpha": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          183,
+          97,
+          355,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          165,
+          112,
+          336,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          170,
+          57,
+          367,
+          234
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          150,
+          81,
+          347,
+          234
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          144,
+          48,
+          391,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          123,
+          89,
+          371,
+          253
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          109,
+          39,
+          412,
+          266
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          92,
+          76,
+          405,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          85,
+          41,
+          439,
+          308
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          70,
+          84,
+          418,
+          307
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\fly.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          148,
+          78,
+          367,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          159,
+          59,
+          341,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          137,
+          41,
+          384,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          144,
+          22,
+          346,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          111,
+          26,
+          409,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          125,
+          12,
+          367,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          89,
+          25,
+          431,
+          321
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          101,
+          9,
+          396,
+          321
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          55,
+          20,
+          450,
+          342
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          87,
+          12,
+          403,
+          341
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\french-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          143,
+          93,
+          379,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          141,
+          52,
+          372,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          137,
+          62,
+          385,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          133,
+          24,
+          381,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          115,
+          69,
+          403,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          108,
+          17,
+          404,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          80,
+          66,
+          429,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          79,
+          14,
+          434,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          36,
+          82,
+          473,
+          365
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          34,
+          16,
+          478,
+          365
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\front-raise.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          204,
+          104,
+          325,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          183,
+          103,
+          320,
+          255
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          174,
+          41,
+          335,
+          233
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          163,
+          34,
+          344,
+          233
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          140,
+          28,
+          367,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          126,
+          25,
+          393,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          108,
+          23,
+          407,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          88,
+          20,
+          420,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          66,
+          23,
+          443,
+          375
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          55,
+          22,
+          448,
+          372
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\hammer-curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          201,
+          88,
+          342,
+          248
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          165,
+          85,
+          310,
+          247
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          172,
+          34,
+          362,
+          230
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          148,
+          28,
+          324,
+          229
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          151,
+          29,
+          383,
+          271
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          115,
+          22,
+          353,
+          271
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          113,
+          26,
+          397,
+          306
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          88,
+          20,
+          380,
+          305
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          83,
+          19,
+          430,
+          380
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          62,
+          18,
+          434,
+          380
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\hip-thrust.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          114,
+          90,
+          373,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          127,
+          87,
+          398,
+          263
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          113,
+          48,
+          386,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          120,
+          42,
+          400,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          79,
+          35,
+          399,
+          277
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          90,
+          29,
+          427,
+          277
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          52,
+          26,
+          416,
+          312
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          65,
+          19,
+          461,
+          309
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          24,
+          23,
+          432,
+          312
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          47,
+          19,
+          470,
+          311
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\incline-curl.png",
+    "cornersAlpha": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          162,
+          63,
+          378,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          133,
+          62,
+          352,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          152,
+          30,
+          378,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          130,
+          29,
+          361,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          135,
+          19,
+          403,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          108,
+          19,
+          377,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          104,
+          11,
+          427,
+          317
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          83,
+          11,
+          409,
+          317
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          80,
+          8,
+          456,
+          341
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          56,
+          7,
+          429,
+          340
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\inverted-row.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          154,
+          102,
+          403,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          133,
+          71,
+          364,
+          266
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          133,
+          71,
+          424,
+          251
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          120,
+          38,
+          371,
+          251
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          105,
+          51,
+          435,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          106,
+          35,
+          390,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          88,
+          44,
+          446,
+          295
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          94,
+          27,
+          406,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          38,
+          46,
+          451,
+          316
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          62,
+          19,
+          435,
+          315
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\lateral-raise.png",
+    "cornersAlpha": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          188,
+          64,
+          326,
+          214
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          174,
+          61,
+          347,
+          213
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          162,
+          43,
+          342,
+          230
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          161,
+          39,
+          361,
+          230
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          136,
+          32,
+          374,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          123,
+          30,
+          398,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          96,
+          22,
+          389,
+          297
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          98,
+          22,
+          440,
+          300
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          53,
+          17,
+          429,
+          409
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          49,
+          14,
+          533,
+          409
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\leg-curl.png",
+    "cornersAlpha": [
+      1,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          192,
+          66,
+          387,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          135,
+          66,
+          329,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          189,
+          36,
+          401,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          126,
+          36,
+          338,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          171,
+          35,
+          415,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          110,
+          35,
+          353,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          145,
+          27,
+          430,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          88,
+          27,
+          375,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          102,
+          30,
+          451,
+          312
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          62,
+          31,
+          410,
+          310
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\leg-extension.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          171,
+          50,
+          396,
+          277
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          127,
+          49,
+          355,
+          277
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          163,
+          26,
+          399,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          119,
+          26,
+          362,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          114,
+          29,
+          413,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          88,
+          29,
+          397,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          76,
+          17,
+          423,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          67,
+          16,
+          434,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          63,
+          15,
+          446,
+          324
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          46,
+          14,
+          469,
+          324
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\leg-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          96,
+          83,
+          407,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          85,
+          67,
+          449,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          89,
+          45,
+          407,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          82,
+          47,
+          471,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          72,
+          37,
+          408,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          70,
+          36,
+          492,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          54,
+          24,
+          411,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          59,
+          24,
+          501,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          21,
+          27,
+          416,
+          322
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          39,
+          26,
+          536,
+          326
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\lunge.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          188,
+          74,
+          346,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          173,
+          89,
+          326,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          161,
+          41,
+          386,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          136,
+          53,
+          341,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          127,
+          25,
+          412,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          99,
+          42,
+          377,
+          283
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          92,
+          16,
+          429,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          81,
+          34,
+          395,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          62,
+          10,
+          461,
+          325
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          51,
+          34,
+          434,
+          325
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\lying-curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          118,
+          66,
+          382,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          124,
+          66,
+          388,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          110,
+          43,
+          394,
+          243
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          115,
+          43,
+          398,
+          243
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          88,
+          47,
+          417,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          92,
+          46,
+          422,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          72,
+          36,
+          439,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          72,
+          36,
+          439,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          42,
+          41,
+          476,
+          303
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          45,
+          41,
+          466,
+          303
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\overhead-extension.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          206,
+          111,
+          334,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          171,
+          65,
+          299,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          186,
+          75,
+          343,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          156,
+          29,
+          312,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          166,
+          69,
+          364,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          133,
+          19,
+          331,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          134,
+          66,
+          388,
+          296
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          105,
+          14,
+          359,
+          296
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          97,
+          75,
+          414,
+          373
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          77,
+          18,
+          395,
+          373
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\overhead-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          159,
+          111,
+          385,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          135,
+          73,
+          361,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          151,
+          65,
+          403,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          117,
+          30,
+          386,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          133,
+          53,
+          414,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          105,
+          25,
+          405,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          133,
+          40,
+          424,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          94,
+          17,
+          409,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          106,
+          43,
+          451,
+          324
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          73,
+          20,
+          414,
+          325
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\pec-deck.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          165,
+          8,
+          390,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          144,
+          8,
+          336,
+          269
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          142,
+          14,
+          404,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          132,
+          14,
+          348,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          107,
+          12,
+          427,
+          296
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          106,
+          12,
+          374,
+          296
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          89,
+          9,
+          454,
+          307
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          72,
+          9,
+          408,
+          307
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          49,
+          8,
+          464,
+          337
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          53,
+          8,
+          430,
+          337
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\plank.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          133,
+          133,
+          394,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          115,
+          139,
+          375,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          112,
+          43,
+          407,
+          222
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          100,
+          48,
+          395,
+          222
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          77,
+          42,
+          442,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          66,
+          50,
+          432,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          60,
+          33,
+          467,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          47,
+          40,
+          456,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          27,
+          37,
+          489,
+          305
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          24,
+          44,
+          489,
+          305
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\pull-up.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          156,
+          70,
+          358,
+          232
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          155,
+          31,
+          357,
+          176
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          156,
+          50,
+          358,
+          235
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          155,
+          20,
+          357,
+          199
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          156,
+          53,
+          358,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          155,
+          17,
+          357,
+          229
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          142,
+          40,
+          363,
+          302
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          146,
+          5,
+          366,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          125,
+          51,
+          371,
+          419
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          132,
+          5,
+          389,
+          355
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\pulldown.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          211,
+          13,
+          419,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          112,
+          13,
+          336,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          198,
+          19,
+          418,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          103,
+          20,
+          345,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          160,
+          20,
+          422,
+          291
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          86,
+          21,
+          364,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          125,
+          17,
+          425,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          77,
+          17,
+          375,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          92,
+          15,
+          430,
+          336
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          62,
+          18,
+          393,
+          337
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\pullover.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          141,
+          53,
+          383,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          105,
+          100,
+          392,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          122,
+          27,
+          402,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          88,
+          93,
+          407,
+          257
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          85,
+          18,
+          426,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          67,
+          99,
+          428,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          47,
+          14,
+          454,
+          305
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          41,
+          97,
+          456,
+          305
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          27,
+          16,
+          492,
+          335
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          14,
+          93,
+          477,
+          333
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\push-up.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          160,
+          80,
+          358,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          150,
+          121,
+          372,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          147,
+          41,
+          375,
+          231
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          132,
+          92,
+          408,
+          230
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          108,
+          27,
+          422,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          75,
+          93,
+          467,
+          250
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          76,
+          19,
+          439,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          55,
+          87,
+          485,
+          283
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          31,
+          34,
+          461,
+          345
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          33,
+          123,
+          510,
+          344
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\pushdown.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          169,
+          25,
+          379,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          152,
+          25,
+          361,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          140,
+          35,
+          380,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          136,
+          35,
+          376,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          108,
+          32,
+          380,
+          274
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          120,
+          32,
+          392,
+          274
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          74,
+          26,
+          395,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          96,
+          26,
+          417,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          52,
+          28,
+          430,
+          315
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          67,
+          28,
+          445,
+          315
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\rear-delt.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          182,
+          23,
+          365,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          146,
+          23,
+          360,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          152,
+          20,
+          370,
+          270
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          133,
+          20,
+          372,
+          271
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          116,
+          20,
+          381,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          113,
+          20,
+          391,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          67,
+          15,
+          394,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          84,
+          15,
+          415,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          47,
+          16,
+          404,
+          335
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          64,
+          17,
+          447,
+          335
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\romanian-deadlift.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          188,
+          67,
+          378,
+          248
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          144,
+          76,
+          341,
+          246
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          165,
+          22,
+          391,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          123,
+          51,
+          357,
+          248
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          126,
+          19,
+          419,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          86,
+          48,
+          381,
+          263
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          107,
+          16,
+          451,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          62,
+          45,
+          400,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          66,
+          13,
+          483,
+          371
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          33,
+          63,
+          440,
+          371
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\row.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          176,
+          74,
+          382,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          134,
+          69,
+          339,
+          234
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          150,
+          35,
+          410,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          109,
+          28,
+          357,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          116,
+          27,
+          432,
+          275
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          84,
+          21,
+          376,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          100,
+          21,
+          457,
+          313
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          60,
+          16,
+          402,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          62,
+          22,
+          488,
+          357
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          31,
+          15,
+          429,
+          352
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\seated-row.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          121,
+          67,
+          451,
+          286
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          90,
+          67,
+          423,
+          286
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          95,
+          30,
+          452,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          80,
+          30,
+          435,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          48,
+          31,
+          453,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          56,
+          31,
+          458,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          32,
+          25,
+          453,
+          277
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          43,
+          26,
+          471,
+          277
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          16,
+          27,
+          454,
+          321
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          41,
+          25,
+          471,
+          321
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          158,
+          68,
+          382,
+          209
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          136,
+          89,
+          363,
+          211
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          151,
+          32,
+          400,
+          229
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          121,
+          65,
+          377,
+          232
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          127,
+          24,
+          423,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          100,
+          61,
+          396,
+          268
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          94,
+          14,
+          444,
+          312
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          76,
+          56,
+          421,
+          312
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          83,
+          14,
+          470,
+          388
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          51,
+          57,
+          437,
+          389
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\t-row.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          168,
+          75,
+          422,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          113,
+          74,
+          326,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          168,
+          32,
+          434,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          108,
+          27,
+          342,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          140,
+          15,
+          452,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          90,
+          14,
+          364,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          105,
+          14,
+          469,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          59,
+          10,
+          385,
+          296
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          62,
+          11,
+          503,
+          348
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          31,
+          3,
+          429,
+          344
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\dragon\\walk.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          149,
+          68,
+          405,
+          227
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          106,
+          68,
+          363,
+          227
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          133,
+          36,
+          424,
+          230
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          88,
+          36,
+          380,
+          229
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          113,
+          31,
+          445,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          67,
+          33,
+          400,
+          256
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          102,
+          21,
+          458,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          54,
+          24,
+          412,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          62,
+          28,
+          490,
+          366
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          24,
+          28,
+          444,
+          366
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\fox\\bench.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          130,
+          14,
+          371,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          112,
+          77,
+          366,
+          262
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          127,
+          15,
+          381,
+          266
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          103,
+          80,
+          375,
+          266
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          101,
+          11,
+          399,
+          274
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          84,
+          84,
+          395,
+          274
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          76,
+          11,
+          421,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          69,
+          86,
+          419,
+          298
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          52,
+          13,
+          464,
+          354
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          31,
+          99,
+          463,
+          354
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\fox\\curl.png",
+    "cornersAlpha": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          217,
+          92,
+          372,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          140,
+          86,
+          308,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          171,
+          31,
+          395,
+          238
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          106,
+          28,
+          342,
+          238
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          146,
+          30,
+          408,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          89,
+          24,
+          363,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          122,
+          20,
+          426,
+          307
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          76,
+          20,
+          388,
+          307
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          91,
+          24,
+          448,
+          344
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          44,
+          16,
+          438,
+          344
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\fox\\leg-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          106,
+          90,
+          449,
+          288
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          73,
+          90,
+          451,
+          288
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          88,
+          31,
+          454,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          57,
+          33,
+          474,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          52,
+          29,
+          460,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          31,
+          29,
+          500,
+          276
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          34,
+          21,
+          463,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          25,
+          21,
+          513,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          18,
+          23,
+          473,
+          304
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          15,
+          23,
+          516,
+          305
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\fox\\lunge.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          205,
+          83,
+          344,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          168,
+          99,
+          306,
+          245
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          182,
+          32,
+          374,
+          235
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          138,
+          58,
+          336,
+          235
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          155,
+          29,
+          393,
+          266
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          122,
+          59,
+          362,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          126,
+          16,
+          410,
+          302
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          97,
+          42,
+          387,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          83,
+          19,
+          441,
+          354
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          67,
+          52,
+          426,
+          354
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\fox\\pulldown.png",
+    "cornersAlpha": [
+      1,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          182,
+          18,
+          408,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          127,
+          18,
+          361,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          166,
+          17,
+          408,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          113,
+          17,
+          377,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          138,
+          17,
+          411,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          97,
+          17,
+          390,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          96,
+          17,
+          416,
+          300
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          74,
+          17,
+          415,
+          300
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          63,
+          17,
+          422,
+          319
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          59,
+          18,
+          423,
+          319
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\fox\\squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          143,
+          80,
+          409,
+          251
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          114,
+          110,
+          375,
+          255
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          120,
+          31,
+          433,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          87,
+          70,
+          400,
+          242
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          102,
+          22,
+          447,
+          263
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          74,
+          71,
+          420,
+          265
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          69,
+          12,
+          472,
+          293
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          48,
+          64,
+          450,
+          296
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          42,
+          13,
+          498,
+          357
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          20,
+          69,
+          482,
+          359
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\phoenix\\bench.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          146,
+          26,
+          394,
+          266
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          101,
+          90,
+          350,
+          266
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          143,
+          19,
+          398,
+          267
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          96,
+          88,
+          368,
+          266
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          128,
+          15,
+          410,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          82,
+          99,
+          380,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          114,
+          5,
+          437,
+          303
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          58,
+          82,
+          402,
+          303
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          77,
+          6,
+          465,
+          361
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          30,
+          80,
+          429,
+          361
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\phoenix\\curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          179,
+          62,
+          328,
+          236
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          172,
+          62,
+          320,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          156,
+          34,
+          364,
+          239
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          142,
+          34,
+          353,
+          241
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          147,
+          17,
+          367,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          129,
+          17,
+          362,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          109,
+          13,
+          407,
+          295
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          98,
+          13,
+          388,
+          295
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          69,
+          22,
+          452,
+          375
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          56,
+          22,
+          444,
+          375
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\phoenix\\leg-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          93,
+          71,
+          407,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          86,
+          71,
+          479,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          89,
+          30,
+          409,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          80,
+          30,
+          488,
+          261
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          70,
+          18,
+          407,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          67,
+          18,
+          515,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          51,
+          14,
+          410,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          54,
+          14,
+          527,
+          278
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          20,
+          20,
+          413,
+          326
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          42,
+          15,
+          552,
+          327
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\phoenix\\lunge.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          182,
+          75,
+          332,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          178,
+          99,
+          327,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          171,
+          39,
+          369,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          148,
+          59,
+          346,
+          252
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          134,
+          25,
+          379,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          121,
+          54,
+          372,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          97,
+          14,
+          405,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          97,
+          40,
+          396,
+          289
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          82,
+          15,
+          444,
+          336
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          61,
+          40,
+          440,
+          336
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\phoenix\\pulldown.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          155,
+          14,
+          394,
+          286
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          126,
+          14,
+          355,
+          286
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          151,
+          17,
+          397,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          120,
+          17,
+          363,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          149,
+          20,
+          396,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          114,
+          20,
+          369,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          118,
+          19,
+          402,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          100,
+          19,
+          384,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          81,
+          19,
+          409,
+          311
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          88,
+          21,
+          393,
+          310
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\phoenix\\squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          167,
+          86,
+          410,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          106,
+          109,
+          362,
+          258
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          140,
+          31,
+          430,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          88,
+          64,
+          378,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          144,
+          16,
+          442,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          79,
+          59,
+          382,
+          275
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          113,
+          8,
+          471,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          51,
+          58,
+          412,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          57,
+          11,
+          493,
+          365
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          21,
+          68,
+          448,
+          365
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\tiger\\bench.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          99,
+          36,
+          357,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          129,
+          81,
+          388,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          88,
+          15,
+          360,
+          270
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          121,
+          71,
+          398,
+          271
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          74,
+          10,
+          403,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          89,
+          80,
+          412,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          64,
+          7,
+          417,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          79,
+          79,
+          433,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          26,
+          11,
+          442,
+          363
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          46,
+          117,
+          477,
+          362
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\tiger\\curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          198,
+          91,
+          348,
+          241
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          156,
+          90,
+          312,
+          241
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          174,
+          37,
+          370,
+          230
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          132,
+          33,
+          337,
+          232
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          161,
+          34,
+          387,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          122,
+          27,
+          356,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          136,
+          24,
+          406,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          100,
+          22,
+          374,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          88,
+          28,
+          446,
+          362
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          60,
+          25,
+          430,
+          362
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\tiger\\leg-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          81,
+          116,
+          422,
+          315
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          70,
+          103,
+          467,
+          315
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          72,
+          36,
+          431,
+          247
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          61,
+          36,
+          482,
+          247
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          70,
+          22,
+          431,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          60,
+          22,
+          496,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          47,
+          16,
+          431,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          50,
+          16,
+          517,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          15,
+          23,
+          450,
+          305
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          24,
+          23,
+          544,
+          305
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\tiger\\lunge.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          198,
+          80,
+          340,
+          236
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          167,
+          87,
+          328,
+          235
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          164,
+          32,
+          363,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          148,
+          43,
+          347,
+          240
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          132,
+          18,
+          374,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          126,
+          36,
+          382,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          97,
+          13,
+          397,
+          312
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          100,
+          30,
+          413,
+          311
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          66,
+          8,
+          438,
+          362
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          70,
+          37,
+          451,
+          360
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\tiger\\pulldown.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          169,
+          17,
+          389,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          136,
+          16,
+          364,
+          282
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          158,
+          19,
+          391,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          132,
+          20,
+          372,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          155,
+          17,
+          391,
+          294
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          128,
+          17,
+          375,
+          294
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          144,
+          15,
+          392,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          119,
+          15,
+          384,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          122,
+          11,
+          397,
+          304
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          99,
+          14,
+          399,
+          304
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\tiger\\squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          131,
+          79,
+          412,
+          248
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          101,
+          105,
+          387,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          108,
+          37,
+          430,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          82,
+          70,
+          409,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          101,
+          22,
+          443,
+          263
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          66,
+          64,
+          427,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          80,
+          16,
+          465,
+          293
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          46,
+          63,
+          452,
+          290
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          45,
+          20,
+          489,
+          349
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          22,
+          75,
+          480,
+          345
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\wolf\\bench.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          126,
+          13,
+          382,
+          272
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          106,
+          82,
+          363,
+          271
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          118,
+          13,
+          386,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          98,
+          81,
+          373,
+          279
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          108,
+          12,
+          394,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          85,
+          87,
+          386,
+          285
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          95,
+          9,
+          410,
+          300
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          74,
+          89,
+          402,
+          299
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          65,
+          8,
+          430,
+          348
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          47,
+          103,
+          443,
+          345
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\wolf\\curl.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          178,
+          74,
+          355,
+          239
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          154,
+          74,
+          335,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          147,
+          37,
+          379,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          129,
+          32,
+          359,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          123,
+          28,
+          391,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          112,
+          23,
+          379,
+          273
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          96,
+          19,
+          398,
+          295
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          99,
+          19,
+          405,
+          295
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          63,
+          19,
+          434,
+          349
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          62,
+          16,
+          442,
+          349
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\wolf\\leg-press.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          91,
+          111,
+          412,
+          286
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          81,
+          108,
+          474,
+          286
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          74,
+          36,
+          420,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          71,
+          36,
+          485,
+          249
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          59,
+          31,
+          428,
+          260
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          59,
+          31,
+          501,
+          260
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          46,
+          26,
+          436,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          49,
+          26,
+          511,
+          284
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          19,
+          19,
+          448,
+          318
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          30,
+          19,
+          530,
+          318
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\wolf\\lunge.png",
+    "cornersAlpha": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          179,
+          74,
+          341,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          159,
+          84,
+          332,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          151,
+          31,
+          360,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          138,
+          55,
+          355,
+          259
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          120,
+          22,
+          371,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          121,
+          50,
+          385,
+          280
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          93,
+          11,
+          402,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          90,
+          37,
+          422,
+          287
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          38,
+          7,
+          441,
+          352
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          56,
+          38,
+          468,
+          352
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\wolf\\pulldown.png",
+    "cornersAlpha": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          162,
+          10,
+          392,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          127,
+          10,
+          353,
+          264
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          152,
+          12,
+          396,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          122,
+          12,
+          360,
+          281
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          144,
+          12,
+          403,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          115,
+          12,
+          368,
+          292
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          133,
+          11,
+          410,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          102,
+          12,
+          382,
+          301
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          114,
+          11,
+          418,
+          329
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          88,
+          11,
+          395,
+          330
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\pet-training\\wolf\\squat.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          125,
+          83,
+          385,
+          254
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          118,
+          111,
+          396,
+          255
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          99,
+          27,
+          419,
+          238
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          86,
+          64,
+          421,
+          242
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          81,
+          13,
+          440,
+          271
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          68,
+          57,
+          435,
+          271
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          65,
+          10,
+          464,
+          307
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          46,
+          45,
+          460,
+          307
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          39,
+          14,
+          487,
+          360
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          25,
+          63,
+          477,
+          360
+        ],
+        "touchesEdge": false
+      }
+    ]
+  },
+  {
+    "file": "public\\exercise-poses\\program-basics.png",
+    "cornersAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "poses": [
+      {
+        "age": 1,
+        "pose": 0,
+        "bounds": [
+          160,
+          80,
+          385,
+          371
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 1,
+        "pose": 1,
+        "bounds": [
+          117,
+          24,
+          369,
+          371
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 0,
+        "bounds": [
+          231,
+          18,
+          307,
+          338
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 2,
+        "pose": 1,
+        "bounds": [
+          186,
+          58,
+          331,
+          337
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 0,
+        "bounds": [
+          58,
+          23,
+          450,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 3,
+        "pose": 1,
+        "bounds": [
+          52,
+          18,
+          442,
+          237
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 0,
+        "bounds": [
+          72,
+          17,
+          402,
+          193
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 4,
+        "pose": 1,
+        "bounds": [
+          82,
+          93,
+          453,
+          193
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 0,
+        "bounds": [
+          213,
+          17,
+          373,
+          314
+        ],
+        "touchesEdge": false
+      },
+      {
+        "age": 5,
+        "pose": 1,
+        "bounds": [
+          150,
+          99,
+          347,
+          314
+        ],
+        "touchesEdge": false
+      }
+    ]
+  }
+]

@@ -1,0 +1,663 @@
+{
+  "format": "WebP lossless, exact RGBA equality",
+  "sourceBytes": 169687628,
+  "outputBytes": 118048134,
+  "entries": [
+    {
+      "source": "public/pet-training/axolotl/bench.png",
+      "output": "public/pet-training/axolotl/bench.webp",
+      "sourceBytes": 1898888,
+      "outputBytes": 1254122,
+      "sourceSha256": "6d6e59e2ae23976fd2392f3f84e8272a34d34c4d2b6236b87f454cfe84cd8243",
+      "outputSha256": "3a14b31a273482ba52c0881740c5024bb139af5090654206f2cb9e5632c8a44f"
+    },
+    {
+      "source": "public/pet-training/axolotl/curl.png",
+      "output": "public/pet-training/axolotl/curl.webp",
+      "sourceBytes": 2176595,
+      "outputBytes": 1517374,
+      "sourceSha256": "e8ce80ed31a6954d4a5a443e9fb93369d42a5e4820f1bc8d4d209863d9e9342a",
+      "outputSha256": "a0201db617f1c02abc8ea7e6163dbfb4aab6ed56ff71c15c972e21bd4610ed85"
+    },
+    {
+      "source": "public/pet-training/axolotl/leg-press.png",
+      "output": "public/pet-training/axolotl/leg-press.webp",
+      "sourceBytes": 2347594,
+      "outputBytes": 1638566,
+      "sourceSha256": "98a753c4c448b44b4483bcc9da406a4d8d7b27be776f5572daadd8791f371d0e",
+      "outputSha256": "54e751adcfd0a748cc39288928cd94db01f04709ce0a98782591401971c32fb4"
+    },
+    {
+      "source": "public/pet-training/axolotl/lunge.png",
+      "output": "public/pet-training/axolotl/lunge.webp",
+      "sourceBytes": 2073696,
+      "outputBytes": 1449752,
+      "sourceSha256": "d67520fe38faba2ec0d9f3598628dbdb6b84bbf24a08586ec98f65908f971a0a",
+      "outputSha256": "2fc40d44ec818c3e739006bb5955005718a2013833e0a5cfcf5b77ce3823488b"
+    },
+    {
+      "source": "public/pet-training/axolotl/pulldown.png",
+      "output": "public/pet-training/axolotl/pulldown.webp",
+      "sourceBytes": 1997448,
+      "outputBytes": 1373134,
+      "sourceSha256": "3e99450d0ddaf0fd29805f48ea95640baa002121afc9c298fbea4f7b15500ff2",
+      "outputSha256": "311b12585e0833c9896fc269bfd49b0402760e89dcd1cca42d0df557f78fe6c4"
+    },
+    {
+      "source": "public/pet-training/axolotl/squat.png",
+      "output": "public/pet-training/axolotl/squat.webp",
+      "sourceBytes": 2087484,
+      "outputBytes": 1466558,
+      "sourceSha256": "fd145d112d67cf71be484a4eb2af56759b62d3ce32b9778757362445d667653e",
+      "outputSha256": "03da19c4fe405a619c91765034572af0cdbae4dd8d404394d21ed57731247e9a"
+    },
+    {
+      "source": "public/pet-training/bear/bench.png",
+      "output": "public/pet-training/bear/bench.webp",
+      "sourceBytes": 1831556,
+      "outputBytes": 1244800,
+      "sourceSha256": "6419870eae60a7b7aff17d0b35ac195af37e35321c704537a1bf7808846d3f8a",
+      "outputSha256": "2f66b149eb0fb343c6b9dff0f4feb230b81fc95c3d1657ddd0b67ebcb649a7e9"
+    },
+    {
+      "source": "public/pet-training/bear/curl.png",
+      "output": "public/pet-training/bear/curl.webp",
+      "sourceBytes": 1791804,
+      "outputBytes": 1247012,
+      "sourceSha256": "8ff8f9354bbaf6ae39af9c0db9ce92ba6cdfa42c2fa0a9f3a7d5f628eff1683d",
+      "outputSha256": "90f57a26f16fda4fa7e60cd95048ee92dae116272808385b4f98720d98422020"
+    },
+    {
+      "source": "public/pet-training/bear/leg-press.png",
+      "output": "public/pet-training/bear/leg-press.webp",
+      "sourceBytes": 2081604,
+      "outputBytes": 1433062,
+      "sourceSha256": "d9e4209124c8f816138ac8ee080fe0da269b2b7fe414c2a37d333ac247188c30",
+      "outputSha256": "33afcd3bbd35e03990fc17f6d8ff81001d849eeb3f786c2ed2c2c15da59c45af"
+    },
+    {
+      "source": "public/pet-training/bear/lunge.png",
+      "output": "public/pet-training/bear/lunge.webp",
+      "sourceBytes": 1833400,
+      "outputBytes": 1264972,
+      "sourceSha256": "1a50ac9da9015f904fea62cb649fab5e1a781dce1b3e772821441b05b964be35",
+      "outputSha256": "d49b35349dfe6c35927cc3f9c51857896f00047b68dff762a99e60c7cc79bba1"
+    },
+    {
+      "source": "public/pet-training/bear/pulldown.png",
+      "output": "public/pet-training/bear/pulldown.webp",
+      "sourceBytes": 1932833,
+      "outputBytes": 1334702,
+      "sourceSha256": "25514930ac9d49befb09b355cc7bd25829b08515566a12c614ef6eee39397bcf",
+      "outputSha256": "104f63753a34b1da29865e0c7d83d383a6f6016786161bbb786f935281048ccd"
+    },
+    {
+      "source": "public/pet-training/bear/squat.png",
+      "output": "public/pet-training/bear/squat.webp",
+      "sourceBytes": 1934796,
+      "outputBytes": 1362854,
+      "sourceSha256": "b80944fdc786cd35d348349c5a6ef6d6ecfe311680dec3c2954451c3afea7a02",
+      "outputSha256": "18081f11777bc12f2fb4a65d8ab24f67f35dcb22d89fd56b4c3327ec009aca1b"
+    },
+    {
+      "source": "public/pet-training/crocodile/bench.png",
+      "output": "public/pet-training/crocodile/bench.webp",
+      "sourceBytes": 1882920,
+      "outputBytes": 1320658,
+      "sourceSha256": "9939975a7e9a3b41bd510be93c0f4b228ef81648621f5de86901498e1d564910",
+      "outputSha256": "3e0005fa7703ce162123a194a17545f13986c38e2916739de924a53921a7b258"
+    },
+    {
+      "source": "public/pet-training/crocodile/curl.png",
+      "output": "public/pet-training/crocodile/curl.webp",
+      "sourceBytes": 1898903,
+      "outputBytes": 1314880,
+      "sourceSha256": "9cad2cd4ba6d1496d50dda7b4f00748f10a9f85e02ce138bb69bdc2f44d3b391",
+      "outputSha256": "1ba0f90e03147a02f6f9acacc4cb13792e9119244fba7338dfc527721d67f40f"
+    },
+    {
+      "source": "public/pet-training/crocodile/leg-press.png",
+      "output": "public/pet-training/crocodile/leg-press.webp",
+      "sourceBytes": 2181613,
+      "outputBytes": 1582844,
+      "sourceSha256": "bf6fb22cbc4ee1ee52558af17ea901189fddf3d217366a0f1865335a1237f7ae",
+      "outputSha256": "b710b6cd59c2d5dff6cc9dcc5adda9ff6efd92ee9ddfc5a94f4cac03a58a2aea"
+    },
+    {
+      "source": "public/pet-training/crocodile/lunge.png",
+      "output": "public/pet-training/crocodile/lunge.webp",
+      "sourceBytes": 1948525,
+      "outputBytes": 1371726,
+      "sourceSha256": "1452b8e0493127349dde439f9d3f6e4ac9987ea5190ffa76ca0de3b4608bb2bf",
+      "outputSha256": "a319624e4c8bf9110d4d810e7ddac16f9591779e25250db285bccaff28ab1100"
+    },
+    {
+      "source": "public/pet-training/crocodile/pulldown.png",
+      "output": "public/pet-training/crocodile/pulldown.webp",
+      "sourceBytes": 2013517,
+      "outputBytes": 1436648,
+      "sourceSha256": "1ca3b195c4ecce8871b46aa50de20a312b3fa3668d1334c74442854e453bece8",
+      "outputSha256": "02d48a15bd31d117e2c19a528018a7369df826597715ff55d96102551ef663b0"
+    },
+    {
+      "source": "public/pet-training/crocodile/squat.png",
+      "output": "public/pet-training/crocodile/squat.webp",
+      "sourceBytes": 2021049,
+      "outputBytes": 1455056,
+      "sourceSha256": "b377b6680b9ecbab7357500f73f4150655a4bc857de3aefc73197db27d3500df",
+      "outputSha256": "dc00309d9e8847afa7b7527a794af8171025d4763f60b25d3f4049df0a341ac6"
+    },
+    {
+      "source": "public/pet-training/dragon/abductor.png",
+      "output": "public/pet-training/dragon/abductor.webp",
+      "sourceBytes": 2084867,
+      "outputBytes": 1443010,
+      "sourceSha256": "995f9fbc26a3c1da22d73703e0ef053c71f8c2fc6d68b4ade6f7f2d5fdd50c58",
+      "outputSha256": "d4f0d431e7011fc7d82ddcef93bdce472f9efcfdac67fd52619df825ca0010d1"
+    },
+    {
+      "source": "public/pet-training/dragon/barbell-curl.png",
+      "output": "public/pet-training/dragon/barbell-curl.webp",
+      "sourceBytes": 2173369,
+      "outputBytes": 1532436,
+      "sourceSha256": "ca600ee78bcdccecb9c57d53af4d6bf41deee675a9d2c104413b77511541d484",
+      "outputSha256": "a6404e71df2758e7b20e4a27a128283cd5f1682bcd4dd5397030e651dce4181c"
+    },
+    {
+      "source": "public/pet-training/dragon/bench.png",
+      "output": "public/pet-training/dragon/bench.webp",
+      "sourceBytes": 2096182,
+      "outputBytes": 1402812,
+      "sourceSha256": "a4d0df4799053ba080c7d0638d380be8abb182d6b81f326a17a08a5213f15855",
+      "outputSha256": "7e816ac0f28d2265c980fd2b17f46483145e92109cb9f7a2f75479d99c006a6f"
+    },
+    {
+      "source": "public/pet-training/dragon/bodyweight-squat.png",
+      "output": "public/pet-training/dragon/bodyweight-squat.webp",
+      "sourceBytes": 2089487,
+      "outputBytes": 1453250,
+      "sourceSha256": "551c52351aaeb1df0d58e0e12fd12854d85a828434869298d3e08d98b4f6dcda",
+      "outputSha256": "319d53ef254f4e85c44d522cccd275e54e4f4e2be66c19778b303460f5602a8f"
+    },
+    {
+      "source": "public/pet-training/dragon/calf-raise.png",
+      "output": "public/pet-training/dragon/calf-raise.webp",
+      "sourceBytes": 2054175,
+      "outputBytes": 1403866,
+      "sourceSha256": "d7dc741b52192d0aad9bd0f9c40e9c9687087ff8a63b3d11b01d29662ef1303b",
+      "outputSha256": "0393e08e0a1df4b1d58f9cbb2be561c8c27565ccc7d000d9a3919f8fafe7c3c8"
+    },
+    {
+      "source": "public/pet-training/dragon/curl.png",
+      "output": "public/pet-training/dragon/curl.webp",
+      "sourceBytes": 2095987,
+      "outputBytes": 1451208,
+      "sourceSha256": "cdd5e6b14f84198d96422099b218000a95add9863fff9d1c388907e4fb8e4638",
+      "outputSha256": "f7859ca6413ffca8cb28c68b203002c4d0d190f1157ae981c717419e495a227e"
+    },
+    {
+      "source": "public/pet-training/dragon/deadlift.png",
+      "output": "public/pet-training/dragon/deadlift.webp",
+      "sourceBytes": 2155534,
+      "outputBytes": 1492864,
+      "sourceSha256": "68140d8f4eb4e4854444e252e507655803e86530129f80a295386d57cbf28b4f",
+      "outputSha256": "903f5c4358bd65cdf5fb7005d8dd789cccbd20967c6cbb3c6f30ed18f73ef8c0"
+    },
+    {
+      "source": "public/pet-training/dragon/dip.png",
+      "output": "public/pet-training/dragon/dip.webp",
+      "sourceBytes": 1847728,
+      "outputBytes": 1250928,
+      "sourceSha256": "8608b9e5d5a153987f81d3eec8765364ff0e83a9770451e05180bac94e2980be",
+      "outputSha256": "95e11350a8ff195b67188364de48441f09b09b59ae0e6d37275fcd10b8e124b1"
+    },
+    {
+      "source": "public/pet-training/dragon/dumbbell-press.png",
+      "output": "public/pet-training/dragon/dumbbell-press.webp",
+      "sourceBytes": 1974572,
+      "outputBytes": 1359386,
+      "sourceSha256": "85d589dbbe36198414291418ea3dfedc853f73e6978ef3d1f820877a411274cc",
+      "outputSha256": "1368cb7868ffa048a01956973b20dc7b10aea0245883fa56808cfb943dfd685f"
+    },
+    {
+      "source": "public/pet-training/dragon/fly.png",
+      "output": "public/pet-training/dragon/fly.webp",
+      "sourceBytes": 2145370,
+      "outputBytes": 1466566,
+      "sourceSha256": "321ed80dbb8bc873b08c77333f8baf3c5ea3dc0165a3d6a7e39a274132f0fc1b",
+      "outputSha256": "8ecbe31968ad6b0d90dac375791b0ab186c5eed8060b696b0ea1df8717bf1b9c"
+    },
+    {
+      "source": "public/pet-training/dragon/french-press.png",
+      "output": "public/pet-training/dragon/french-press.webp",
+      "sourceBytes": 1997401,
+      "outputBytes": 1358584,
+      "sourceSha256": "bb7527b090a2620434bad1c4cd9cea4cee61e6c737dd0a5ad77044df88f4da58",
+      "outputSha256": "4423f90f5a23585060abc0dfc793ef7aae1afb595509847845945f5fb4d4b014"
+    },
+    {
+      "source": "public/pet-training/dragon/front-raise.png",
+      "output": "public/pet-training/dragon/front-raise.webp",
+      "sourceBytes": 2150778,
+      "outputBytes": 1506550,
+      "sourceSha256": "74492b14c3edc56032c3f6e7bd660a39db4e0a1896c4b0abf3380ed62de960a5",
+      "outputSha256": "c10c132cbd569d92f8db4be39f885cc76145966b03627942b14986cc49b7c842"
+    },
+    {
+      "source": "public/pet-training/dragon/hammer-curl.png",
+      "output": "public/pet-training/dragon/hammer-curl.webp",
+      "sourceBytes": 2119376,
+      "outputBytes": 1488424,
+      "sourceSha256": "f383d240e878f7aff7c29cc477f3e37eae2d4d1aac6b22c5a0ea3a97911aaacf",
+      "outputSha256": "5fba6ce01fac5b097bf14d77e556609c5dd127b72efd3460b7fc1e01e00e28e8"
+    },
+    {
+      "source": "public/pet-training/dragon/hip-thrust.png",
+      "output": "public/pet-training/dragon/hip-thrust.webp",
+      "sourceBytes": 2271286,
+      "outputBytes": 1580990,
+      "sourceSha256": "dde9808fa36e525bc80d0ec2dcf846e9dd5af7e156ff6ccf9a7f038d00fe2b7b",
+      "outputSha256": "f6cfd7896b8c921d059ab2fa1860a7d2cea306d3a1acfb670920e385308c9a5c"
+    },
+    {
+      "source": "public/pet-training/dragon/incline-curl.png",
+      "output": "public/pet-training/dragon/incline-curl.webp",
+      "sourceBytes": 2255249,
+      "outputBytes": 1551178,
+      "sourceSha256": "40fff32dbe6d8d0848bb32b35df874de458f1dfd1cc445c955337f399305851b",
+      "outputSha256": "d4a28d70f179cc62a23eacce974425b40f779311cf63f6be3610e47a5b79aebe"
+    },
+    {
+      "source": "public/pet-training/dragon/inverted-row.png",
+      "output": "public/pet-training/dragon/inverted-row.webp",
+      "sourceBytes": 2023428,
+      "outputBytes": 1386992,
+      "sourceSha256": "36ce06e86f6fca95a42c44e3d39e747985d02d2b2b9c5a91cf5e14ac2c5e2e6e",
+      "outputSha256": "0e4fa1b42f4eae5cbec4e3914cafbd02c4af66992b55aa4c4c39b4bdce46624f"
+    },
+    {
+      "source": "public/pet-training/dragon/lateral-raise.png",
+      "output": "public/pet-training/dragon/lateral-raise.webp",
+      "sourceBytes": 2190903,
+      "outputBytes": 1551900,
+      "sourceSha256": "ad989bf7ecd0e45cd1d88b5b48fbf825491a1d3e300369c421c539849c428de4",
+      "outputSha256": "3760cff4bde69b77444c1aef2b43dda260e6b2e4e8663884f93ee159cb63bc0e"
+    },
+    {
+      "source": "public/pet-training/dragon/leg-curl.png",
+      "output": "public/pet-training/dragon/leg-curl.webp",
+      "sourceBytes": 2007280,
+      "outputBytes": 1331758,
+      "sourceSha256": "2b3c4dfc5877bdb0cd1ca17ff892b538751c3096bae229feddce5f406913b932",
+      "outputSha256": "deec48a93cf0e448d2267849ebc0d7ba5e7cad68764c1c1ef90fb99a4becec75"
+    },
+    {
+      "source": "public/pet-training/dragon/leg-extension.png",
+      "output": "public/pet-training/dragon/leg-extension.webp",
+      "sourceBytes": 2223172,
+      "outputBytes": 1531766,
+      "sourceSha256": "a64fa4767b15b14f0d67a0fd799fac1ba4b4ced6d9e9191b2e4cf782b6b30499",
+      "outputSha256": "6b099e8d3f3548202b9021f70a0b82c75712c94506f17e1d82a23c95c4ae4ccc"
+    },
+    {
+      "source": "public/pet-training/dragon/leg-press.png",
+      "output": "public/pet-training/dragon/leg-press.webp",
+      "sourceBytes": 2284387,
+      "outputBytes": 1588698,
+      "sourceSha256": "cb67975ca99cd3272889617eab68f5aa5cf3ca90fe3133b3090ee374dcf42344",
+      "outputSha256": "b40969244d4c59a23d0d5c1f14fa3b71fd61ff131518576b035fce1b5d91a5a7"
+    },
+    {
+      "source": "public/pet-training/dragon/lunge.png",
+      "output": "public/pet-training/dragon/lunge.webp",
+      "sourceBytes": 2086797,
+      "outputBytes": 1440292,
+      "sourceSha256": "d896d7079fffbd369738e365a706c4742b6e6be39982a7b7638b14bb3b5b6443",
+      "outputSha256": "9438438091f0924f00cc8237c05ece16823745e3d23639f18375206a77c9ecb3"
+    },
+    {
+      "source": "public/pet-training/dragon/lying-curl.png",
+      "output": "public/pet-training/dragon/lying-curl.webp",
+      "sourceBytes": 2084168,
+      "outputBytes": 1454594,
+      "sourceSha256": "8538b0b2ed6f6930080619a542ed577a1d346f8a5592f14eb38844aa0e1e8d17",
+      "outputSha256": "739bea59561237a889dba90b16f307e838135aec6e8cf04e7a71c22e59d32493"
+    },
+    {
+      "source": "public/pet-training/dragon/overhead-extension.png",
+      "output": "public/pet-training/dragon/overhead-extension.webp",
+      "sourceBytes": 2049227,
+      "outputBytes": 1408166,
+      "sourceSha256": "c360079c8d3c63dd16b436938aeaa617e793f1569bbe56ba517c9eeeb8c68f7a",
+      "outputSha256": "5e5c76184d8d4bcbb1e776d035cd9f48d8e6d91ddd6ae982eada52d29ff4e021"
+    },
+    {
+      "source": "public/pet-training/dragon/overhead-press.png",
+      "output": "public/pet-training/dragon/overhead-press.webp",
+      "sourceBytes": 2050385,
+      "outputBytes": 1406200,
+      "sourceSha256": "9fcabfaa3d72ddd6a428ea7b754bdb5f6ab61ba4fddcfce488daff9c8d44a29f",
+      "outputSha256": "274f8a7067ac8dc3cfb234ea3339af51906febc874dee7fa3243bcc6bcb5e288"
+    },
+    {
+      "source": "public/pet-training/dragon/pec-deck.png",
+      "output": "public/pet-training/dragon/pec-deck.webp",
+      "sourceBytes": 2268393,
+      "outputBytes": 1578042,
+      "sourceSha256": "9c9ddc0e0ced7088db3274186eafd2db5dd2aadf10bbbe42e368df8aed7890dd",
+      "outputSha256": "eea4e5449d20eaaa01637f84b2f669361610c3c7393726ecfce17ccc63b03425"
+    },
+    {
+      "source": "public/pet-training/dragon/plank.png",
+      "output": "public/pet-training/dragon/plank.webp",
+      "sourceBytes": 2063291,
+      "outputBytes": 1473928,
+      "sourceSha256": "d7a102eb1f84ab0b92f9099ef3b51e28f07f578f470b6cd6429b4e4183cf2908",
+      "outputSha256": "939565f120459310fa1ccd91696d8bbf568df95fcce339bd6d693299dd9db9f3"
+    },
+    {
+      "source": "public/pet-training/dragon/pull-up.png",
+      "output": "public/pet-training/dragon/pull-up.webp",
+      "sourceBytes": 1919357,
+      "outputBytes": 1316058,
+      "sourceSha256": "dde770634c5d13f7256dcf40ca0d8c0831c4dfe279b7605016b67ced0fda5b1e",
+      "outputSha256": "4414e1f1720291934ecaae8686aa717df7288f2825fdc95c67f3e61ee33226bd"
+    },
+    {
+      "source": "public/pet-training/dragon/pulldown.png",
+      "output": "public/pet-training/dragon/pulldown.webp",
+      "sourceBytes": 2160435,
+      "outputBytes": 1490294,
+      "sourceSha256": "9b4a2b9c3bf15e207e3e8552bc7744d9c197f182103cd6423f12558a86638a44",
+      "outputSha256": "648db38aad018e85290c214cf14639fb8c11c1c8381d1b6adcfccb1365163364"
+    },
+    {
+      "source": "public/pet-training/dragon/pullover.png",
+      "output": "public/pet-training/dragon/pullover.webp",
+      "sourceBytes": 2082349,
+      "outputBytes": 1428590,
+      "sourceSha256": "315ecf526729527d697495eb86ecdbc174123500d77b185f23250d9231a066b9",
+      "outputSha256": "da98e7e84f2b8bf5e0e6705ffd227267549b88224e3da0d8e64dcf687c712f29"
+    },
+    {
+      "source": "public/pet-training/dragon/push-up.png",
+      "output": "public/pet-training/dragon/push-up.webp",
+      "sourceBytes": 2055104,
+      "outputBytes": 1414266,
+      "sourceSha256": "2c2bf4bb53de5d589a19fd914f2b3eb53ef8de2ff019ffccb58e59dfd908bddc",
+      "outputSha256": "f562b47cf92c26fb7c1f2f909d63644d04ba23c9246c92108da0856957e94acc"
+    },
+    {
+      "source": "public/pet-training/dragon/pushdown.png",
+      "output": "public/pet-training/dragon/pushdown.webp",
+      "sourceBytes": 2055387,
+      "outputBytes": 1435018,
+      "sourceSha256": "03ea10d18822cf3e73e5ff624f96aa10adbb17794f6d56b53270dcac1653180e",
+      "outputSha256": "f360eb10efdeeb0c1d5fb1f238c30c5f81412ec385e3b51dfdf1bddc14d32a8a"
+    },
+    {
+      "source": "public/pet-training/dragon/rear-delt.png",
+      "output": "public/pet-training/dragon/rear-delt.webp",
+      "sourceBytes": 2163672,
+      "outputBytes": 1505992,
+      "sourceSha256": "64547d6460bc9a82e348ef4a98b56984319ed6d7876ad499c8b4ddb1495e3354",
+      "outputSha256": "f5c545f2cf0003a4856b51c2eef5a0de8748f643af190a2b51d2f02916b82181"
+    },
+    {
+      "source": "public/pet-training/dragon/romanian-deadlift.png",
+      "output": "public/pet-training/dragon/romanian-deadlift.webp",
+      "sourceBytes": 2162895,
+      "outputBytes": 1513934,
+      "sourceSha256": "50665f1d9dfb7b50366e1fab387ed20b5b7e9599e78355bc5e30f25d6785b034",
+      "outputSha256": "7e102ab646f52e72fee6a45e420d1965ed26a150aa3e2531141a4f1581271b0a"
+    },
+    {
+      "source": "public/pet-training/dragon/row.png",
+      "output": "public/pet-training/dragon/row.webp",
+      "sourceBytes": 2193887,
+      "outputBytes": 1535640,
+      "sourceSha256": "09c34ca02719cc9e1f8953075d94a5dc63a8e461a352d4c411f1fc4a398eb4ff",
+      "outputSha256": "1d1051c86e60fc2be2867e049bd3da846dcc9ee6bc7c8e078a40157a0dddc0f7"
+    },
+    {
+      "source": "public/pet-training/dragon/seated-row.png",
+      "output": "public/pet-training/dragon/seated-row.webp",
+      "sourceBytes": 2192027,
+      "outputBytes": 1546380,
+      "sourceSha256": "681cf14c6fe990bb0b6ab92a0007f02a7e6089d1eb0086cd3bd40111ecee8b4f",
+      "outputSha256": "f60b6f670e90f18620020aff65abdcc1b99d7529571539a1b181a7133b282f59"
+    },
+    {
+      "source": "public/pet-training/dragon/squat.png",
+      "output": "public/pet-training/dragon/squat.webp",
+      "sourceBytes": 2162316,
+      "outputBytes": 1502276,
+      "sourceSha256": "7b7fe57f95c823b41fa8c4433af51bcd762975bd793b625d789f29b9f9966d9b",
+      "outputSha256": "42ba765a5ab711ab35f8be27cb637aefae687458d2cc9453944cde35d542a7f5"
+    },
+    {
+      "source": "public/pet-training/dragon/t-row.png",
+      "output": "public/pet-training/dragon/t-row.webp",
+      "sourceBytes": 2263321,
+      "outputBytes": 1582062,
+      "sourceSha256": "85e93dbb165bcc5362f231fcf7d0a5bd5ac99030a2b06eecb1bf3715757a145a",
+      "outputSha256": "1ce4fed25375c6e8222fafe244b9171f9ae817e7e833a1747f42be1333947f7d"
+    },
+    {
+      "source": "public/pet-training/dragon/walk.png",
+      "output": "public/pet-training/dragon/walk.webp",
+      "sourceBytes": 2141387,
+      "outputBytes": 1512094,
+      "sourceSha256": "a676468ca00c73137f71bb18ff6588711a439ad4f4e14b009fda7465ab4c95ba",
+      "outputSha256": "c648b3baff3645c1f0e7b0d9734250b77f6b689c016901c3ac4d46e3405004c1"
+    },
+    {
+      "source": "public/pet-training/fox/bench.png",
+      "output": "public/pet-training/fox/bench.webp",
+      "sourceBytes": 2015835,
+      "outputBytes": 1362934,
+      "sourceSha256": "2afdada9b146cece592a31658624bda707410a640e9d90698a728414a5da8117",
+      "outputSha256": "00741452f44afb62681f59156d00d81feff84e36ea0be502edd0a380ca4d51dd"
+    },
+    {
+      "source": "public/pet-training/fox/curl.png",
+      "output": "public/pet-training/fox/curl.webp",
+      "sourceBytes": 2138136,
+      "outputBytes": 1512524,
+      "sourceSha256": "7185e55b91dc8e8b63230b8af4d430f91effc3b7fea77ed9c85611ea67edffb1",
+      "outputSha256": "6d8bf015235eb032f7c97a2534c87545a2258098d7165ab1e95c5e591052255a"
+    },
+    {
+      "source": "public/pet-training/fox/leg-press.png",
+      "output": "public/pet-training/fox/leg-press.webp",
+      "sourceBytes": 2447782,
+      "outputBytes": 1754708,
+      "sourceSha256": "2bcc61873c688c765b94b150ff86f42cd4c05cf17727b3adfad2f30d2398de82",
+      "outputSha256": "a919422732789c8787512ce79c4d9fc84ff59b231cf42931ffc81a057aabc5c3"
+    },
+    {
+      "source": "public/pet-training/fox/lunge.png",
+      "output": "public/pet-training/fox/lunge.webp",
+      "sourceBytes": 2022596,
+      "outputBytes": 1407960,
+      "sourceSha256": "91cb2b8d74fb619a312e1979967a5a4ddbb07646e9a6fe9e0a58d5a8ad6f4235",
+      "outputSha256": "6572c0828727b02855399d48c2bc8ec2f220619b0f46ff5ea9f159754a69d00c"
+    },
+    {
+      "source": "public/pet-training/fox/pulldown.png",
+      "output": "public/pet-training/fox/pulldown.webp",
+      "sourceBytes": 2139463,
+      "outputBytes": 1470992,
+      "sourceSha256": "9467bf2af728002890f232d1f86306d18777647f414bf42fbad01c65b772cd87",
+      "outputSha256": "bccb6651ef8183f1fcf832a17d994bf97d2527e10299b2a4bd8b9210d963a727"
+    },
+    {
+      "source": "public/pet-training/fox/squat.png",
+      "output": "public/pet-training/fox/squat.webp",
+      "sourceBytes": 2157313,
+      "outputBytes": 1508362,
+      "sourceSha256": "e13eab3ba3d74187c1704ae43d812c4ccdd9219dd4548d43bb9ef47e25ddd992",
+      "outputSha256": "9db2548385eb13def1bc6d8cf16f0793f2ba205f75dea73c2dfb7d38aff10d16"
+    },
+    {
+      "source": "public/pet-training/phoenix/bench.png",
+      "output": "public/pet-training/phoenix/bench.webp",
+      "sourceBytes": 2104498,
+      "outputBytes": 1448010,
+      "sourceSha256": "d8757aa4ffd953e7a73a0cf995142e6419bdd20ee0acdb9039860c48e27b5ccc",
+      "outputSha256": "c825fc5a1046ae6f98ce2c19ecdbd1b84b0709c1e663640b37e407b44d6ff3c1"
+    },
+    {
+      "source": "public/pet-training/phoenix/curl.png",
+      "output": "public/pet-training/phoenix/curl.webp",
+      "sourceBytes": 2218924,
+      "outputBytes": 1617316,
+      "sourceSha256": "13bb93b532ada44b54d52b2d2366c96e9f73417b11268d8530daaa7599791286",
+      "outputSha256": "86cf21b890251955fecc94db5aa181fe2c080262e0846cc32b99087a07aa076b"
+    },
+    {
+      "source": "public/pet-training/phoenix/leg-press.png",
+      "output": "public/pet-training/phoenix/leg-press.webp",
+      "sourceBytes": 2357214,
+      "outputBytes": 1715800,
+      "sourceSha256": "41ceb382f7a3f0e9330705ccaaa4e248b4555b5f5da3350c0b146bb6235e8a14",
+      "outputSha256": "bb84c8cc16ece007c6814d32d2e249cb4fef286d969f9ea9e00f8320cd731c5c"
+    },
+    {
+      "source": "public/pet-training/phoenix/lunge.png",
+      "output": "public/pet-training/phoenix/lunge.webp",
+      "sourceBytes": 2173207,
+      "outputBytes": 1579334,
+      "sourceSha256": "9ae8cf328c87a9661f36997ed14d894fd7f8108c861d5dcb671b5074c385756f",
+      "outputSha256": "5d92c6b292bb9fe57f030857f258abcc35bad4008985f1a2e095c512543eb332"
+    },
+    {
+      "source": "public/pet-training/phoenix/pulldown.png",
+      "output": "public/pet-training/phoenix/pulldown.webp",
+      "sourceBytes": 2085758,
+      "outputBytes": 1481174,
+      "sourceSha256": "08a07b3e2e0fc51d2008ef662a9eeec9525d454d6f88f78a4dbba284c8417f2f",
+      "outputSha256": "dfaaa91ccc4a046f29a0d7adfb02beda3b7eda932f68a0072d1aff6a4284f574"
+    },
+    {
+      "source": "public/pet-training/phoenix/squat.png",
+      "output": "public/pet-training/phoenix/squat.webp",
+      "sourceBytes": 2194313,
+      "outputBytes": 1605710,
+      "sourceSha256": "841bb41ed49142db58e7cf4e24e856a48d9bec9a9f1d28afcac98f8e3d74237e",
+      "outputSha256": "3090ff27cc57766fce3d12c5c45a76c9ad70dc0ffa987fe81544192a7a48dd59"
+    },
+    {
+      "source": "public/pet-training/tiger/bench.png",
+      "output": "public/pet-training/tiger/bench.webp",
+      "sourceBytes": 2071825,
+      "outputBytes": 1427974,
+      "sourceSha256": "c79c4141d8372b8cb6c66152c2ff7fb97a49a81c9bfd9b182a40365a4bf01746",
+      "outputSha256": "8a491b46348e38b190c9aa5bc3c3c3a27f5343416d7124b337ee4bcdba80f337"
+    },
+    {
+      "source": "public/pet-training/tiger/curl.png",
+      "output": "public/pet-training/tiger/curl.webp",
+      "sourceBytes": 1964025,
+      "outputBytes": 1399032,
+      "sourceSha256": "76e4ae009eaf50c4e285f3f7a1349c6b721ebb781799f73bd509ce99ce858ab1",
+      "outputSha256": "2ec21c96bf58ce5bf3e081648e6bf23648770b1d7341593dd86f35cb5e626279"
+    },
+    {
+      "source": "public/pet-training/tiger/leg-press.png",
+      "output": "public/pet-training/tiger/leg-press.webp",
+      "sourceBytes": 2317502,
+      "outputBytes": 1671256,
+      "sourceSha256": "1c4cb2685eda20e7b4b5e148418cd56b37c38721ae097a8f3d4b9198e8cdf39a",
+      "outputSha256": "ec6d5bf9cd0762dade7098d66501c8aab8ccb812a6d9ce2267df8fffa7341193"
+    },
+    {
+      "source": "public/pet-training/tiger/lunge.png",
+      "output": "public/pet-training/tiger/lunge.webp",
+      "sourceBytes": 2065521,
+      "outputBytes": 1470028,
+      "sourceSha256": "47b1c621f1e95fef8f6a2fc89cb6d1c0b33d328a6644e842c08192ff3a62381b",
+      "outputSha256": "f69a862738b577fa8e405148b003acd0baaae13a83fa5110c26d9a447a1c8e1a"
+    },
+    {
+      "source": "public/pet-training/tiger/pulldown.png",
+      "output": "public/pet-training/tiger/pulldown.webp",
+      "sourceBytes": 2038333,
+      "outputBytes": 1419848,
+      "sourceSha256": "6fc7d79b0895fdea9d79b3aa9a36b860b73bd97b0d2038dbf16b60fc57adb6cb",
+      "outputSha256": "41a823a71a6631de3ed7fb582b20ec8087de9b46051339aaa9769c0e50b9e93c"
+    },
+    {
+      "source": "public/pet-training/tiger/squat.png",
+      "output": "public/pet-training/tiger/squat.webp",
+      "sourceBytes": 2198682,
+      "outputBytes": 1576812,
+      "sourceSha256": "21d5a92a7effa019e8385a1b0a4b5653f3181ee6a9f5fb7fdaa329c35e62797d",
+      "outputSha256": "132b0a2069e2d26c78e684ad4cce4ae154715d5b63b9096355c7dfc9b3486d25"
+    },
+    {
+      "source": "public/pet-training/wolf/bench.png",
+      "output": "public/pet-training/wolf/bench.webp",
+      "sourceBytes": 1969313,
+      "outputBytes": 1299592,
+      "sourceSha256": "2ae7684b452d87a36857e1ee651656475b3b25df47e49bb6c69420bee380e898",
+      "outputSha256": "c3d1196b2dd4534eb2200c53059db08146b439a5561736fa8a8ec42a705e5785"
+    },
+    {
+      "source": "public/pet-training/wolf/curl.png",
+      "output": "public/pet-training/wolf/curl.webp",
+      "sourceBytes": 1917932,
+      "outputBytes": 1298178,
+      "sourceSha256": "7268d50bb92f86fffab542ed314892c6cbbced052a8bd7fd42f21f698bbd0a1a",
+      "outputSha256": "6db17a5c19573923b953100e1a0eadc7766cbd12911a6813e54e395671c58bec"
+    },
+    {
+      "source": "public/pet-training/wolf/leg-press.png",
+      "output": "public/pet-training/wolf/leg-press.webp",
+      "sourceBytes": 2163091,
+      "outputBytes": 1493326,
+      "sourceSha256": "55dcb848b2185131544400b8b73c7af31b16bb916891c6d9f6da75f69396c9ec",
+      "outputSha256": "03699b840bedd4ec7947822bf5722e10f934d99d77d7bb0b07b76dad05c57630"
+    },
+    {
+      "source": "public/pet-training/wolf/lunge.png",
+      "output": "public/pet-training/wolf/lunge.webp",
+      "sourceBytes": 1929208,
+      "outputBytes": 1298482,
+      "sourceSha256": "dec3bd10cc06392f95db1363b7b015641eb19445276749623cdcc5c0ea8ad063",
+      "outputSha256": "ad7058273b3b344424b4157b4a9af6a3a4402d6f845cbac8c01d0793424f68f6"
+    },
+    {
+      "source": "public/pet-training/wolf/pulldown.png",
+      "output": "public/pet-training/wolf/pulldown.webp",
+      "sourceBytes": 2053620,
+      "outputBytes": 1377320,
+      "sourceSha256": "e285d2f6e1f647a89e61b100d436be8db6e5d0991faadee3632f6d47e6365245",
+      "outputSha256": "b3dffd38656c35a31946cc68ef9af3d592c8b212e1ec4d75a03d85926ad81bd0"
+    },
+    {
+      "source": "public/pet-training/wolf/squat.png",
+      "output": "public/pet-training/wolf/squat.webp",
+      "sourceBytes": 2083393,
+      "outputBytes": 1424896,
+      "sourceSha256": "2aabe0068e074fe3d0d33dd8304bdc2b42697f135480acb6e46b2d38b3eae759",
+      "outputSha256": "93822484c2e6185fa270dcba4c80fe69d07eec2965599f417999600f489f6315"
+    },
+    {
+      "source": "public/exercise-poses/program-basics.png",
+      "output": "public/exercise-poses/program-basics.webp",
+      "sourceBytes": 1703183,
+      "outputBytes": 1115966,
+      "sourceSha256": "9246eb65c8df1804aa8655cddb029686a7d92fb4cb9d77f15b2417ca8b265e15",
+      "outputSha256": "c7ffc9c3b951bb2953efe57cf5a6bb293e580a966613bb46470405b44e796db5"
+    },
+    {
+      "source": "public/exercise-poses/french-press-lying.png",
+      "output": "public/exercise-poses/french-press-lying.webp",
+      "sourceBytes": 827807,
+      "outputBytes": 564888,
+      "sourceSha256": "7ca0f4800d703c749f9b22ddd8dd664368aa1baa0075e58981a9bbc0da3fcafc",
+      "outputSha256": "9e84333d1b60d7d6f3d39d6edeb00075cfe52dc50e73647de4f3ca7133931302"
+    }
+  ]
+}

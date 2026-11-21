@@ -1,7 +1,9 @@
-# Diseño
+# Diseño vigente · 19/11/2026
 
-Interfaz en español rioplatense con sprites y paneles pixel art. Usar Press Start 2P para títulos cortos e insignias. Usar Atkinson Hyperlegible Next para controles, cifras y texto. Paleta violeta carbón con acento lima y tema claro lavanda.
+Mobile first, español rioplatense, paleta única **Obsidiana dorada**: carbón, superficies oscuras, texto claro, acciones doradas y colores propios de las ilustraciones. Press Start 2P se reserva para títulos breves; Atkinson Hyperlegible Next para campos, cifras y textos. Las fuentes se sirven localmente con sus licencias OFL.
 
-Inicio prioriza la próxima sesión. Entrenar reúne planificación, plantillas, importación y biblioteca. Los mapas musculares resaltan músculos principales en lima y secundarios en lavanda y repiten los nombres como texto.
+Navegación inferior: Inicio, Entrenar, Rutinas, Tienda y Perfil. Progreso y Amigos se abren desde Perfil. No hay encabezado superior ni selector de paleta. Inicio destaca compañero, vida, EXP y la siguiente acción o felicitación del día. Entrenar muestra el día actual y Crear rutina; crear/importar tienen pantallas propias.
 
-Las mascotas 2D tienen un estado seleccionado y una reacción breve al terminar una sesión. La confirmación visual de series respeta el movimiento reducido. Mantener controles táctiles, foco visible y áreas seguras.
+Mascotas 2D de ocho especies, seis etapas más huevo, fondos animados e interacción. La ropa conserva el acabado elegido; bandanas, medallas, cadenas, gafas y guantes permanecen retirados. La mascota entrenando usa demostración propia cuando corresponde y dragón como alternativa. No hay opciones 3D.
+
+Los controles conservan áreas táctiles, etiquetas accesibles y foco visible. Las transiciones no reducen el contraste del texto. Movimiento reducido conserva los resultados sin animación continua. Las demostraciones tienen dos poses y una alternativa fija navegable. Se revisaron tamaños de 320, 390 y 430 px en Chromium/WebKit; teclado y lectores físicos todavía requieren comprobación. Ver [etapa 10](etapa-10.md).

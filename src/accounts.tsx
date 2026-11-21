@@ -1,11 +1,11 @@
 import { useState, type FormEvent } from 'react'
-import { LogOut, LockKeyhole, Ticket } from 'lucide-react'
+import { Eye, EyeOff, LogOut, LockKeyhole } from 'lucide-react'
 import { api } from './store'
-import { normalizeUsername, validPassword, passwordProblem } from '../supabase/functions/_shared/account-rules'
+import { normalizeUsername, registrationUsernameProblem, validPassword, passwordProblem } from '../supabase/functions/_shared/account-rules'
 
 type Credentials = {
   action: 'login' | 'register' | 'password'; username: string; password: string;
-  invitation?: string; operation?: string; newPassword?: string;
+  operation?: string; newPassword?: string;
 }
 
 async function authenticate(input: Credentials) {
@@ -23,6 +23,18 @@ async function authenticate(input: Credentials) {
   if (result.error) throw new Error('No pudimos guardar la sesión. Volvé a entrar.')
 }
 
+function PasswordField({ label, name, autoComplete, disabled }: {
+  label: string; name: string; autoComplete: string; disabled: boolean
+}) {
+  const [visible, setVisible] = useState(false)
+  return <label>{label}<span className="account-password">
+    <input name={name} type={visible ? 'text' : 'password'} placeholder="••••••••••" required
+      maxLength={128} autoComplete={autoComplete} disabled={disabled}/>
+    <button type="button" className="secondary" aria-label={(visible ? 'Ocultar ' : 'Mostrar ') + label.toLowerCase()}
+      onClick={() => setVisible(!visible)}>{visible ? <EyeOff size={18} aria-hidden="true"/> : <Eye size={18} aria-hidden="true"/>}</button>
+  </span></label>
+}
+
 export function AccountForm() {
   const [register, setRegister] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -33,13 +45,17 @@ export function AccountForm() {
     const fields = new FormData(event.currentTarget)
     const username = normalizeUsername(String(fields.get('username')))
     const password = String(fields.get('password'))
+    if (register) {
+      const problem = registrationUsernameProblem(username) || passwordProblem(password)
+        || (password !== fields.get('confirm-password') ? 'Las contraseñas deben coincidir.' : '')
+      if (problem) { setMessage(problem); return }
+    }
     setBusy(true); setMessage('')
     try {
       const key = 'gymbeast-registration-' + username
       const operation = sessionStorage.getItem(key) ?? crypto.randomUUID()
       if (register) sessionStorage.setItem(key, operation)
       await authenticate({ action: register ? 'register' : 'login', username, password,
-        invitation: register ? String(fields.get('invitation')).trim() : undefined,
         operation: register ? operation : undefined,
       })
       sessionStorage.removeItem(key)
@@ -53,18 +69,13 @@ export function AccountForm() {
       <button type="button" className={register ? undefined : 'secondary'} aria-pressed={register}
         disabled={busy} onClick={() => { setRegister(true); setMessage('') }}>Crear cuenta</button>
     </div>
-    <form key={String(register)} onSubmit={submit}>
-      <label>Usuario<input name="username" required minLength={3} maxLength={24} pattern="[a-zA-Z0-9_]{3,24}"
+    <form key={String(register)} onSubmit={submit} noValidate={register}>
+      <label>Usuario<input name="username" placeholder="Tu usuario" required minLength={3} maxLength={24} pattern="[a-zA-Z0-9_]{3,24}"
         autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} disabled={busy}/></label>
-      <label>Contraseña<input name="password" type="password" required minLength={register ? 10 : 1} maxLength={128}
-        autoComplete={register ? 'new-password' : 'current-password'} disabled={busy}/></label>
-      {register && <><label><span><Ticket size={15}/> Código de invitación</span>
-        <input name="invitation" required minLength={32} maxLength={100} autoCapitalize="none" autoCorrect="off" spellCheck={false} disabled={busy}/></label>
-        <p className="account-help">Elegí un usuario de 3 a 24 letras, números o guion bajo y una contraseña de al menos 10 caracteres.</p></>}
-      <button disabled={busy || !api}><LockKeyhole size={17}/> {busy ? 'Un momento…' : register ? 'Crear mi cuenta' : 'Entrar a GymBeast'}</button>
-      {!api && <p role="status" className="account-help">El acceso con cuenta todavía no está habilitado para este grupo. Podés probar en este dispositivo.</p>}
-      {!register && <p className="account-help">¿Olvidaste la contraseña? Pedile al administrador del grupo que restablezca tu acceso.</p>}
-      {message && <p role="alert">{message}</p>}
+      <PasswordField label="Contraseña" name="password" autoComplete={register ? 'new-password' : 'current-password'} disabled={busy}/>
+      {register && <PasswordField label="Repetir contraseña" name="confirm-password" autoComplete="new-password" disabled={busy}/>}
+      <button disabled={busy || !api}>{busy ? 'Un momento…' : register ? 'Crear mi cuenta' : 'Iniciar sesión'}</button>
+      {message && <p className="account-error" role="alert">{message}</p>}
     </form>
   </section>
 }
@@ -94,8 +105,8 @@ export function PasswordForm({ username, forced = false, onExit }: { username: s
     {forced && <p>Tu acceso fue restablecido. Cambiá la contraseña temporal para continuar.</p>}
     <input className="sr-only" aria-label="Usuario de la cuenta" readOnly value={username} autoComplete="username"/>
     <label>{forced ? 'Contraseña temporal' : 'Contraseña actual'}<input name="current-password" type="password" required maxLength={128} autoComplete="current-password" disabled={busy}/></label>
-    <label>Contraseña nueva<input name="new-password" type="password" required minLength={10} maxLength={128} autoComplete="new-password" disabled={busy}/></label>
-    <label>Repetir contraseña nueva<input name="confirm-password" type="password" required minLength={10} maxLength={128} autoComplete="new-password" disabled={busy}/></label>
+    <label>Contraseña nueva<input name="new-password" type="password" required minLength={8} maxLength={128} autoComplete="new-password" disabled={busy}/></label>
+    <label>Repetir contraseña nueva<input name="confirm-password" type="password" required minLength={8} maxLength={128} autoComplete="new-password" disabled={busy}/></label>
     <button disabled={busy}>{busy ? 'Guardando…' : 'Actualizar contraseña'}</button>
     {onExit && <button type="button" className="secondary" disabled={busy} onClick={async () => {
       setBusy(true); setMessage('')
@@ -106,19 +117,19 @@ export function PasswordForm({ username, forced = false, onExit }: { username: s
   </form>
 }
 
-export function AccountSettings({ exit }: { exit: () => Promise<void> }) {
+export function AccountSettings({ exit, localMode = false }: { exit: () => Promise<void>; localMode?: boolean }) {
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
   return <section className="panel">
-    <h2>Tu cuenta</h2>
+    {!localMode && <h2>Tu cuenta</h2>}
     <div className="actions">
-      <button className="secondary" disabled={busy} onClick={async () => {
+      {!localMode && <button className="secondary" disabled={busy} onClick={async () => {
         const { data } = await api!.auth.getSession()
         setUsername(data.session?.user.app_metadata.gymbeast_registration?.handle ?? '')
         setOpen(!open)
-      }}><LockKeyhole size={17}/> Cambiar contraseña</button>
+      }}><LockKeyhole size={17}/> Cambiar contraseña</button>}
       <button className="secondary" disabled={busy} onClick={async () => {
         setBusy(true); setMessage('')
         try { await exit() } catch { setMessage('No pudimos cerrar la sesión. Probá de nuevo.') }

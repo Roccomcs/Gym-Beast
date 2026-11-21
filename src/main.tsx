@@ -1,28 +1,34 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMotionVisibility } from './motion'
+import {useMobileViewport,useScreenFocus,useOfflineRoutineArt} from './mobile-behavior'
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { BrowserRouter, Navigate, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { Activity, CalendarDays, Dumbbell, House, UserRound, BookOpen, ShoppingBag } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { registerSW } from 'virtual:pwa-register'
 import { api, clearAccount, db, list, local, save, sessionKey, sync } from './store'
 import { dateKey, weekDates, uid, type Profile, type Routine } from './domain'
 import { initialVitals, petProgress } from './pet-progress'
-import { Routines } from './routines'
-import { Workout } from './workout'
-import { Progress } from './progress'
-import { Companion } from './companion'
-import { Habitat } from './habitat'
-import { outfitFor } from './shop-catalog'
-import { Onboarding, ProgramLibrary, Train, CreateRoutine } from './journey'
-import { Library } from './library'
-import { Friends } from './friends'
+import { recordPetPlan } from './weekly-plan'
+import { HomePets } from './home-pets'
+import {Onboarding} from './onboarding'
 import { ProfileSettings } from './profile-settings'
 import { SyncIssue } from './sync-issues'
 import { AccountForm, AccountSettings, PasswordForm } from './accounts'
-import { PetShop, LocalPetTools, localRewards } from './economy'
+import {localRewards} from './local-rewards'
 import '@fontsource/press-start-2p/latin-400.css'
 import '@fontsource-variable/atkinson-hyperlegible-next'
 import './style.css'
+
+const Train=lazy(()=>import('./journey').then(module=>({default:module.Train})))
+const ProgramLibrary=lazy(()=>import('./journey').then(module=>({default:module.ProgramLibrary})))
+const RoutineBuilder=lazy(()=>import('./routine-builder').then(module=>({default:module.RoutineBuilder})))
+const Routines=lazy(()=>import('./routines').then(module=>({default:module.Routines})))
+const Workout=lazy(()=>import('./workout').then(module=>({default:module.Workout})))
+const Progress=lazy(()=>import('./progress').then(module=>({default:module.Progress})))
+const Friends=lazy(()=>import('./friends').then(module=>({default:module.Friends})))
+const Library=lazy(()=>import('./exercise-library').then(module=>({default:module.Library})))
+const PetShop=lazy(()=>import('./economy').then(module=>({default:module.PetShop})))
 
 const update = registerSW({
   onNeedRefresh() {
@@ -36,6 +42,8 @@ const defaults: Profile = {
 }
 
 function Root() {
+  useMotionVisibility()
+  useMobileViewport()
   const [owner, setOwner] = useState(() => localStorage.getItem(sessionKey) ?? '')
   const [ready, setReady] = useState(!api || !navigator.onLine)
   const [passwordUser, setPasswordUser] = useState('')
@@ -87,7 +95,6 @@ function Root() {
     })
     return () => data.subscription.unsubscribe()
   }, [])
-  const startLocal = () => { localStorage.setItem(sessionKey, local); setOwner(local) }
   const exit = async () => {
     if (owner !== local && api) {
       const { error } = await api.auth.signOut({ scope: 'local' })
@@ -100,17 +107,16 @@ function Root() {
   if (!ready) return <main>Abriendo GymBeast…</main>
   if (passwordUser && owner !== local) return <main><PasswordForm username={passwordUser} forced onExit={exit}/></main>
   if (!owner) return <main className="welcome">
-    <Logo /><Companion name="Dragón" /><p className="eyebrow">TU DIARIO DE FUERZA</p>
-    <h1>Cada repetición cuenta.</h1>
-    <p>Planificá tu semana, registrá tus series y seguí tu progreso.</p>
+    <header className="access-heading">
+      <h1>Gym<span>Beast</span></h1>
+      <img className="access-flight" src="/access-titans-flight.webp" alt="Dragón y fénix Titán en vuelo"/>
+    </header>
     <AccountForm />
-    <button className="secondary" onClick={startLocal}>Probar en este dispositivo</button>
+    <div className="access-hero">
+      <img className="access-ground" src="/access-titans-ground.webp" alt="Lobo, oso y cocodrilo Titán en el patio"/>
+    </div>
   </main>
   return <Dashboard key={owner} owner={owner} exit={exit} />
-}
-
-function Logo() {
-  return <NavLink to="/" className="brand"><img className="brand-mark" src="/icon.svg" alt=""/>Gym<span className="lime">Beast</span></NavLink>
 }
 
 function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }) {
@@ -161,13 +167,15 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
   const eligibleSessions = completed.filter(item => !item.data.incomplete)
   const weekCount = eligibleSessions.filter(item => week.includes(item.data.date)).length
   const completedToday = eligibleSessions.find(item => dateKey(new Date(item.data.ended!), profile.timezone) === date)
-  const target = routine?.days.length ?? 0
+  const target = Math.min(7, routine?.days.length ?? 0)
   const petPlans = useMemo(() => profile.petPlans ?? (cycle?.startedOn && target
     ? [{ from: cycle.startedOn, target, companion: profile.companion }] : []),
   [profile.petPlans, cycle?.startedOn, target, profile.companion])
   const pets = useMemo(() => petProgress(date, profile.timezone, profile.companion, petPlans, sessions, schedules, rewards),
     [date, profile.timezone, profile.companion, petPlans, sessions, schedules, rewards])
-  const { xp: petXp, health } = pets.get(profile.companion) ?? initialVitals
+  const { xp: petXp } = pets.get(profile.companion) ?? initialVitals
+  const offlineArt=useOfflineRoutineArt(owner,profile,routine,active?.data)
+  useScreenFocus(pathname+':'+!!profile.onboarded+':'+!!syncState?.initialized,hash)
   useEffect(() => {
     const refresh = () => setAvailable(true)
     window.addEventListener('gymbeast-update', refresh)
@@ -211,7 +219,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
       const id = uid()
       await save(owner, 'session', id, {
         title: day.title, exercises: day.exercises, started: Date.now(), date: schedule?.date ?? date, scheduleId,
-        cycleId: scheduleId ? undefined : cycle?.id, dayId: scheduleId ? undefined : nextDay?.id, routineId: scheduleId ? undefined : cycle?.routineId, routineVersion: scheduleId ? undefined : routine?.version, weeklyTarget: routine?.days.length, companion: profile.companion,
+        cycleId: scheduleId ? undefined : cycle?.id, dayId: scheduleId ? undefined : nextDay?.id, routineId: scheduleId ? undefined : cycle?.routineId, routineVersion: scheduleId ? undefined : routine?.version, weeklyTarget: routine?.days.length, companion: profile.companion, companionXpAtStart: petXp,
       })
       navigate('/sesion/' + id)
     } catch { setStatus('No pudimos iniciar el entrenamiento.') }
@@ -227,7 +235,7 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
     if (!existing) await save(owner, 'routine', id, routine)
     await save(owner, 'profile', 'self', { ...profile,
       cycle: { id: uid(), routineId: id, skipped: [], startedOn: date },
-      petPlans: [...petPlans.filter(plan => plan.from !== date), { from: date, target: routine.days.length, companion: profile.companion }],
+      petPlans: recordPetPlan(petPlans, { from: date, target: Math.min(7,routine.days.length), companion: profile.companion }),
     })
     navigate('/entrenar')
   }
@@ -251,11 +259,11 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
     <main>
       {available && !active && <button className="secondary" onClick={() => void update(true)}>Actualizar GymBeast</button>}
       {operations.filter(item => item.rejected || item.conflict).map(item => <SyncIssue key={item.op} operation={item}/>)}
-      <div className="route-enter" key={pathname}><Routes>
+      <div className="route-enter" key={pathname}><Suspense fallback={<p role="status">Abriendo…</p>}><Routes>
         <Route index element={<>
           <p className="eyebrow"><CalendarDays size={16} /> {new Date(date + 'T12:00:00Z').toLocaleDateString('es-AR', { dateStyle: 'full', timeZone: 'UTC' })}</p>
           <h1>{profile.name ? 'Hola, ' + profile.name : 'Tu entrenamiento'}</h1>
-          <Habitat name={profile.companion} xp={petXp} health={health} outfit={outfitFor(profile, profile.companion)}/>
+          <HomePets profile={profile} pets={pets}/>
           {completedToday && !active ? <section className="panel hero">
             <h2>¡Felicitaciones! Ya entrenaste hoy</h2>
             <p>Completaste {completedToday.data.title}.</p>
@@ -271,36 +279,33 @@ function Dashboard({ owner, exit }: { owner: string; exit: () => Promise<void> }
             <section className="panel"><p>Sesiones totales</p><strong>{completed.length}</strong></section></div>
         </>} />
         <Route path="/entrenar" element={<Train routine={routine} index={index} active={active?.data.title}
-          companion={profile.companion} xp={petXp} start={() => void start()}
-          repeat={() => { if (cycle) changeCycle({ id: uid(), routineId: cycle.routineId, skipped: [], startedOn: date }) }} />} />
+          offlineArt={offlineArt.status} retryArt={offlineArt.retry}
+          companion={active?.data.companion ?? profile.companion} xp={active?.data.companionXpAtStart ?? petXp} activeExercises={active?.data.exercises.map(exercise => exercise.catalogId)} start={() => void start()}
+          repeat={() => { if (cycle) void import('./routine-cycle').then(module=>module.repeatCycle(owner,cycle.id,date)).catch(() => setStatus('No pudimos repetir el ciclo.')) }} />} />
         <Route path="/rutinas" element={<ProgramLibrary routines={routines} activate={activate} updateCover={(id, routine) => save(owner, 'routine', id, routine)} />} />
-        <Route path="/editor" element={<CreateRoutine/>} />
-        <Route path="/editor/manual" element={<Routines key="manual" {...editorProps} mode="manual" editId={params.get('rutina') ?? undefined} />} />
+        <Route path="/editor" element={<Navigate to="/editor/manual" replace/>} />
+        <Route path="/editor/manual" element={<RoutineBuilder key={owner+':'+(params.get('rutina')??'new')} owner={owner} unit={profile.unit} editId={params.get('rutina') ?? undefined} />} />
         <Route path="/editor/importar" element={<Routines key="importar" {...editorProps} mode="importar" />} />
         <Route path="/calendario" element={<Routines key="calendar" {...editorProps} mode="calendar" />} />
         <Route path="/ejercicios" element={<Library />} />
         <Route path="/mascotas" element={<PetShop owner={owner} profile={profile} rewards={rewards} pets={pets} petPlans={petPlans} date={date} target={target} />} />
         <Route path="/tienda" element={<PetShop owner={owner} profile={profile} rewards={rewards} pets={pets} petPlans={petPlans} date={date} target={target} />} />
         <Route path="/sesion/:id" element={<Workout owner={owner} profile={profile} sessions={sessions} sets={sets} rewards={rewards} pets={pets} />} />
-        <Route path="/progreso" element={<Progress sessions={completed} sets={sets} unit={profile.unit} today={date} weekStart={1} goal={routine?.days.length || 0} schedules={schedules} rewards={rewards} />} />
-        <Route path="/amigos" element={<Friends owner={owner} sessions={completed.filter(item => rewards.some(reward => reward.session_id === item.id && reward.occurrence))
+        <Route path="/progreso" element={<Progress sessions={completed} sets={sets} unit={profile.unit} today={date} weekStart={1} goal={routine?.days.length || 0} schedules={schedules} rewards={rewards} petPlans={petPlans} pending={owner!==local && operations.some(op=>op.kind==='session'||op.kind==='set')} />} />
+        <Route path="/amigos" element={<Friends owner={owner} profile={profile} routines={routines} sessions={completed.filter(item => rewards.some(reward => reward.session_id === item.id && reward.occurrence))
           .slice(0, 15).map(item => ({ id: item.id, title: item.data.title + ' · ' + item.data.date }))}/>} />
         <Route path="/instalar" element={<Install />} />
         <Route path="/perfil" element={<><h1>Perfil</h1>
-          <Logo /><span className="sync" role="status">{owner === local ? 'Modo local' : operations.length ? status + ' · ' + operations.length + ' pendientes' : status}</span>
-          <section className="panel profile-banner"><div><p className="eyebrow">TU EQUIPO</p><h2>{profile.name || 'Atleta'}</h2>
-            <p>{profile.companion} · {petXp} EXP de compañero</p><NavLink className="profile-shop-link" to="/tienda"><ShoppingBag size={17}/> Mascotas y tienda</NavLink></div>
-            <Companion name={profile.companion} xp={petXp} outfit={outfitFor(profile, profile.companion)}/>
-          </section>
+          <HomePets profile={profile} pets={pets} showStats={false}/>
           <ProfileSettings profile={profile} persist={next => save(owner, 'profile', 'self', next)} />
-          {owner === local ? <LocalPetTools profile={profile} /> : <AccountSettings exit={exit}/>}
           <NavLink className="panel friends-link" to="/progreso"><Activity size={20}/> <strong>Progreso</strong></NavLink>
           <NavLink className="panel friends-link" to="/amigos"><span className="friend-avatar" aria-hidden="true"><UserRound/></span>
             <span><strong>Amigos</strong><small>Tu círculo de entrenamiento</small></span><span aria-hidden="true">›</span>
           </NavLink>
+          <AccountSettings exit={exit} localMode={owner === local}/>
         </>} />
         <Route path="*" element={<p>Esta página no existe.</p>} />
-      </Routes></div>
+      </Routes></Suspense></div>
     </main>
     <nav aria-label="Navegación principal">
       <NavLink end to="/"><House />Inicio</NavLink><NavLink to="/entrenar"><Dumbbell />Entrenar</NavLink>

@@ -1,0 +1,64 @@
+{
+  "dist": {
+    "initial": [
+      {
+        "path": "/assets/index-OVo91QDt.js",
+        "bytes": 416698,
+        "gzipBytes": 132680
+      },
+      {
+        "path": "/assets/jsx-runtime-BZ45BA69.js",
+        "bytes": 12348,
+        "gzipBytes": 4875
+      },
+      {
+        "path": "/assets/domain-C7u0q6VE.js",
+        "bytes": 94605,
+        "gzipBytes": 28154
+      },
+      {
+        "path": "/assets/index-13usnrsT.css",
+        "bytes": 60364,
+        "gzipBytes": 13829
+      }
+    ],
+    "initialBytes": 584015,
+    "initialGzipBytes": 179538,
+    "publishedBytes": 138753724,
+    "maxFile": {
+      "path": "dist\\pet-training\\fox\\leg-press.webp",
+      "bytes": 1754708
+    }
+  },
+  ".auth-dist": {
+    "initial": [
+      {
+        "path": "/assets/index-DwBEM4BS.js",
+        "bytes": 638442,
+        "gzipBytes": 188760
+      },
+      {
+        "path": "/assets/jsx-runtime-BZ45BA69.js",
+        "bytes": 12348,
+        "gzipBytes": 4875
+      },
+      {
+        "path": "/assets/domain-C7u0q6VE.js",
+        "bytes": 94605,
+        "gzipBytes": 28154
+      },
+      {
+        "path": "/assets/index-13usnrsT.css",
+        "bytes": 60364,
+        "gzipBytes": 13829
+      }
+    ],
+    "initialBytes": 805759,
+    "initialGzipBytes": 235618,
+    "publishedBytes": 138994469,
+    "maxFile": {
+      "path": ".auth-dist\\pet-training\\fox\\leg-press.webp",
+      "bytes": 1754708
+    }
+  }
+}

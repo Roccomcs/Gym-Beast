@@ -1,0 +1,80 @@
+{
+  "scenario": "localhost, Chromium 390x844, CPU ×4; 5 Mbps bajada/1 Mbps subida, 80 ms, 260 sesiones/5200 series",
+  "home": {
+    "lcp": 1052,
+    "cls": 0.00019360023003405478,
+    "longTasks": 529,
+    "series": [],
+    "commits": [],
+    "submitted": 0,
+    "sceneReadyMs": 1704.5999999996275,
+    "resources": [
+      {
+        "name": "http://127.0.0.1:4182/assets/index-OVo91QDt.js",
+        "bytes": 132680,
+        "duration": 416.59999999962747
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/jsx-runtime-BZ45BA69.js",
+        "bytes": 4875,
+        "duration": 147.19999999925494
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/domain-C7u0q6VE.js",
+        "bytes": 28154,
+        "duration": 242.89999999850988
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/index-13usnrsT.css",
+        "bytes": 13829,
+        "duration": 194.69999999925494
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/workbox-window.prod.es5-Bd17z0YL.js",
+        "bytes": 2199,
+        "duration": 109.29999999888241
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/atkinson-hyperlegible-next-latin-wght-normal-BcXVPD7q.woff2",
+        "bytes": 33996,
+        "duration": 160.90000000037253
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2",
+        "bytes": 12512,
+        "duration": 250.40000000037253
+      },
+      {
+        "name": "http://127.0.0.1:4182/habitat.jpg",
+        "bytes": 193051,
+        "duration": 9.800000000745058
+      },
+      {
+        "name": "http://127.0.0.1:4182/dragon-stages.webp",
+        "bytes": 515822,
+        "duration": 15.599999999627471
+      }
+    ]
+  },
+  "series": [
+    49.69999999925494,
+    72.59999999962747,
+    33.600000001490116,
+    28.799999998882413,
+    30.90000000037253
+  ],
+  "commits": [
+    41.90000000037253,
+    67.19999999925494,
+    28.600000001490116,
+    24.5,
+    23
+  ],
+  "frames": {
+    "frames": 91,
+    "p95": 16.799999999999727
+  },
+  "heapUsed": 52456736,
+  "recordTargetMs": 100,
+  "lcpTargetMs": 2500
+}

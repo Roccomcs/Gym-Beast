@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-19",
+  "build": "passed: local and configured-account variants",
+  "domain_sql": {
+    "passed": 228,
+    "environment": "Vitest / PGlite"
+  },
+  "mobile": {
+    "passed": 30,
+    "browsers": [
+      "Chromium",
+      "WebKit"
+    ],
+    "widths": [
+      320,
+      390,
+      430
+    ],
+    "axe_tags": [
+      "wcag2a",
+      "wcag2aa",
+      "wcag21aa"
+    ],
+    "axe_violations": 0,
+    "physical_keyboard": false
+  },
+  "general_e2e": {
+    "passed": 25
+  },
+  "accounts": {
+    "passed": 14,
+    "auth": "simulated",
+    "sql": "PGlite"
+  },
+  "mobile_social": {
+    "passed": 4,
+    "width": 430,
+    "browsers": [
+      "Chromium",
+      "WebKit"
+    ],
+    "axe_violations": 0
+  },
+  "performance_scenarios": 3,
+  "remaining": [
+    "physical iPhone and Android",
+    "VoiceOver and TalkBack",
+    "published HTTPS/Auth/sync",
+    "visual series feedback below 100 ms in every sample",
+    "hosted account performance and 100-account capacity: stage 11"
+  ],
+  "pilot_ready": false
+}

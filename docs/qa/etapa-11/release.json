@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-19T17:59:54.083Z",
+  "directory": "dist",
+  "files": 276,
+  "totalBytes": 162992000,
+  "largest": 2076471,
+  "manifestSha256": "300b83494a7a9623a8bcf5d458c650e58a1345dddc4af81a053bb1b2fdf3d98c",
+  "accountsConfigurationVerified": false,
+  "publishedVerified": false,
+  "physicalPhonesVerified": false,
+  "pilotReady": false
+}

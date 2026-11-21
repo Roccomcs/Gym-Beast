@@ -1,6 +1,6 @@
 import type { ShopGood } from './shop-catalog'
 
-export function paintDragonAccessory(ctx: CanvasRenderingContext2D, item: ShopGood) {
+export function paintDragonAccessory(ctx: CanvasRenderingContext2D, item: ShopGood, cell = 2, clothed = false) {
   const ink = '#28162e'
   const paint = (outline: string, color: string | CanvasGradient = item.primary, edge = ink) => {
     const path = new Path2D(outline)
@@ -20,6 +20,14 @@ export function paintDragonAccessory(ctx: CanvasRenderingContext2D, item: ShopGo
     paint('M209 97 L220 99 L239 93 L236 101 L220 104 L212 103 Z', item.secondary)
     paint('M218 92 L223 86 L228 91 L224 97 Z', '#ffe7ac', '')
   } else if (item.art === 'watch') {
+    // Foreleg just above the near paw, in the actual 352px sprite cell.
+    // A watch follows the wrist, rather than the generic chest anchor.
+    const bare = [[0,0,1],[174,257,.78],[206,248,1],[232,294,1],[229,294,1.05],[254,294,1.1]]
+    const dressed = [[0,0,1],[174,257,.78],[207,255,1],[237,293,1],[236,293,1.05],[254,294,1.1]]
+    const [x,y,scale]=(clothed?dressed:bare)[cell]
+    ctx.translate(x,y)
+    ctx.scale(scale,scale)
+    ctx.translate(-206,-248)
     ctx.globalCompositeOperation = 'source-atop'
     paint('M194 243 Q205 248 218 243 L219 250 Q207 257 194 251 Z', item.secondary)
     paint('M198 243 L210 241 L215 247 L212 253 L200 254 L196 250 Z')

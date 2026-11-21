@@ -4,9 +4,9 @@ import { readFile, writeFile, stat } from 'node:fs/promises'
 import { createInterface } from 'node:readline/promises'
 
 const [command, value = '', file, operationId] = process.argv.slice(2)
-const commands = ['invite', 'revoke', 'reset', 'backup', 'restore', 'delete']
+const commands = ['invite', 'revoke', 'reset', 'backup', 'restore', 'delete', 'status', 'compact', 'recover-sync']
 if (!commands.includes(command)) {
-  console.log('Uso: npm run accounts:admin -- invite [cantidad] | revoke <código> | reset <usuario> | backup <usuario> <archivo> | restore <usuario> <archivo> [UUID] | delete <usuario>')
+  console.log('Uso: npm run accounts:admin -- invite [cantidad] | revoke <código> | reset <usuario> | backup <usuario> <archivo> | restore <usuario> <archivo> [UUID] | delete <usuario> | status | compact | recover-sync')
   process.exit(1)
 }
 const url = process.env.GYMBEAST_ADMIN_URL
@@ -34,6 +34,13 @@ async function confirm(expected, message) {
 }
 
 try {
+  if(command==='status') console.log(JSON.stringify(check(await api.rpc('pilot_storage_report')),null,2))
+  if(command==='compact') console.log('Eventos reemplazados retirados:',check(await api.rpc('compact_sync_history')))
+  if(command==='recover-sync'){
+    await confirm('RECONCILIAR','Usar solo después de restaurar TODO el proyecto. Los dispositivos volverán a descargar los datos confirmados y conservarán su cola pendiente.')
+    check(await api.rpc('begin_recovery_epoch'))
+    console.log('Nueva generación de recuperación confirmada. Actualizá los clientes y verificá sus conflictos pendientes.')
+  }
   if (command === 'invite') {
     const count = Number(value || 1)
     if (!Number.isInteger(count) || count < 1 || count > 100) throw new Error('Elegí entre 1 y 100 invitaciones.')

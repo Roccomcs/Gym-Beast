@@ -1,50 +1,47 @@
 # GymBeast
 
-PWA de registro de gimnasio con importación de rutinas, planificación, sesiones offline y un historial local. La primera entrega permite usar el flujo con datos reales en un navegador sin configurar servicios externos.
+PWA de entrenamiento pensada para celular, con rutinas editables, registro offline, progreso, compañeros 2D y tienda con oro. Español rioplatense, paleta Obsidiana dorada y navegación sin encabezado superior.
 
-## Ejecutar
+## Iniciar
 
-1. Instalá Node 24 y ejecutá `npm ci`.
-2. Ejecutá `npm run dev` y abrí la dirección que muestra Vite.
-3. Elegí **Probar en este dispositivo**. Para comprobar el service worker ejecutá `npm run build` y luego `npm run preview`.
+Node 24.14.0 y npm. Ejecutar `npm ci` y `npm run dev`. Para cuentas, copiar `.env.example` a `.env.local`, completar únicamente la conexión pública del proyecto y reiniciar/recompilar. No se necesita correo: el acceso es por usuario y contraseña con registro abierto y sesión persistente.
 
-El espacio local conserva datos en IndexedDB en ese navegador. Borrar los datos del sitio elimina ese espacio. Existe restauración local desde archivo en el código, pero su acceso no está visible en Perfil.
+El modo local guarda datos solo en ese navegador; no es un respaldo remoto. La sincronización de cuentas conserva el entrenamiento offline y confirma premios al reconectar. No borrar almacenamiento ni desinstalar con cambios pendientes.
 
-## Conectar cuentas y publicar
+## Comprobar
 
-GymBeast usa usuario y contraseña con invitación de un solo uso. Conserva la sesión en el celular y permite recuperar el acceso con ayuda del administrador del grupo.
-Sin un proyecto configurado, se puede usar Probar en este dispositivo.
+```text
+npm test
+npm run build
+npm run check:release
+npx playwright install chromium webkit
+npm run test:e2e -- --workers=2
+npm run test:accounts
+npm run test:mobile
+npm run test:mobile-social
+npm run test:performance
+npm run test:capacity
+```
 
-1. Crear un proyecto Supabase y aplicar las migraciones en orden.
-2. Configurar Auth, los orígenes permitidos y la función accounts según [la guía de cuentas](docs/etapa-2.md).
-3. Copiar .env.example a .env.local y completar la URL y la clave publicable. Las claves administrativas se usan exclusivamente en el servidor y la herramienta del titular.
-4. Generar invitaciones con npm run accounts:admin -- invite 10, después de configurar la herramienta.
-5. En Cloudflare Pages, compilar con npm run build y publicar dist. Configurar las variables públicas del frontend y comprobar el flujo real antes de abrir el piloto.
+La prueba de capacidad crea una base embebida descartable con 100 cuentas sintéticas, 26.000 sesiones y 520.000 series. Tarda alrededor de 75 segundos y requiere memoria adicional. No escribe en Supabase. Las pruebas de cuentas usan Auth simulado y PostgreSQL embebido; no prueban credenciales de producción.
 
-En iPhone, abrir el sitio HTTPS en Safari y elegir Compartir → Agregar a inicio. En Android, usar instalar o agregar a la pantalla principal.
-Abrir una vez con conexión para descargar los recursos antes del uso offline.
+## Estado vigente
 
-## Pruebas
+Las etapas 1–11 tienen implementación y herramientas locales; **el piloto publicado todavía no está habilitado**. Faltan los proyectos del titular, ensayo con Auth/HTTPS reales y validación física en iPhone/Android. La auditoría exhaustiva de ropa quedó fuera del cierre por decisión de conservar el acabado actual.
 
-- `npm test` ejecuta las pruebas del parser, del dominio y de PostgreSQL embebido. La suite SQL simula el rol y la identidad de Supabase para comprobar operaciones, RLS y recompensas.
-- `npx playwright install chromium`, `npm run build` y `npm run test:e2e` permiten probar el flujo offline en un navegador con dimensiones móviles.
-- npm run test:accounts comprueba los formularios y la sesión persistente con un servidor de Auth simulado.
-- La autenticación hospedada, el despliegue de las migraciones en Supabase, la sincronización completa entre dos dispositivos y la validación en iPhone y Android físicos requieren verificación antes de abrir el piloto.
+La capacidad de 100 cuentas entra en la medición local después del mantenimiento, con margen ajustado. No garantiza que un proyecto Supabase real soporte ese volumen sin medir Auth, fotos, actividad y crecimiento. El grupo inicial es de diez amigos.
 
-## Estado
+- [Etapa 11: resultados y pendientes](docs/etapa-11.md)
+- [Publicación en Supabase y Cloudflare Free](docs/publicacion.md)
+- [Invitaciones, recuperación, respaldo y cuotas](docs/operacion.md)
+- [Prueba física en el celular](docs/prueba-en-telefono.md)
+- [Calidad móvil y rendimiento](docs/etapa-10.md)
+- [Inventario vigente](docs/pendientes.md) y [cierre final](docs/cierre-final.md)
+- [Arquitectura](docs/architecture.md), [datos](docs/database.md) y [diseño](docs/design-system.md)
+- [Créditos visuales](docs/assets-licenses.md) y [avisos de dependencias](docs/third-party-notices.txt)
 
-El alta local permite elegir un compañero y activar una de diez rutinas ilustradas. El entrenamiento registra series sin conexión y conserva el avance del ciclo al recargar. La economía incluye EXP, oro, tienda y crecimiento, con recompensas locales de demostración y funciones PostgreSQL para cuentas.
+Los informes anteriores documentan entregas históricas. Las decisiones actuales reemplazan Google, correo, 3D, temas alternativos y accesorios retirados. No se requiere Meshy, SMTP ni Web Push.
 
-Las ocho especies tienen seis etapas ilustradas en 2D, hábitats animados e interacción al tocarlas. La paleta es Obsidiana dorada y la app no tiene encabezado superior.
+### Crear rutinas
 
-El piloto todavía requiere las validaciones alojadas y físicas. Consultá el [registro de QA](docs/pilot-qa.md) y los [créditos visuales](docs/assets-licenses.md).
-
-## Entrega por etapas
-
-La etapa 2 implementa acceso por usuario y contraseña con invitación y recuperación administrativa. Falta desplegarlo y validarlo contra Supabase real. Consultá [la guía de cuentas](docs/etapa-2.md).
-
-La etapa 1 tiene compilación, 78 pruebas de dominio/SQL y 17 recorridos de navegador aprobados. Ejecutá npm run build y npm run demo para producir una demostración aislada con historial, ropa y mascota. Las capturas y el respaldo quedan en demo-results. El escenario social de prueba usa dos identidades fijas y roles simulados en PostgreSQL embebido.
-
-Consultá [la entrega de etapa 1](docs/etapa-1.md) y [el inventario vigente](docs/pendientes.md). Cada etapa espera tu aprobación antes de pasar a la siguiente.
-
-La etapa 3 incorpora sincronización por lotes, descarga incremental y recuperación administrativa. Consultá [la guía de persistencia](docs/etapa-3.md) y [las comprobaciones de cierre final](docs/cierre-final.md). Los comandos administrativos backup, restore y delete requieren las claves del titular, y las dos últimas operaciones piden confirmación.
+Crear rutina abre directamente el catálogo del Día 1. Elegí varias imágenes, ajustá los valores, guardá el día y agregá los siguientes desde el resumen. El nombre y la insignia se asignan por cantidad de días y se pueden editar después de crearla. Los borradores se conservan en el dispositivo. Detalle y QA: [docs/crear-rutina.md](docs/crear-rutina.md).

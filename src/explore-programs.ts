@@ -1,0 +1,58 @@
+import {fiveDayRoutine} from './rocco-routine'
+import type {Program} from './programs'
+
+const double='Elegí una carga que deje unas dos repeticiones posibles al terminar. Cuando completes todas las series en el máximo del rango con control, subí el mínimo disponible y volvé al extremo bajo. Repetí la carga si todavía faltan repeticiones.'
+
+export const explorePrograms:readonly Program[]=[
+  {name:'Básica · Base completa',reference:'Programa original de GymBeast',level:'Básica',cover:11,
+    goal:'Tres días, seis ejercicios por día y trabajo de los principales grupos musculares.',equipment:'Gimnasio completo',
+    progression:double,adaptation:'División solicitada: espalda/bíceps, pierna y pecho/hombro/tríceps. Incluye abdomen, deltoides posteriores, gemelos y abductores. Series de trabajo: las aproximaciones livianas se hacen antes.',
+    recovery:'Por ejemplo lunes, miércoles y viernes. Descansá unos dos minutos entre básicos y 60–90 segundos en accesorios. En la primera semana podés hacer dos series por ejercicio para aprender el recorrido.',
+    source:'',titles:['Espalda y bíceps','Pierna completa','Pecho, hombros y tríceps'],
+    tips:['Empezá por los dos tirones; después trabajá hombro posterior y brazos. La plancha cierra la sesión.',
+      'Elegí una mancuerna manejable para aprender la sentadilla. En rumano mantené una pequeña flexión de rodillas y la espalda estable.',
+      'Hacé primero los empujes de pecho y después hombros y tríceps. No hace falta llegar al fallo.'],
+    days:[
+      'Jalón al pecho 3x10-12 descanso 120s\nRemo bajo 3x10-12 descanso 120s\nPosteriores en máquina 2x12-15\nCurl bíceps 2x10-12\nCurl martillo 2x10-12\nPlancha 3x20-30s descanso 60s',
+      'Sentadilla goblet 3x8-12 descanso 120s\nPeso muerto rumano 2x8-12 descanso 120s\nPrensa 2x10-15\nCamilla de isquios 2x10-15\nGemelos de pie en máquina 3x12-20\nAbductores en máquina 2x12-20',
+      'Press banca 3x8-12 descanso 120s\nPress inclinado mancuernas 2x10-12 descanso 120s\nPress de hombros sentado con mancuernas 2x10-12\nElevaciones laterales 2x12-15\nTríceps polea 2x10-15\nExtensión de tríceps con mancuerna 2x10-15',
+    ]},
+  {name:'Intermedia · PHUL',reference:'PHUL · Brandon Campbell',level:'Intermedia',cover:12,
+    goal:'Cuatro días de torso/pierna: fuerza al inicio y volumen después.',equipment:'Gimnasio completo',progression:double,
+    adaptation:'Prescripción fija basada en PHUL. Se elige una cantidad de series dentro de los rangos originales y se conservan las variantes de ejercicios. Las cargas son individuales y editables; no hay porcentajes automáticos.',
+    recovery:'Lunes y martes, descanso, jueves y viernes. Básicos de fuerza: 3 minutos; accesorios: 90 segundos. En estocadas y remo unilateral las repeticiones son por lado.',
+    source:'https://www.muscleandstrength.com/workouts/phul-workout',
+    titles:['Torso · fuerza','Pierna · fuerza','Torso · hipertrofia','Pierna · hipertrofia'],
+    days:[
+      'Press banca 3x3-5\nPress inclinado mancuernas 3x6-10\nRemo barra 3x3-5\nJalón al pecho 3x6-10\nPress militar 2x5-8\nCurl con barra 2x6-10\nTríceps acostado con barra EZ 2x6-10',
+      'Sentadilla libre 3x3-5\nPeso muerto 3x3-5\nPrensa 3x10-15\nCurl femoral 3x6-10\nGemelos de pie en máquina 4x6-10',
+      'Press inclinado con barra 3x8-12\nAperturas 3x8-12\nRemo bajo 3x8-12\nRemo unilateral con mancuerna 3x8-12\nElevaciones laterales 3x8-12\nCurl inclinado con mancuernas 3x8-12\nTríceps polea 3x8-12',
+      'Sentadilla frontal 3x8-12\nEstocadas con barra 3x8-12\nSillón de cuádriceps 3x10-15\nCurl femoral 3x10-15\nGemelos sentado en máquina 3x8-12\nGemelos de pie en máquina 3x8-12',
+    ]},
+  {name:'Avanzada · PHAT',reference:'PHAT · Layne Norton',level:'Avanzada',cover:13,
+    goal:'Cinco días de fuerza e hipertrofia con trabajo específico por grupo muscular.',equipment:'Gimnasio completo',
+    progression:'En fuerza, aumentá el mínimo disponible al completar el rango con control. En hipertrofia, alcanzá el máximo de repeticiones de todas las series antes de subir. En los bloques de 6×3 usá una carga moderada que permita repeticiones rápidas y controladas. Revisá la recuperación cada cuatro semanas.',
+    adaptation:'Versión con series fijas de la estructura PHAT publicada. Conserva los cinco días, accesorios y bloques 6×3. No calcula 1RM ni porcentajes automáticamente. El peso de los ejercicios con lastre representa solo la carga añadida; no se estima su 1RM.',
+    recovery:'Dos días de fuerza, uno de descanso, tres de hipertrofia y otro de descanso. Sesiones largas y volumen alto. Descansá 3 minutos en fuerza, 90 segundos en 6×3 y 60–90 segundos en accesorios.',
+    source:'https://www.boostcamp.app/coaches/layne-norton/phat',speedDays:[2,3,4],
+    titles:['Torso · fuerza','Pierna · fuerza','Espalda y hombros · hipertrofia','Pierna · hipertrofia','Pecho y brazos · hipertrofia'],
+    tips:['Dominadas y fondos: los kg indican el lastre añadido al peso corporal. Elegí cargas que te dejen controlar todas las repeticiones.',
+      'Hacé aproximaciones antes de las series pesadas; no bloquees las rodillas en el peso muerto semirrígido.',
+      'Remo Pendlay 6×3: usá carga moderada y movimiento rápido, sin cambiar el ángulo del torso. No es una prueba de máximo.',
+      'Sentadilla 6×3: carga moderada y subida rápida con control. Descansá 90 segundos; seguí después con el bloque de volumen.',
+      'Press con mancuernas 6×3: carga moderada, sin fallo. Continuá con los rangos de hipertrofia; en trabajo unilateral las repeticiones son por lado.'],
+    days:[
+      'Press banca 3x3-5\nDominadas con lastre 2x6-10\nRemo en máquina con pecho apoyado 2x6-10\nFondos con lastre 2x6-10\nRemo Pendlay 3x3-5\nPress de hombros sentado con mancuernas 3x6-10\nCurl con barra 3x6-10\nTríceps acostado con barra EZ 3x6-10',
+      'Sentadilla libre 3x3-5\nSentadilla hack en máquina 2x6-10\nSillón de cuádriceps 2x6-10\nPeso muerto con piernas semirrígidas 3x5-8\nCurl femoral 2x6-10\nGemelos de pie en máquina 3x6-10\nGemelos sentado en máquina 2x6-10',
+      'Remo Pendlay 6x3\nRemo unilateral con mancuerna 3x8-12\nRemo bajo 3x8-12\nRemo en máquina con pecho apoyado 2x12-15\nJalón al pecho 2x15-20\nPress de hombros sentado con mancuernas 3x8-12\nRemo al mentón con mancuernas 2x12-15\nElevaciones laterales 3x12-20',
+      'Sentadilla libre 6x3\nSentadilla hack en máquina 3x8-12\nPrensa 2x12-15\nSillón de cuádriceps 3x15-20\nPeso muerto rumano 3x8-12\nCamilla de isquios 2x12-15\nCurl femoral 2x15-20\nGemelos burro en máquina 4x10-15\nGemelos sentado en máquina 3x15-20',
+      'Press banca mancuernas 6x3\nPress inclinado mancuernas 3x8-12\nPress inclinado con barra 3x12-15\nAperturas inclinadas en polea 2x15-20\nCurl predicador con barra EZ 3x8-12\nCurl concentrado 2x12-15\nCurl araña con mancuernas 2x15-20\nTríceps acostado con barra EZ 3x8-12\nTríceps polea 2x12-15\nPatada de tríceps en polea 2x15-20',
+    ]},
+  {name:'Rutina DEV',reference:'La rutina de Rocco',level:'Especial DEV',featured:true,cover:14,sourceText:fiveDayRoutine,
+    goal:'La división original de Rocco: cinco días de gimnasio, ahora para toda la comunidad.',equipment:'Gimnasio completo',
+    progression:'Las cargas originales son editables. Elegí las tuyas y aumentalas cuando completes las series con control.',
+    adaptation:'Conserva los 31 ejercicios, cargas y observaciones originales. Donde faltaban valores se sugieren 3 series y 10 repeticiones. El curl unilateral del día 2 es femoral de pie en máquina.',
+    recovery:'Espalda y bíceps; posterior de pierna; pecho, hombros y tríceps; cuádriceps y abductores; tren superior. Distribuí los cinco días según tu recuperación.',
+    source:'',days:['','','','',''],titles:['Espalda y bíceps','Posterior de pierna','Pecho, hombros y tríceps','Cuádriceps y abductores','Tren superior'],
+  },
+]

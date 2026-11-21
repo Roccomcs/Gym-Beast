@@ -6,7 +6,8 @@ test('demostración reproducible de rutina, ropa, mascota e historial', async ({
   await page.setViewportSize({ width: 390, height: 844 })
   await page.clock.setFixedTime(new Date(pilotDate))
   await page.goto('/')
-  await page.getByRole('button', { name: 'Probar en este dispositivo' }).click()
+  await page.evaluate(() => localStorage.setItem('gymbeast-active-account', 'local'))
+  await page.reload()
   const items = pilotItems()
   await page.evaluate(async rows => {
     const database = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -27,13 +28,14 @@ test('demostración reproducible de rutina, ropa, mascota e historial', async ({
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await expect(page.getByRole('heading', { name: 'Hola, Rocco Demo' })).toBeVisible()
   await expect(page.locator('[data-dressed-sprite="boca"]')).toBeVisible()
-  await expect(page.getByLabel('Progreso hacia la siguiente evolución')).toHaveAttribute('value', '81.25')
+  // The fixture raises loads weekly: 625 base EXP + 310 load-bonus EXP = 935 pet EXP.
+  await expect(page.getByLabel('Progreso hacia la siguiente evolución')).toHaveAttribute('value', '29.375')
   await page.screenshot({ path: info.outputPath('inicio.png'), fullPage: true, scale: 'css' })
   await page.getByRole('link', { name: 'Entrenar', exact: true }).click()
   await expect(page.getByText('DÍA 1 DE 5')).toBeVisible()
   await page.screenshot({ path: info.outputPath('entrenar.png'), fullPage: true, scale: 'css' })
   await page.getByRole('link', { name: 'Tienda', exact: true }).click()
-  await expect(page.getByTestId('shop-balance')).toContainText('335')
+  await expect(page.getByTestId('shop-balance')).toContainText('645')
   await page.screenshot({ path: info.outputPath('tienda.png'), fullPage: true, scale: 'css' })
   await page.getByRole('link', { name: 'Perfil', exact: true }).click()
   await page.getByRole('link', { name: 'Progreso', exact: true }).click()

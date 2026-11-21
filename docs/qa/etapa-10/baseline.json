@@ -1,0 +1,71 @@
+{
+  "scenario": "localhost, Chromium 390x844, CPU ×4; sin limitación de red, 260 sesiones/5200 series",
+  "home": {
+    "lcp": 804,
+    "cls": 0.0001614339192567725,
+    "longTasks": 621,
+    "series": [],
+    "submitted": 0,
+    "resources": [
+      {
+        "name": "http://127.0.0.1:4182/assets/index-B0YAad1o.js",
+        "bytes": 196237,
+        "duration": 22.09999999962747
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/index-B_1Ljd7z.css",
+        "bytes": 16488,
+        "duration": 11
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/workbox-window.prod.es5-Bd17z0YL.js",
+        "bytes": 2199,
+        "duration": 4.5
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/atkinson-hyperlegible-next-latin-wght-normal-BcXVPD7q.woff2",
+        "bytes": 33996,
+        "duration": 25.59999999962747
+      },
+      {
+        "name": "http://127.0.0.1:4182/habitat.jpg",
+        "bytes": 193051,
+        "duration": 86.59999999962747
+      },
+      {
+        "name": "http://127.0.0.1:4182/dragon-stages.webp",
+        "bytes": 515822,
+        "duration": 84.5
+      },
+      {
+        "name": "http://127.0.0.1:4182/assets/press-start-2p-latin-400-normal-_wFEWmAB.woff2",
+        "bytes": 12512,
+        "duration": 79.20000000111759
+      },
+      {
+        "name": "http://127.0.0.1:4182/habitat.jpg",
+        "bytes": 193051,
+        "duration": 1.400000000372529
+      },
+      {
+        "name": "http://127.0.0.1:4182/dragon-stages.webp",
+        "bytes": 515822,
+        "duration": 1
+      }
+    ]
+  },
+  "series": [
+    2245.9000000003725,
+    1436.4000000003725,
+    1077.699999999255,
+    843.5,
+    910.8000000007451
+  ],
+  "frames": {
+    "frames": 72,
+    "p95": 50
+  },
+  "heapUsed": 50218712,
+  "recordTargetMs": 100,
+  "lcpTargetMs": 2500
+}

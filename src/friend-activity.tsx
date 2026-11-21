@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { api } from './store'
 
-type Post = { id: string; handle: string; mine: boolean; cheered: boolean; cheers: number }
+type Post = { id: string; handle: string; mine: boolean; cheered: boolean; cheers: number;avatar?:string|null;created_at?:string;xp?:number }
 type Challenge = { id: string; handle: string; outgoing: boolean; accepted: boolean; expired: boolean;
-  starts_on: string; ends_on: string; mine: number; theirs: number }
+  starts_on: string; ends_on: string; mine: number; theirs: number;timezone?:string }
 type Activity = { posts: Post[]; challenges: Challenge[] }
 
-export function FriendActivity({ friends, sessions, online }: {
-  friends: string[]; sessions: { id: string; title: string }[]; online: boolean
+export function FriendActivity({ friends, sessions, online,onProfile }: {
+  friends: string[]; sessions: { id: string; title: string }[]; online: boolean;onProfile:(handle:string)=>void
 }) {
   const [data, setData] = useState<Activity>()
   const [status, setStatus] = useState('')
@@ -44,8 +44,11 @@ export function FriendActivity({ friends, sessions, online }: {
         <button disabled={disabled}>Compartir sesión</button>
       </form>}
       {!data?.posts.length && <p>Todavía no hay entrenamientos compartidos.</p>}
-      {data?.posts.map(post => <article className="my-routine" key={post.id}>
-        <strong>@{post.handle}</strong><p>Completó un entrenamiento · {post.cheers} celebraciones</p>
+      {data?.posts.map(post => <article className="my-routine social-post" key={post.id}>
+        <div className="friends-link">{post.avatar?<img className="friend-avatar" src={post.avatar} alt=""/>:<span className="friend-avatar" aria-hidden="true">{post.handle.slice(0,2).toUpperCase()}</span>}
+          <div>{post.mine?<strong>Vos</strong>:<button type="button" className="social-name" disabled={disabled} onClick={()=>onProfile(post.handle)}>@{post.handle}</button>}
+          {post.created_at&&<small>{new Date(post.created_at).toLocaleDateString('es-AR')}</small>}</div>
+        </div><p>Completó un entrenamiento{post.xp?' · +'+post.xp+' EXP':''}</p><p>{post.cheers} {post.cheers===1?'celebración':'celebraciones'}</p>
         {post.mine ? <button className="secondary" disabled={disabled} onClick={() => void act('unpublish', post.id)}>Quitar publicación</button> :
           <button className="secondary" disabled={disabled} aria-pressed={post.cheered}
             onClick={() => void act(post.cheered ? 'uncheer' : 'cheer', post.id)}>{post.cheered ? 'Quitar celebración' : 'Celebrar'}</button>}
@@ -60,11 +63,14 @@ export function FriendActivity({ friends, sessions, online }: {
         <button disabled={disabled}>Enviar desafío</button>
       </form>}
       {!data?.challenges.length && <p>Todavía no hay desafíos.</p>}
-      {data?.challenges.map(challenge => <article className="my-routine" key={challenge.id}>
+      {data?.challenges.map(challenge => <article className="my-routine social-challenge" data-complete={challenge.mine>=3&&challenge.theirs>=3} key={challenge.id}>
         <strong>@{challenge.handle}</strong>
         {challenge.accepted ? <>
-          <p>{challenge.mine >= 3 && challenge.theirs >= 3 ? 'Desafío completado' : challenge.expired ? 'Desafío cerrado' : 'En curso hasta ' + challenge.ends_on}</p>
+          <p>{challenge.mine >= 3 && challenge.theirs >= 3 ? 'Desafío completado' : challenge.expired ? 'Desafío cerrado' : 'En curso'}</p>
+          <p>{challenge.starts_on} — {challenge.ends_on}<br/>Calendario: {challenge.timezone==='UTC'?'Horario universal':challenge.timezone?.split('/').at(-1)?.replaceAll('_',' ')??'Horario universal'}</p>
           <p>Vos {Math.min(3, challenge.mine)} de 3 · @{challenge.handle} {Math.min(3, challenge.theirs)} de 3</p>
+          <label>Tu avance<progress aria-label="Tu avance en el desafío" max={3} value={Math.min(3,challenge.mine)}/></label>
+          <label>Avance de @{challenge.handle}<progress aria-label={'Avance de @'+challenge.handle} max={3} value={Math.min(3,challenge.theirs)}/></label>
         </> : <><p>{challenge.expired ? 'Invitación vencida' : challenge.outgoing ? 'Invitación enviada' : 'Invitación recibida'}</p>
           {!challenge.outgoing && !challenge.expired && <div className="actions">
             <button disabled={disabled} onClick={() => void act('accept', challenge.id)}>Aceptar desafío</button>

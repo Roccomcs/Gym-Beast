@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Droplets, Flame, Heart, Leaf, PawPrint, Radio, Sparkles } from 'lucide-react'
 import { Companion, companionStage } from './companion'
 import { FittedAccessory } from './fitted-accessory'
@@ -16,8 +16,9 @@ const habitats = {
   Fénix: { id: 'phoenix', title: 'Templo del sol', Effect: Flame },
 }
 
-export function Habitat({ name, xp, health, outfit, preview = false }: {
-  name: string; xp: number; health: number; outfit?: ShopGood[]; preview?: boolean
+export function Habitat({ name, displayName, xp, health, outfit, sceneFooter, showStats = true, preview = false }: {
+  sceneFooter?: ReactNode;
+  name: string; displayName?: string; showStats?: boolean; xp: number; health: number; outfit?: ShopGood[]; preview?: boolean
 }) {
   const [animation, play] = useState(0)
   const [buddyReaction, petBuddy] = useState(0)
@@ -53,17 +54,18 @@ export function Habitat({ name, xp, health, outfit, preview = false }: {
       </button>}
       {preview && <div className="habitat-badge">{stage.name}</div>}
       {preview && <span className="habitat-place">{title}</span>}
+      {sceneFooter}
     </div>
     {!preview && <div className="habitat-details">
-      <div className="page-heading"><h2>{name}</h2></div>
-      <div className="habitat-meter">
+      <div className="page-heading"><h2>{displayName || name}</h2></div>
+      {showStats && <div className="habitat-meter">
         <span><Heart size={16} fill="currentColor"/> Vida</span><strong>{health} / 100</strong>
         <progress className="life-meter" aria-label="Vida de la mascota" max={100} value={health}/>
-      </div>
-      <div className="habitat-meter">
+      </div>}
+      {showStats && <div className="habitat-meter">
         <span><Sparkles size={16}/> EXP</span><strong>{xp}{next ? ' / ' + next.xp : ''}</strong>
         <progress aria-label="Progreso hacia la siguiente evolución" max={100} value={percent}/>
-      </div>
+      </div>}
     </div>}
   </section>
 }

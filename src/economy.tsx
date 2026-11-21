@@ -1,9 +1,13 @@
-import { milestoneId, trainingMilestones } from './milestones'
+import {localRewards} from './local-rewards'
+import { recordPetPlan } from './weekly-plan'
 import { useRef, useState } from 'react'
+import { ExerciseDemonstration } from './movement'
+import { catalog } from './domain'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Coins, Sparkles, Egg, Shirt, Dumbbell, Gem, PawPrint } from 'lucide-react'
-import { Companion, companions, companionStage, companionStages } from './companion'
+import { Companion, companions, companionStages } from './companion'
 import { GoodArt } from './good-art'
+import { FittedAccessory } from './fitted-accessory'
 import { Habitat } from './habitat'
 import type { PetPlan, PetVitals } from './pet-progress'
 import { goods, outfitFor, type ShopGood } from './shop-catalog'
@@ -25,33 +29,15 @@ const retiredPrices: Record<string, number> = { 'bandana': 40, 'medalla': 80, 'g
 const goldBalance = (rewards: Reward[], purchased: string[]) => rewards.reduce((total, entry) => total + (entry.gold ?? 0), 0) -
   purchased.reduce((total, id) => total + (goods.find(item => item.id === id)?.price ?? retiredPrices[id] ?? 0), 0)
 
-export function localRewards(sessions: Item<'session'>[], sets: Item<'set'>[]): Reward[] {
-  const seen = new Set<string>()
-  const earned: Reward[] = [...sessions].sort((a, b) => (a.data.ended ?? 0) - (b.data.ended ?? 0) || a.id.localeCompare(b.id)).flatMap(item => {
-    const session = item.data
-    const occurrence = session.scheduleId ? 'schedule:' + session.scheduleId :
-      session.cycleId && session.dayId ? 'cycle:' + session.cycleId + ':' + session.dayId : undefined
-    if (!occurrence || seen.has(occurrence) || !session.ended || session.incomplete || !session.exercises.length) return []
-    const exercised = new Set(sets.filter(set => set.data.sessionId === item.id && set.data.done &&
-      set.data.reps > 0 && set.data.type !== 'warmup').map(set => set.data.exerciseId))
-    if (!session.exercises.some(exercise => exercised.has(exercise.id)) ||
-        !session.exercises.every(exercise => exercised.has(exercise.id) || session.omitted?.includes(exercise.id))) return []
-    seen.add(occurrence)
-    return [{ owner: item.owner, session_id: item.id, xp: 25, gold: 20, companion: session.companion, occurrence }]
-  })
-  const owner = earned[0]?.owner
-  if (!owner) return earned
-  return [...earned, ...trainingMilestones.filter(item => earned.length >= item.goal)
-    .map(item => ({ owner, session_id: milestoneId(item.goal), xp: 25 }))]
-}
-
-
+export {localRewards} from './local-rewards'
 
 export function PetShop({ owner, profile, rewards, pets, petPlans, date, target }: {
   owner: string; profile: Profile; rewards: Reward[]; pets: Map<string, PetVitals>; petPlans: PetPlan[]; date: string; target: number
 }) {
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
+  const [petName, setPetName] = useState('')
+  const [namingSpecies, setNamingSpecies] = useState<string>()
   const [filter, setFilter] = useState(0)
   const [page, setPage] = useState(0)
   const shelf = useRef<HTMLDivElement>(null)
@@ -62,6 +48,7 @@ export function PetShop({ owner, profile, rewards, pets, petPlans, date, target 
   const gold = owner === local ? bonus + goldBalance(rewards, acquired) : confirmed?.balance?.gold ?? goldBalance(rewards, acquired)
   const owned = companions.filter(name => name === initial || acquired.includes('egg:' + name))
   const activeOutfit = outfitFor(profile, profile.companion)
+  const familiar = activeOutfit.find(item => item.slot === 'buddy')
   const visible = goods.filter(item => item.id !== 'egg:' + initial && filters[filter].matches(item))
   const pages = Array.from({ length: Math.ceil(visible.length / 4) }, (_, index) => visible.slice(index * 4, index * 4 + 4))
   function selectPage(index: number) {
@@ -72,6 +59,28 @@ export function PetShop({ owner, profile, rewards, pets, petPlans, date, target 
     setBusy(true)
     try { await save(owner, 'profile', 'self', next); setMessage('Cambios guardados.') }
     catch { setMessage('No pudimos guardar el cambio.') }
+    finally { setBusy(false) }
+  }
+  async function equip(item: ShopGood) {
+    setBusy(true)
+    try {
+      await db.transaction('rw', db.items, db.operations, db.syncState, db.tombstones, async () => {
+        const row = await db.items.get([owner, 'profile', 'self'])
+        if (!row) throw new Error('Perfil ausente')
+        const current = row.data as Profile
+        const holder = companions.find(name => outfitFor(current, name).some(good => good.id === item.id))
+        if (holder && holder !== current.companion) {
+          setMessage('Primero quitáselo a ' + (current.petNames?.[holder] || holder) + '.')
+          return
+        }
+        const outfits: NonNullable<Profile['petOutfits']> = Object.fromEntries(companions.map(name =>
+          [name, Object.fromEntries(outfitFor(current, name).map(good => [good.slot, good.id]))]))
+        outfits[current.companion][item.slot] = holder ? null : item.id
+        await save(owner, 'profile', 'self', { ...current, equipped: undefined, petGear: {},
+          petOutfits: outfits })
+        setMessage(holder ? 'Objeto quitado.' : 'Objeto equipado.')
+      })
+    } catch { setMessage('No pudimos guardar el equipamiento.') }
     finally { setBusy(false) }
   }
   async function buy(item: ShopGood) {
@@ -90,6 +99,7 @@ export function PetShop({ owner, profile, rewards, pets, petPlans, date, target 
           return 'Compraste ' + item.name + '.'
         })
         setMessage(result)
+        if (result.startsWith('Compraste ') && item.slot === 'egg') { setPetName(''); setNamingSpecies(item.id.slice(4)) }
       } catch { setMessage('No pudimos guardar la compra.') }
       finally { setBusy(false) }
       return
@@ -102,6 +112,7 @@ export function PetShop({ owner, profile, rewards, pets, petPlans, date, target 
       if (result.error) throw result.error
       await sync(owner)
       setMessage('Compraste ' + item.name + '.')
+      if (item.slot === 'egg') { setPetName(''); setNamingSpecies(item.id.slice(4)) }
     } catch { setMessage('No pudimos confirmar la compra. Revisá el saldo y la conexión.') }
     finally { setBusy(false) }
   }
@@ -111,6 +122,28 @@ export function PetShop({ owner, profile, rewards, pets, petPlans, date, target 
       <p className="shop-balance" data-testid="shop-balance"><Coins aria-hidden="true" size={18}/> <span className="sr-only">Saldo: </span>{gold}<span className="sr-only"> de oro</span></p>
       <p role="status" className="shop-feedback">{message}</p>
     </section>
+    {namingSpecies && <div className="pet-naming-backdrop"><form className="panel shop-pet-name" role="dialog"
+      aria-modal="true" aria-label="Nombrar nuevo compañero" onSubmit={event => {
+        event.preventDefault()
+        if (!petName.trim() || busy) return
+        setBusy(true)
+        void (async () => {
+          try {
+            const row = await db.items.get([owner, 'profile', 'self'])
+            if (!row) throw new Error('Perfil ausente')
+            const current = row.data as Profile
+            await save(owner, 'profile', 'self', { ...current,
+              petNames: { ...current.petNames, [namingSpecies]: petName.trim() } })
+            setNamingSpecies(undefined)
+            setPetName('')
+          } catch { setMessage('No pudimos guardar el nombre. Probá de nuevo.') }
+          finally { setBusy(false) }
+        })()
+      }}>
+      <label>Nombre para tu {namingSpecies.toLowerCase()}<input autoFocus autoComplete="off"
+        value={petName} maxLength={30} required onChange={event => setPetName(event.target.value)}/></label>
+      <button disabled={busy || !petName.trim()}>Guardar nombre</button>
+    </form></div>}
     <section className="shop-catalog" aria-label="Catálogo de la tienda">
       <div className="shop-tools">
         <div className="shop-filters" role="group" aria-label="Categorías">
@@ -128,17 +161,16 @@ export function PetShop({ owner, profile, rewards, pets, petPlans, date, target 
         {entries.map(item => {
           const own = acquired.includes(item.id)
           const equipped = activeOutfit.some(good => good.id === item.id)
+          const holder = owned.find(name => name !== profile.companion && outfitFor(profile, name).some(good => good.id === item.id))
           const eggSpecies = item.slot === 'egg' ? item.id.slice(4) : ''
           return <article className="shop-row" key={item.id} data-equipped={equipped}>
             <div className="shop-display">{eggSpecies ? <Companion name={eggSpecies} xp={0}/> : <GoodArt good={item}/>}</div>
             <h3>{item.name}</h3>
             <p className="shop-price">{own ? equipped ? 'Equipado' : 'Comprado' : <><Coins size={14} aria-hidden="true"/> {item.price} de oro</>}</p>
             {own ? eggSpecies ? <small>En tu equipo</small> :
-              <button className="secondary" disabled={busy} onClick={() => void update({
-                ...profile, petOutfits: { ...profile.petOutfits, [profile.companion]: {
-                  ...profile.petOutfits?.[profile.companion], [item.slot]: equipped ? null : item.id,
-                } },
-              })}>{equipped ? 'Quitar' : 'Equipar'}</button> :
+              <button className="secondary" disabled={busy || !!holder} onClick={() => void equip(item)}>
+                {holder ? 'Lo usa ' + (profile.petNames?.[holder] || holder) : equipped ? 'Quitar' : 'Equipar'}
+              </button> :
               <button disabled={busy || gold < item.price} onClick={() => void buy(item)}>Comprar</button>}
           </article>
         })}
@@ -149,24 +181,28 @@ export function PetShop({ owner, profile, rewards, pets, petPlans, date, target 
           aria-current={index === page ? 'page' : undefined} onClick={() => selectPage(index)}/>)}
       </div>}
     </section>
-    <section className="panel"><h2>Tu equipo</h2><div className="companion-picker">
-      {owned.map(name => {
-        const xp = pets.get(name)?.xp ?? 0
-        const stage = companionStage(name, xp).stage.name.toLowerCase()
-        return <button className="secondary" key={name} disabled={busy} aria-pressed={name === profile.companion}
+    <section className="shop-team" aria-label="Tu equipo">
+      <h2>Tu equipo</h2>
+      <div className="shop-fitting-stage">
+        <Companion name={profile.companion} xp={pets.get(profile.companion)?.xp ?? 0} outfit={activeOutfit.filter(item => item.slot !== 'buddy')}/>
+        {familiar && <span className="shop-familiar" data-art={familiar.art} aria-label={familiar.name}>
+          {familiar.art === 'fish' || familiar.art === 'tiger'
+            ? <Companion name={familiar.art === 'fish' ? 'Ajolote' : 'Tigre'} stage="bebé"/>
+            : <FittedAccessory item={familiar}/>}
+        </span>}
+      </div>
+      {owned.length > 1 && <div className="shop-team-picker" aria-label="Elegir compañero">
+        {owned.map(name => <button type="button" className="secondary" key={name} disabled={busy}
+          aria-label={'Elegir ' + name} aria-pressed={name === profile.companion}
           onClick={() => {
             if (name === profile.companion) return
             void update({ ...profile, starter: initial, companion: name,
-              petPlans: [...petPlans.filter(plan => plan.from !== date), { from: date, target, companion: name }],
+              petPlans: recordPetPlan(petPlans, { from: date, target, companion: name }),
             })
           }}>
-          <Companion name={name} xp={xp} outfit={outfitFor(profile, name)}/>{name}<small>{stage} · {xp} EXP</small>
-        </button>
-      })}
-    </div>
-      {activeOutfit.length > 0 && <p className="shop-note">Equipado en {profile.companion}: {activeOutfit.map(item => item.name).join(', ')}.</p>}
-      {activeOutfit.some(item => item.slot !== 'buddy') && (pets.get(profile.companion)?.xp ?? 0) < companionStages[1].xp &&
-        <p className="shop-note">La ropa y los accesorios aparecen al eclosionar.</p>}
+          <Companion name={name} xp={pets.get(name)?.xp ?? 0}/>
+        </button>)}
+      </div>}
     </section>
   </div>
 }
@@ -175,6 +211,8 @@ const testGoldKey = 'gymbeast-local-shop-test-gold'
 const testGold = 10000
 
 export function LocalPetTools({ profile }: { profile: Profile }) {
+  const [trainingPreview, setTrainingPreview] = useState(false)
+  const [previewExercise, setPreviewExercise] = useState<string>('bench-barbell')
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewPet, setPreviewPet] = useState(profile.companion)
   const [previewStage, setPreviewStage] = useState(1)
@@ -198,8 +236,17 @@ export function LocalPetTools({ profile }: { profile: Profile }) {
             setPreviewPet('Dragón'); setPreviewStage(2); setSampleOutfit(true)
           }}>Ver muestra de ropa</button>
           {sampleOutfit && <p>Buzo Oversize y Reloj cronógrafo · muestra de calce</p>}
-          <Habitat key={previewPet + previewStage} name={previewPet} xp={companionStages[previewStage].xp} health={100}
-            outfit={sampleOutfit ? goods.filter(item => ['hoodie', 'watch'].includes(item.id)) : outfitFor(profile, previewPet)} preview/>
+          <div className="actions tabs" aria-label="Vista de la muestra">
+            <button type="button" className={trainingPreview ? 'secondary' : ''} aria-pressed={!trainingPreview} onClick={() => setTrainingPreview(false)}>Escena</button>
+            <button type="button" className={trainingPreview ? '' : 'secondary'} aria-pressed={trainingPreview} onClick={() => setTrainingPreview(true)}>Entrenamiento</button>
+          </div>
+          {trainingPreview ? <>
+            <label>Ejercicio de muestra<select value={previewExercise} onChange={event => setPreviewExercise(event.target.value)}>
+              {catalog.map(([id, name]) => <option key={id} value={id}>{name}</option>)}
+            </select></label>
+            <ExerciseDemonstration key={previewPet + previewStage + previewExercise} id={previewExercise} pet={previewPet} petXp={companionStages[previewStage].xp}/>
+          </> : <Habitat key={previewPet + previewStage} name={previewPet} xp={companionStages[previewStage].xp} health={100}
+            outfit={sampleOutfit ? goods.filter(item => ['hoodie', 'watch'].includes(item.id)) : outfitFor(profile, previewPet)} preview/>}
         </>}
       </div>
     </section>

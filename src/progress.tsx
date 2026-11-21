@@ -1,48 +1,27 @@
 import { MuscleMap, primaryMuscle } from './library'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { fromKg, metrics, weekDates, weeklyStreaks, type Exercise, type Profile } from './domain'
+import { fromKg, metrics, weekDates, type Exercise, type Profile } from './domain'
 import { milestoneId, trainingMilestones } from './milestones'
 import type { Item, Reward } from './store'
+import type { PetPlan } from './pet-progress'
+import { companionStages } from './pet-progress'
+import { weeklyMissions } from './gamification'
 
 const identity = (exercise: Exercise) =>
-  (exercise.catalogId ?? exercise.name.trim().toLocaleLowerCase('es-AR')) + ':' + exercise.mode
+  (exercise.catalogId ?? exercise.custom?.id ?? exercise.name?.trim().toLocaleLowerCase('es-AR') ?? exercise.id) + ':' + exercise.mode + ':' + (exercise.measure ?? 'reps')
 
-export function Progress({ sessions, sets, unit, today, weekStart, goal, schedules, rewards }: {
-  sessions: Item<'session'>[]; sets: Item<'set'>[]; unit: Profile['unit']; today: string; weekStart: number; goal: number; schedules: Item<'schedule'>[]; rewards: Reward[]
+export function Progress({ sessions, sets, unit, today, weekStart, schedules, rewards, petPlans=[], pending=false }: {
+  sessions: Item<'session'>[]; sets: Item<'set'>[]; unit: Profile['unit']; today: string; weekStart: number; goal: number; schedules: Item<'schedule'>[]; rewards: Reward[]; petPlans?:PetPlan[]; pending?:boolean
 }) {
   const [calendar, selectDate] = useState(today)
   const [selection, select] = useState('')
   const dates = weekDates(calendar, weekStart)
   const weekSessions = sessions.filter(item => dates.includes(item.data.date) && !item.data.incomplete)
   const complete = sessions.filter(item => !item.data.incomplete)
-  const completedSchedules = new Set(complete.map(item => item.data.scheduleId).filter(Boolean))
-  const planned = schedules.filter(item => !item.data.skipped)
-  const weeks = new Map<string, number>()
-  for (const item of complete) {
-    const week = weekDates(item.data.date, weekStart)[0]
-    weeks.set(week, (weeks.get(week) ?? 0) + 1)
-  }
-  const plannedWeeks = new Map<string, Item<'schedule'>[]>()
-  for (const item of planned) {
-    const week = weekDates(item.data.date, weekStart)[0]
-    plannedWeeks.set(week, [...(plannedWeeks.get(week) ?? []), item])
-  }
-  const targets = new Map<string, number>()
-  for (const item of [...complete].sort((a, b) => a.data.started - b.data.started)) {
-    const week = weekDates(item.data.date, weekStart)[0]
-    const target = item.data.weeklyTarget
-    if (target && !targets.has(week)) targets.set(week, target)
-  }
-  const currentWeek = weekDates(today, weekStart)[0]
-  const activeWeeks = new Set([...weeks].filter(([week, total]) => {
-    const entries = plannedWeeks.get(week)
-    return entries?.length ? entries.every(item => completedSchedules.has(item.id)) : (targets.get(week) ?? (week === currentWeek ? goal : 0)) > 0 && total >= (targets.get(week) ?? goal)
-  }).map(([week]) => week))
-  const streaks = weeklyStreaks(activeWeeks, currentWeek)
-  const thisPlan = plannedWeeks.get(currentWeek) ?? []
-  const currentTotal = thisPlan.length ? thisPlan.filter(item => completedSchedules.has(item.id)).length : weeks.get(currentWeek) ?? 0
-  const target = thisPlan.length || (targets.get(currentWeek) ?? goal)
+  const missions = weeklyMissions(today,petPlans,sessions,schedules,rewards)
+  const streaks = missions.streaks
+  const target = missions.current.goal
   const precedingDates = weekDates(new Date(Date.parse(dates[0] + 'T00:00:00Z') - 604800000).toISOString().slice(0, 10), weekStart)
   const precedingSessions = complete.filter(item => precedingDates.includes(item.data.date))
   const precedingCount = precedingSessions.length
@@ -69,7 +48,8 @@ export function Progress({ sessions, sets, unit, today, weekStart, goal, schedul
     const moves = new Map(item.data.exercises.map(exercise => [exercise.id, exercise]))
     for (const set of bySession.get(item.id) ?? []) {
       if (!set.done || set.type === 'warmup') continue
-      const muscle = primaryMuscle(moves.get(set.exerciseId)?.catalogId ?? null) ?? 'Sin clasificar'
+      const exercise = moves.get(set.exerciseId)
+      const muscle = exercise?.custom?.primary ?? primaryMuscle(exercise?.catalogId ?? null) ?? 'Sin clasificar'
       muscleCounts.set(muscle, (muscleCounts.get(muscle) ?? 0) + 1)
     }
   }
@@ -88,31 +68,43 @@ export function Progress({ sessions, sets, unit, today, weekStart, goal, schedul
     x: timeline.length === 1 ? 150 : 15 + index * 270 / (timeline.length - 1),
     y: 110 - (peak ? point.peak / peak : 0) * 87,
   }))
-  const records = new Map<string, number>()
-  let newRecords = 0
-  for (const item of [...complete].sort((a, b) => a.data.started - b.data.started)) {
-    if (item.data.deload) continue
-    const bestInSession = new Map<string, number>()
-    for (const exercise of item.data.exercises) {
-      const key = identity(exercise)
-      const result = metrics((bySession.get(item.id) ?? []).filter(set => set.exerciseId === exercise.id), exercise)
-      bestInSession.set(key, Math.max(bestInSession.get(key) ?? 0, result.peak))
-    }
-    for (const [key, value] of bestInSession) {
-      if (value <= 0) continue
-      const old = records.get(key)
-      if (old !== undefined && value > old) newRecords++
-      if (old === undefined || value > old) records.set(key, value)
-    }
-  }
   const achievements = [
-    { name: 'Marca personal', rarity: 'Raro', value: newRecords, target: 1, hint: 'Superá una carga que ya registraste.' },
-    { name: 'Cinco récords', rarity: 'Épico', value: newRecords, target: 5, hint: 'Superá cinco marcas a lo largo de tus sesiones.' },
+    { name: 'Marca personal', rarity: 'Raro', value: missions.records, target: 1, hint: 'Conseguí tu primer premio por subir peso.' },
+    { name: 'Cinco récords', rarity: 'Épico', value: missions.records, target: 5, hint: 'Conseguí cinco mejoras de carga confirmadas.' },
     { name: 'Cuatro semanas de constancia', rarity: 'Épico', value: streaks.best, target: 4, hint: 'Cumplí tu plan durante cuatro semanas consecutivas.' },
-    { name: 'Cincuenta sesiones', rarity: 'Legendario', value: complete.length, target: 50, hint: 'Completá cincuenta entrenamientos.' },
+    { name: 'Cincuenta sesiones', rarity: 'Legendario', value: missions.confirmed, target: 50, hint: 'Completá cincuenta entrenamientos válidos.' },
   ]
   const seriesCount = [...muscleCounts.values()].reduce((total, value) => total + value, 0)
   return <><h1>Progreso</h1>
+    <section className="panel weekly-missions" aria-label="Misiones semanales">
+      <p className="eyebrow">DE LUNES A DOMINGO</p><h2>Misiones de esta semana</h2>
+      <div className="mission-cards">
+        <article data-complete={missions.current.fulfilled}>
+          <span className="mission-emblem" aria-hidden="true">{missions.current.fulfilled?'✓':'Ⅰ'}</span>
+          <h3>Tu plan, completo</h3>
+          <p>{missions.current.rest ? 'Descanso programado: tu plan está cumplido.' : target ? `${missions.current.count} de ${target} días confirmados` : 'Elegí una rutina para activar esta misión.'}</p>
+          {target>0 && <progress aria-label="Misión cumplir el plan" value={missions.current.count} max={target}/>}
+          <strong>{missions.current.fulfilled?'Insignia: Plan cumplido':target?'Insignia por conseguir':'Sin plan activo'}</strong>
+        </article>
+        <article data-complete={missions.improved>=3}>
+          <span className="mission-emblem" aria-hidden="true">{missions.improved>=3?'✓':'Ⅱ'}</span>
+          <h3>Un poco más fuerte</h3><p>{missions.improved} de 3 ejercicios con mejora de carga</p>
+          <progress aria-label="Misión mejorar cargas" value={missions.improved} max={3}/>
+          <strong>{missions.improved>=3?'Insignia: Más fuerte':'Insignia por conseguir'}</strong>
+        </article>
+      </div>
+      <p>Las insignias semanales son visuales; tus premios de entrenamiento se mantienen.</p>
+      {missions.current.grace && <p>Semana de adaptación: avanzás sin perder vida si no completás el plan.</p>}
+      {!!missions.badges.length && <details className="weekly-badges"><summary>Tus insignias semanales ({missions.badges.length})</summary>
+        <ul>{missions.badges.slice(0,12).map(badge=><li key={badge.week+badge.label}><span aria-hidden="true">✦</span><strong>{badge.label}</strong><time dateTime={badge.week}>Semana del {badge.week.slice(8)}/{badge.week.slice(5,7)}</time></li>)}</ul>
+      </details>}
+      <details className="pet-rules"><summary>Vida y evolución</summary>
+        <p>Cada semana completa sin cumplir el plan resta 50 de vida. Con cero vida tu compañero baja una etapa. Sigue con cero hasta que vuelva a evolucionar: ahí recupera 100 de vida.</p>
+        <p>Los cambios de rutina o compañero se aplican al cuidado semanal desde el próximo lunes. La EXP de cada sesión siempre va a la mascota que te acompañó.</p>
+        <ol>{companionStages.map(stage=><li key={stage.name}>{stage.name}<strong>{stage.xp} EXP</strong></li>)}</ol>
+      </details>
+      {pending && <p role="status">Hay cambios de entrenamiento pendientes de confirmar. La vida y las misiones se recalculan al sincronizar.</p>}
+    </section>
     <section className="panel progress-dashboard"><h2>Tu semana</h2>
       <label>Semana de<input type="date" value={calendar} max={today} onChange={event => {
         if (event.target.value && event.target.value <= today) selectDate(event.target.value)
@@ -147,10 +139,11 @@ export function Progress({ sessions, sets, unit, today, weekStart, goal, schedul
       <h2>Constancia</h2>
       <p>Racha activa: {streaks.current} {streaks.current === 1 ? 'semana' : 'semanas'} cumpliendo el plan o el objetivo semanal.</p>
       <p>Mejor racha registrada: {streaks.best} {streaks.best === 1 ? 'semana' : 'semanas'}.</p>
-      <p>{thisPlan.length ? 'Plan de esta semana' : 'Objetivo de esta semana'}: {Math.min(currentTotal, target)} de {target} sesiones</p>
-      {target > 0 && <progress className="xp-meter" value={Math.min(currentTotal, target)} max={target} aria-label="Cumplimiento semanal" />}
+      <p>Plan de esta semana: {missions.current.count} de {target} días confirmados</p>
+      {target > 0 && <progress className="xp-meter" value={missions.current.count} max={target} aria-label="Cumplimiento semanal" />}
       <details className="advanced-achievements"><summary>Logros avanzados</summary>
-        <div className="achievement-grid">{achievements.map(achievement => <article key={achievement.name} className="achievement">
+        <div className="achievement-grid">{achievements.map(achievement => <article key={achievement.name} className="achievement" data-complete={achievement.value>=achievement.target}>
+          <span className="mission-emblem" aria-hidden="true">{achievement.value>=achievement.target?'✓':'✧'}</span>
           <span className="eyebrow">{achievement.rarity}</span><h3>{achievement.name}</h3><p>{achievement.hint}</p>
           <strong>{achievement.value >= achievement.target ? 'Desbloqueado' : achievement.value + ' / ' + achievement.target}</strong>
           <progress aria-label={achievement.name} value={Math.min(achievement.value, achievement.target)} max={achievement.target}/>
